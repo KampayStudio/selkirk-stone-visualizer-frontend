@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { HorizontalNavGroup, HorizontalNavLink } from '@layouts/components'
-import type { HorizontalNavItems, NavGroup, NavLink } from '@layouts/types'
+import { HorizontalNavGroup, HorizontalNavLink } from '@layouts/components';
+import type { HorizontalNavItems, NavGroup, NavLink } from '@layouts/types';
 
 defineProps<{
   navItems: HorizontalNavItems
@@ -21,6 +21,7 @@ const resolveNavItemComponent = (item: NavLink | NavGroup) => {
       v-for="(item, index) in navItems"
       :key="index"
       :item="item"
+      class="mx-3"
     />
   </ul>
 </template>
@@ -30,6 +31,8 @@ const resolveNavItemComponent = (item: NavLink | NavGroup) => {
   .nav-items {
     display: flex;
     flex-wrap: wrap;
+    font-size: 15px;
+    margin-block-start: 3px;
   }
 }
 </style>

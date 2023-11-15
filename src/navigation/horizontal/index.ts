@@ -7,8 +7,8 @@ export default [
     icon: { icon: 'bx-home-alt' },
   },
   {
-    title: 'Second page',
-    to: { name: 'second-page' },
+    title: 'Collection',
+    to: { name: 'collection' },
     icon: { icon: 'bx-file-blank' },
   },
 ] as HorizontalNavItems

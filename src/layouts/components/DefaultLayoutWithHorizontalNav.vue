@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import navItems from '@/navigation/horizontal'
 import { useThemeConfig } from '@core/composable/useThemeConfig'
+import { HorizontalNav } from '@layouts/components'
 import { themeConfig } from '@themeConfig'
 
 // Components
@@ -26,6 +27,11 @@ const { appRouteTransition } = useThemeConfig()
         <h1 class="leading-normal">
           {{ themeConfig.app.title }}
         </h1>
+
+        <!-- 👉 Navigation -->
+        <div class="horizontal-nav-content-container">
+          <HorizontalNav :nav-items="navItems" />
+        </div>
       </RouterLink>
       <VSpacer />
 

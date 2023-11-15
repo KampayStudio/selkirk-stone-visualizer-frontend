@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useGenerateImageVariant } from '@/@core/composable/useGenerateImageVariant'
-import AuthProvider from '@/views/pages/authentication/AuthProvider.vue'
 import boyWithRocketDark from '@images/illustrations/boy-with-rocket-dark.png'
 import boyWithRocketLight from '@images/illustrations/boy-with-rocket-light.png'
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
@@ -21,22 +20,6 @@ const isPasswordVisible = ref(false)
     no-gutters
     class="auth-wrapper"
   >
-    <VCol
-      md="8"
-      class="d-none d-md-flex"
-    >
-      <!-- illustration -->
-      <div class="position-relative w-100 pa-8">
-        <div class="d-flex align-center justify-center w-100 h-100">
-          <VImg
-            max-width="700"
-            :src="boyWithRocket"
-            class="auth-illustration"
-          />
-        </div>
-      </div>
-    </VCol>
-
     <VCol
       cols="12"
       md="4"
@@ -128,26 +111,46 @@ const isPasswordVisible = ref(false)
                 </a>
               </VCol>
 
-              <VCol
+              <!--
+                <VCol
                 cols="12"
                 class="d-flex align-center"
-              >
+                >
                 <VDivider />
                 <span class="mx-4">or</span>
                 <VDivider />
-              </VCol>
+                </VCol>
+              -->
 
               <!-- auth providers -->
-              <VCol
+              <!--
+                <VCol
                 cols="12"
                 class="text-center"
-              >
+                >
                 <AuthProvider />
-              </VCol>
+                </VCol>
+              -->
             </VRow>
           </VForm>
         </VCardText>
       </VCard>
+    </VCol>
+
+    <VCol
+      md="8"
+      class="d-none d-md-flex"
+    >
+      <!-- illustration -->
+      <div class="position-relative w-100 pa-8">
+        <div class="d-flex align-center justify-center w-100 h-100">
+          <VImg
+            max-width="700"
+            :src="boyWithRocket"
+            class="auth-illustration"
+          />
+        </div>
+      </div>
     </VCol>
   </VRow>
 </template>

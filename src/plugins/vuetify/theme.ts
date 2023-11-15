@@ -1,6 +1,5 @@
-import type { VuetifyOptions } from 'vuetify'
 import { resolveVuetifyTheme } from '@core/utils/vuetify'
-import { themeConfig } from '@themeConfig'
+import type { VuetifyOptions } from 'vuetify'
 
 export const staticPrimaryColor = '#696CFF'
 
@@ -10,18 +9,20 @@ const theme: VuetifyOptions['theme'] = {
     light: {
       dark: false,
       colors: {
-        'primary': localStorage.getItem(`${themeConfig.app.title}-lightThemePrimaryColor`) || staticPrimaryColor,
+        // 'primary': localStorage.getItem(`${themeConfig.app.title}-lightThemePrimaryColor`) || staticPrimaryColor,
+
+        'primary': '#1A4E19',
         'on-primary': '#fff',
-        'secondary': '#8592A3',
+        'secondary': '#5F2726',
         'on-secondary': '#fff',
-        'success': '#71DD37',
+        'success': '#38A736',
         'on-success': '#fff',
-        'info': '#03C3EC',
+        'info': '#5F2726',
         'on-info': '#fff',
-        'warning': '#FFAB00',
+        'warning': '#D8BF3A',
         'on-warning': '#fff',
-        'error': '#FF3E1D',
-        'background': '#F5F5F9',
+        'error': '#DF3333',
+        'background': '#fff',
         'on-background': '#32475C',
         'on-surface': '#32475C',
         'grey-50': '#FAFAFA',
@@ -58,17 +59,17 @@ const theme: VuetifyOptions['theme'] = {
     dark: {
       dark: true,
       colors: {
-        'primary': localStorage.getItem(`${themeConfig.app.title}-darkThemePrimaryColor`) || staticPrimaryColor,
+        'primary': '#1A4E19',
         'on-primary': '#fff',
-        'secondary': '#8592A3',
+        'secondary': '#5F2726',
         'on-secondary': '#fff',
-        'success': '#71DD37',
+        'success': '#38A736',
         'on-success': '#fff',
-        'info': '#03C3EC',
+        'info': '#5F2726',
         'on-info': '#fff',
-        'warning': '#FFAB00',
+        'warning': '#D8BF3A',
         'on-warning': '#fff',
-        'error': '#FF3E1D',
+        'error': '#DF3333',
         'background': '#232333',
         'on-background': '#DBDBEB',
         'surface': '#2B2C40',
