@@ -1,24 +1,23 @@
 <script setup lang="ts">
-import { useGenerateImageVariant } from '@/@core/composable/useGenerateImageVariant'
-import boyWithRocketDark from '@images/illustrations/boy-with-rocket-dark.png'
-import boyWithRocketLight from '@images/illustrations/boy-with-rocket-light.png'
-import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
-import { themeConfig } from '@themeConfig'
+import background from '@images/pages/login-background.png';
+import { VNodeRenderer } from '@layouts/components/VNodeRenderer';
+import { themeConfig } from '@themeConfig';
 
 const form = ref({
-  email: '',
+  userid: '',
   password: '',
   remember: false,
 })
 
-const boyWithRocket = useGenerateImageVariant(boyWithRocketLight, boyWithRocketDark)
 const isPasswordVisible = ref(false)
 </script>
 
 <template>
   <VRow
-    no-gutters
     class="auth-wrapper"
+    style="
+      max-inline-size: 80rem;
+    "
   >
     <VCol
       cols="12"
@@ -28,7 +27,7 @@ const isPasswordVisible = ref(false)
     >
       <VCard
         flat
-        :max-width="500"
+        :max-width="800"
         class="mt-12 mt-sm-0 pa-6"
       >
         <VCardItem class="justify-start">
@@ -45,10 +44,10 @@ const isPasswordVisible = ref(false)
 
         <VCardText>
           <h6 class="text-h6 mb-1">
-            Welcome to {{ themeConfig.app.title }}! 👋🏻
+            Welcome
           </h6>
           <p class="mb-0">
-            Please sign-in to your account and start the adventure
+            Sign in your account
           </p>
         </VCardText>
 
@@ -58,10 +57,10 @@ const isPasswordVisible = ref(false)
               <!-- email -->
               <VCol cols="12">
                 <VTextField
-                  v-model="form.email"
+                  v-model="form.userid"
                   autofocus
-                  label="Email"
-                  type="email"
+                  label="Email or Username"
+                  type="text"
                 />
               </VCol>
 
@@ -142,13 +141,9 @@ const isPasswordVisible = ref(false)
       class="d-none d-md-flex"
     >
       <!-- illustration -->
-      <div class="position-relative w-100 pa-8">
+      <div class="position-relative w-100">
         <div class="d-flex align-center justify-center w-100 h-100">
-          <VImg
-            max-width="700"
-            :src="boyWithRocket"
-            class="auth-illustration"
-          />
+          <VImg :src="background" />
         </div>
       </div>
     </VCol>
@@ -157,6 +152,10 @@ const isPasswordVisible = ref(false)
 
 <style lang="scss">
 @use "@core/scss/template/pages/page-auth.scss";
+
+.layout-navbar .layout-footer{
+  display: none;
+}
 </style>
 
 <route lang="yaml">
