@@ -1,48 +1,3 @@
-<script setup lang="ts">
-import type { FaqCategory } from '@/@fake-db/types'
-import axios from '@axios'
-import { useGenerateImageVariant } from '@core/composable/useGenerateImageVariant'
-import sittingGirlWithLaptopDark from '@images/illustrations/sitting-girl-with-laptop-dark.png'
-import sittingGirlWithLaptopLight from '@images/illustrations/sitting-girl-with-laptop-light.png'
-
-const faqSearchQuery = ref('')
-
-const faqs = ref<FaqCategory[]>([])
-
-const fetchFaqs = () => {
-  return axios.get('/pages/faqs', {
-    params: {
-      q: faqSearchQuery.value,
-    },
-  }).then(response => {
-    faqs.value = response.data
-  }).catch(error => {
-    console.error(error)
-  })
-}
-
-const activeTab = ref('Payment')
-const activeQuestion = ref(0)
-
-watch(activeTab, () => activeQuestion.value = 0)
-watch(faqSearchQuery, fetchFaqs, { immediate: true })
-
-const contactUs = [
-  {
-    icon: 'bx-phone-call',
-    via: '+ (810) 2548 2568',
-    tagLine: 'We are always happy to help!',
-  },
-  {
-    icon: 'bx-envelope',
-    via: 'hello@help.com',
-    tagLine: 'Best way to get answer faster!',
-  },
-]
-
-const sitingGirlWithLaptop = useGenerateImageVariant(sittingGirlWithLaptopLight, sittingGirlWithLaptopDark)
-</script>
-
 <template>
   <section>
     <div class="text-center pt-12">
@@ -50,7 +5,7 @@ const sitingGirlWithLaptop = useGenerateImageVariant(sittingGirlWithLaptopLight,
         Terms and Condition
       </h6>
       <div
-        class="text-sm mb-6 mx-auto border bg-gray-600 px-5 py-5 rounded-lg"
+        class="text-sm mb-6 mx-auto border bg-gray-600 px-5 py-5 rounded-lg text-left"
         style=" background-color: #fff; inline-size: 60%;"
       >
         <p>Welcome to Selkirk Stone Visualizer!</p>
@@ -58,10 +13,10 @@ const sitingGirlWithLaptop = useGenerateImageVariant(sittingGirlWithLaptopLight,
           Before you continue with your account creation, we would like to inform you about the types of data we collect, how we use this data, and your rights regarding your personal information.
           Data Collection
         </p>
-        <p class="text-left">
+        <p>
           By signing up for our services, you agree to our collection of the following data:
         </p>
-        <ul class="list-group">
+        <ul>
           <li>Demographic Information: This includes name and other demographic details that help us tailor our services to suit your needs better.</li>
           <li>Device Information: We collect information about the devices you use to access our services, including the type of device, operating system, and device settings.</li>
           <li>Images Used in Visualizer App: Any images you upload or use within our Visualizer App will be collected for service enhancement.</li>

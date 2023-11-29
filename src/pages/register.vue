@@ -126,10 +126,7 @@ const isPasswordVisible = ref(false)
                 </VRow>
 
                 <VRow>
-                  <VCol
-                    cols="12"
-                    md="6"
-                  >
+                  <VCol cols="12">
                     <VTextField
                       v-model="form.address"
                       autofocus
@@ -176,13 +173,13 @@ const isPasswordVisible = ref(false)
                     for="privacy-policy"
                     style="opacity: 1;"
                   >
-                    <span class="mx-2 text-wrap">I agree to
-                      <RouterLink
-                        class="text-primary ms-2"
-                        :to="{ name: 'terms-and-condition' }"
-                      >
-                        Terms and Conditions
-                      </RouterLink>
+                    <span class="mx-2 text-wrap">I agree to                      <RouterLink
+                      class="text-primary ms-2"
+                      :to="{ name: 'terms-and-condition' }"
+                      target="_blank"
+                    >
+                      Terms and Conditions
+                    </RouterLink>
                     </span>
                   </VLabel>
                 </div>
