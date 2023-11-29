@@ -75,52 +75,75 @@ const isPasswordVisible = ref(false)
               <!-- Username -->
               <VCol cols="12">
                 <VRow>
-                  <VCol cols="6">
+                  <VCol
+                    cols="12"
+                    md="6"
+                  >
                     <VTextField
                       v-model="form.email"
                       type="email"
                       autofocus
                       label="Email"
+                      required
                     />
                   </VCol>
-                  <VCol cols="6">
+                  <VCol
+                    cols="12"
+                    md="6"
+                  >
                     <VTextField
                       v-model="form.contactNo"
                       autofocus
                       label="Contact Number"
+                      required
                     />
                   </VCol>
                 </VRow>
 
                 <VRow>
-                  <VCol cols="6">
+                  <VCol
+                    cols="12"
+                    md="6"
+                  >
                     <VTextField
                       v-model="form.firstname"
                       autofocus
                       label="First Name"
+                      required
                     />
                   </VCol>
-                  <VCol cols="6">
+                  <VCol
+                    cols="12"
+                    md="6"
+                  >
                     <VTextField
                       v-model="form.lastname"
                       autofocus
                       label="Last Name"
+                      required
                     />
                   </VCol>
                 </VRow>
 
                 <VRow>
-                  <VCol cols="12">
+                  <VCol
+                    cols="12"
+                    md="6"
+                  >
                     <VTextField
                       v-model="form.address"
                       autofocus
                       label="Address"
+                      required
                     />
                   </VCol>
                 </VRow>
 
                 <VRow>
-                  <VCol cols="6">
+                  <VCol
+                    cols="12"
+                    md="6"
+                  >
                     <VTextField
                       v-model="form.password"
                       label="Password"
@@ -129,7 +152,10 @@ const isPasswordVisible = ref(false)
                       @click:append-inner="isPasswordVisible = !isPasswordVisible"
                     />
                   </VCol>
-                  <VCol cols="6">
+                  <VCol
+                    cols="12"
+                    md="6"
+                  >
                     <VTextField
                       v-model="form.confirm_password"
                       label="Confirm Password"
@@ -151,10 +177,12 @@ const isPasswordVisible = ref(false)
                     style="opacity: 1;"
                   >
                     <span class="mx-2 text-wrap">I agree to
-                      <a
-                        href="javascript:void(0)"
-                        class="text-primary"
-                      >privacy policy & terms</a>
+                      <RouterLink
+                        class="text-primary ms-2"
+                        :to="{ name: 'terms-and-condition' }"
+                      >
+                        Terms and Conditions
+                      </RouterLink>
                     </span>
                   </VLabel>
                 </div>
