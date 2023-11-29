@@ -102,12 +102,12 @@ const isPasswordVisible = ref(false)
                 class="text-center text-base d-flex justify-center flex-wrap"
               >
                 <span>New on our platform?</span>
-                <a
+                <RouterLink
                   class="text-primary ms-2"
-                  href="#"
+                  :to="{ name: 'register' }"
                 >
                   Create an account
-                </a>
+                </RouterLink>
               </VCol>
 
               <!--
