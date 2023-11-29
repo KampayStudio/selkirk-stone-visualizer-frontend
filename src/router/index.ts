@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import routes from '~pages'
 
 const router = createRouter({
+  mode: 'hash',
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     ...setupLayouts(routes),
