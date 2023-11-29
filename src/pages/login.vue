@@ -79,12 +79,12 @@ const isPasswordVisible = ref(false)
                     v-model="form.remember"
                     label="Remember me"
                   />
-                  <a
-                    class="text-primary text-sm ms-2 mb-1"
-                    href="#"
+                  <RouterLink
+                    class="text-primary ms-2"
+                    :to="{ name: 'forgot-password' }"
                   >
                     Forgot Password?
-                  </a>
+                  </RouterLink>
                 </div>
 
                 <VBtn
