@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import background from '@images/pages/login-background.png';
-import { VNodeRenderer } from '@layouts/components/VNodeRenderer';
-import { themeConfig } from '@themeConfig';
+import background from '@images/pages/login-background.png'
+import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
+import { themeConfig } from '@themeConfig'
 
 const form = ref({
   userid: '',
@@ -16,7 +16,7 @@ const isPasswordVisible = ref(false)
   <VRow
     class="auth-wrapper"
     style="
-      max-inline-size: 80rem;
+      max-inline-size: 300rem;
     "
   >
     <VCol
@@ -142,7 +142,10 @@ const isPasswordVisible = ref(false)
     >
       <!-- illustration -->
       <div class="position-relative w-100">
-        <div class="d-flex align-center justify-center w-100 h-100">
+        <div
+          class="d-flex align-center justify-center w-100"
+          style="max-block-size: 100vh; object-fit: cover;"
+        >
           <VImg :src="background" />
         </div>
       </div>
