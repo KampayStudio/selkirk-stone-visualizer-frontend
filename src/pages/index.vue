@@ -1,5 +1,13 @@
+<script setup lang="ts">
+const route = useRoute()
+const router = useRouter()
+const show = ref(false)
+
+router.replace(route.query.to ? String(route.query.to) : '/login')
+</script>
+
 <template>
-  <div>
+  <div v-if="show">
     <VCard
       class="mb-6"
       title="Kick start your project 🚀"

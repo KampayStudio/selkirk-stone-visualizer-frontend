@@ -4,6 +4,13 @@ import authV1TopShape from '@images/svg/top-illustration.svg?raw'
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 import { themeConfig } from '@themeConfig'
 
+const route = useRoute()
+const router = useRouter()
+
+const submit = () => {
+  router.replace(route.query.to ? String(route.query.to) : '/login')
+}
+
 const form = ref({
   email: '',
 })
@@ -65,9 +72,11 @@ const form = ref({
                   block
                   type="submit"
                   class="my-4"
+                  @click="submit"
                 >
                   Send Reset Link
                 </VBtn>
+
                 <!-- back to login -->
                 <RouterLink
                   class="d-flex align-center justify-center"
