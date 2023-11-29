@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { useLayouts } from '@layouts'
-import { HorizontalNavPopper } from '@layouts/components'
+import { HorizontalNavLink, HorizontalNavPopper } from '@layouts/components'
 import { config } from '@layouts/config'
 import { canViewNavMenuGroup } from '@layouts/plugins/casl'
 import type { NavGroup } from '@layouts/types'

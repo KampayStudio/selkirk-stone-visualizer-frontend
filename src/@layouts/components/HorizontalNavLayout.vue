@@ -1,9 +1,10 @@
 <script lang="ts" setup>
-import type { HorizontalNavItems } from '@layouts/types';
+import { HorizontalNav } from '@layouts/components'
+import type { HorizontalNavItems } from '@layouts/types'
 
 // ℹ️ Using import from `@layouts` causing build to hangup
 // import { useLayouts } from '@layouts'
-import { useLayouts } from '@layouts/composable/useLayouts';
+import { useLayouts } from '@layouts/composable/useLayouts'
 
 defineProps<{
   navItems: HorizontalNavItems
@@ -38,6 +39,12 @@ const { _layoutClasses: layoutClasses, isNavbarBlurEnabled } = useLayouts()
       <div class="layout-navbar">
         <div class="navbar-content-container">
           <slot name="navbar" />
+        </div>
+      </div>
+      <!-- 👉 Navigation -->
+      <div class="layout-horizontal-nav">
+        <div class="horizontal-nav-content-container">
+          <HorizontalNav :nav-items="navItems" />
         </div>
       </div>
     </div>
