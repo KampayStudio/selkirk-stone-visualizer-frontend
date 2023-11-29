@@ -1,0 +1,1 @@
+import{H as e,o as c,c as t}from"./index-b3addb1e.js";const o={},s={class:"h-100 d-flex align-center justify-space-between"};function n(r,a){return c(),t("div",s)}const f=e(o,[["render",n]]);export{f as default};
