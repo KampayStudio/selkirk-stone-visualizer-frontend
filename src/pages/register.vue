@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
-import { themeConfig } from '@themeConfig'
+import { VNodeRenderer } from '@layouts/components/VNodeRenderer';
+import { themeConfig } from '@themeConfig';
 
 const form = ref({
   firstname: '',
@@ -176,7 +176,6 @@ const isPasswordVisible = ref(false)
                     <span class="mx-2 text-wrap">I agree to                      <RouterLink
                       class="text-primary ms-2"
                       :to="{ name: 'terms-and-condition' }"
-                      target="_blank"
                     >
                       Terms and Conditions
                     </RouterLink>
