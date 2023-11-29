@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { VNodeRenderer } from '@layouts/components/VNodeRenderer';
-import { themeConfig } from '@themeConfig';
+import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
+import { themeConfig } from '@themeConfig'
 
 const form = ref({
   firstname: '',

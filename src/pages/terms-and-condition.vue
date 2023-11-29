@@ -1,3 +1,8 @@
+<script setup lang="ts">
+const route = useRoute()
+const router = useRouter()
+</script>
+
 <template>
   <section>
     <div class="text-center pt-12">
@@ -40,6 +45,7 @@
           By creating an account, you consent to our collection and use of your data as outlined in these terms and conditions. We are committed to protecting your privacy and ensuring the security of your personal information.
           Please read these terms carefully. If you have any questions or concerns about our data practices, please contact us at [Your Contact Information].
         </p>
+        <a @click="$router.go(-1) ">Back</a>
       </div>
     </div>
   </section>
@@ -56,3 +62,8 @@
   border-radius: 8px;
 }
 </style>
+
+<route lang="yaml">
+meta:
+  layout: blank
+</route>
