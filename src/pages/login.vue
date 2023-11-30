@@ -43,7 +43,7 @@ const isPasswordVisible = ref(false)
         </VCardItem>
 
         <VCardText>
-          <h6 class="text-h6 mb-1">
+          <h6 class="text-h4 mb-1">
             Welcome
           </h6>
           <p class="mb-0">
@@ -59,7 +59,7 @@ const isPasswordVisible = ref(false)
                 <VTextField
                   v-model="form.userid"
                   autofocus
-                  label="Email or Username"
+                  label="Email"
                   type="text"
                 />
               </VCol>
@@ -86,30 +86,33 @@ const isPasswordVisible = ref(false)
                     Forgot Password?
                   </RouterLink>
                 </div>
-
-                <VBtn
-                  block
-                  type="submit"
-                  class="mb-1"
-                >
-                  Login
-                </VBtn>
+                <VRow>
+                  <VCol
+                    cols="12"
+                    md="4"
+                  >
+                    <VBtn
+                      block
+                      type="submit"
+                    >
+                      Login
+                    </VBtn>
+                  </VCol>
+                  <VCol
+                    cols="12"
+                    md="4"
+                  >
+                    <VBtn
+                      block
+                      class="mb-1"
+                      variant="outlined"
+                      :to="{ name: 'register' }"
+                    >
+                      Signup
+                    </VBtn>
+                  </VCol>
+                </VRow>
               </VCol>
-
-              <!-- create account -->
-              <VCol
-                cols="12"
-                class="text-center text-base d-flex justify-center flex-wrap"
-              >
-                <span>New on our platform?</span>
-                <RouterLink
-                  class="text-primary ms-2"
-                  :to="{ name: 'register' }"
-                >
-                  Create an account
-                </RouterLink>
-              </VCol>
-
               <!--
                 <VCol
                 cols="12"

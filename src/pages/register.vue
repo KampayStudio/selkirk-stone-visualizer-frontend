@@ -47,6 +47,7 @@ const isPasswordVisible = ref(false)
         flat
         :max-width="900"
         class="mt-12 mt-sm-0 pa-6"
+        style="inline-size: 800px;"
       >
         <VCardItem class="justify-start">
           <template #prepend>
@@ -65,7 +66,13 @@ const isPasswordVisible = ref(false)
             Get Started
           </h6>
           <p class="mb-0">
-            Make your app management easy and fun!
+            <span>Already have an account?</span>
+            <RouterLink
+              class="text-primary ms-2"
+              :to="{ name: 'login' }"
+            >
+              Sign in
+            </RouterLink>
           </p>
         </VCardText>
 
@@ -173,36 +180,27 @@ const isPasswordVisible = ref(false)
                     for="privacy-policy"
                     style="opacity: 1;"
                   >
-                    <span class="mx-2 text-wrap">I agree to                      <RouterLink
-                      class="text-primary ms-2"
-                      :to="{ name: 'terms-and-condition' }"
-                    >
-                      Terms and Conditions
-                    </RouterLink>
+                    <span class="mx-2 text-wrap">I agree to
+                      <RouterLink
+                        class="text-primary"
+                        :to="{ name: 'terms-and-condition' }"
+                      >
+                        TERMS AND CONDITIONS
+                      </RouterLink>
                     </span>
                   </VLabel>
                 </div>
-
-                <VBtn
-                  block
-                  type="submit"
-                >
-                  Sign up
-                </VBtn>
-              </VCol>
-
-              <!-- create account -->
-              <VCol
-                cols="12"
-                class="d-flex justify-center flex-column flex-sm-row flex-md-column flex-lg-row text-center text-base"
-              >
-                <span>Already have an account?</span>
-                <RouterLink
-                  class="text-primary ms-2"
-                  :to="{ name: 'login' }"
-                >
-                  Sign in instead
-                </RouterLink>
+                <VRow class="d-flex justify-content-end">
+                  <VCol
+                    cols="12"
+                    md="2"
+                    class="ms-auto"
+                  >
+                    <VBtn type="submit">
+                      Sign up
+                    </VBtn>
+                  </VCol>
+                </VRow>
               </VCol>
             </VRow>
           </VForm>
