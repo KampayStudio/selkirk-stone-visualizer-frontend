@@ -8,7 +8,7 @@ const router = useRouter()
   <!-- 1st Section -->
   <section
     id="section1"
-    style=" position: relative; background-image: url('/image/landing-page-house.png'); background-size:cover; block-size: 50rem; inline-size: 100%"
+    style=" position: relative; background-image: url('/selkirk-stone-visualizer-frontend/image/landing-page-house.png'); background-size:cover; block-size: 50rem; inline-size: 100%"
   >
     <VCard style="position: absolute; background-color: #F4F2E9; inset-block-end: 15rem; inset-inline-end: 40px;max-inline-size: 30rem;">
       <VCardText
