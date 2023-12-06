@@ -1,7 +1,13 @@
 <script setup lang="ts">
+
 // router.replace(route.query.to ? String(route.query.to) : '/login')
 const route = useRoute()
 const router = useRouter()
+
+if (localStorage.getItem('loggedIn') === '0') {
+  console.log('hello')
+  router.replace(route.query.to ? String(route.query.to) : '/login')
+}
 </script>
 
 <template>

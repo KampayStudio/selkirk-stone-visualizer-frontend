@@ -18,6 +18,8 @@ function login() {
     router.replace(route.query.to ? String(route.query.to) : '/')
   }
   else {
+    localStorage.setItem('loggedIn', '1')
+
     // Show an error message using Swal (SweetAlert)
     Swal.fire({
       title: 'Error!',
