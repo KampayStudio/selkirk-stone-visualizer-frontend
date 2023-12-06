@@ -52,9 +52,11 @@ const isPasswordVisible = ref(false)
       >
         <VCardItem class="justify-start">
           <template #prepend>
-            <div class="d-flex">
-              <VNodeRenderer :nodes="themeConfig.app.logo" />
-            </div>
+            <RouterLink to="/">
+              <div class="d-flex">
+                <VNodeRenderer :nodes="themeConfig.app.logo" />
+              </div>
+            </RouterLink>
           </template>
 
           <VCardTitle class="auth-title">

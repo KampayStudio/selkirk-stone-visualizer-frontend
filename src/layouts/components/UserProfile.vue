@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import avatar1 from '@images/avatars/avatar-1.png'
 </script>
 
 <template>
@@ -16,7 +15,7 @@ import avatar1 from '@images/avatars/avatar-1.png'
       color="primary"
       variant="tonal"
     >
-      <VImg :src="avatar1" />
+      <!-- <VImg :src="avatar1" /> -->
 
       <!-- SECTION Menu -->
       <VMenu
@@ -27,100 +26,122 @@ import avatar1 from '@images/avatars/avatar-1.png'
       >
         <VList>
           <!-- 👉 User Avatar & Name -->
-          <VListItem>
+          <!--
+            <VListItem>
             <template #prepend>
-              <VListItemAction start>
-                <VBadge
-                  dot
-                  location="bottom right"
-                  offset-x="3"
-                  offset-y="3"
-                  color="success"
-                >
-                  <VAvatar
-                    color="primary"
-                    variant="tonal"
-                  >
-                    <VImg :src="avatar1" />
-                  </VAvatar>
-                </VBadge>
-              </VListItemAction>
+            <VListItemAction start>
+            <VBadge
+            dot
+            location="bottom right"
+            offset-x="3"
+            offset-y="3"
+            color="success"
+            >
+            <VAvatar
+            color="primary"
+            variant="tonal"
+            >
+            <VImg :src="avatar1" />
+            </VAvatar>
+            </VBadge>
+            </VListItemAction>
             </template>
 
             <VListItemTitle class="font-weight-semibold">
-              John Doe
+            John Doe
             </VListItemTitle>
             <VListItemSubtitle>Admin</VListItemSubtitle>
-          </VListItem>
+            </VListItem>
+          -->
 
-          <VDivider class="my-2" />
+          <!-- <VDivider class="my-2" /> -->
 
           <!-- 👉 Profile -->
-          <VListItem link>
+          <!--
+            <VListItem link>
             <template #prepend>
-              <VIcon
-                class="me-2"
-                icon="bx-user"
-                size="22"
-              />
+            <VIcon
+            class="me-2"
+            icon="bx-user"
+            size="22"
+            />
             </template>
 
             <VListItemTitle>Profile</VListItemTitle>
-          </VListItem>
+            </VListItem>
+          -->
 
           <!-- 👉 Settings -->
-          <VListItem link>
+          <!--
+            <VListItem link>
             <template #prepend>
-              <VIcon
-                class="me-2"
-                icon="bx-cog"
-                size="22"
-              />
+            <VIcon
+            class="me-2"
+            icon="bx-cog"
+            size="22"
+            />
             </template>
 
             <VListItemTitle>Settings</VListItemTitle>
-          </VListItem>
+            </VListItem>
+          -->
 
           <!-- 👉 Pricing -->
-          <VListItem link>
+          <!--
+            <VListItem link>
             <template #prepend>
-              <VIcon
-                class="me-2"
-                icon="bx-dollar"
-                size="22"
-              />
+            <VIcon
+            class="me-2"
+            icon="bx-dollar"
+            size="22"
+            />
             </template>
 
             <VListItemTitle>Pricing</VListItemTitle>
-          </VListItem>
+            </VListItem>
+          -->
 
           <!-- 👉 FAQ -->
-          <VListItem link>
+          <!--
+            <VListItem link>
             <template #prepend>
-              <VIcon
-                class="me-2"
-                icon="bx-help-circle"
-                size="22"
-              />
+            <VIcon
+            class="me-2"
+            icon="bx-help-circle"
+            size="22"
+            />
             </template>
 
             <VListItemTitle>FAQ</VListItemTitle>
-          </VListItem>
+            </VListItem>
+          -->
 
           <!-- Divider -->
-          <VDivider class="my-2" />
+          <!-- <VDivider class="my-2" /> -->
 
           <!-- 👉 Logout -->
           <VListItem to="/login">
             <template #prepend>
               <VIcon
                 class="me-2"
-                icon="bx-log-out"
+                icon="mdi-login-variant"
                 size="22"
               />
             </template>
 
-            <VListItemTitle>Logout</VListItemTitle>
+            <VListItemTitle>Sign in</VListItemTitle>
+          </VListItem>
+
+          <VListItem to="/login">
+            <template #prepend>
+              <VIcon
+                class="me-2"
+                icon="mdi-form-textbox-password"
+                size="22"
+              />
+            </template>
+
+            <VListItemTitle>Sign up</VListItemTitle>
           </VListItem>
         </VList>
       </VMenu>

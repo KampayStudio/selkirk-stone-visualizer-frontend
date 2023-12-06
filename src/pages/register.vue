@@ -20,25 +20,82 @@ const form = ref({
 const isPasswordVisible = ref(false)
 
 function signup() {
-  if (
-    form.value.firstname.length > 8
-    && form.value.lastname.length > 8
-    && form.value.email.length > 8
-    && form.value.password.length > 8
-    && form.value.confirm_password.length > 8
-    && form.value.contactNo.length > 8
-    && form.value.address.length > 8) {
-    router.replace(route.query.to ? String(route.query.to) : '/')
+  function isFormValid() {
+    const { firstname, lastname, email, password, confirm_password, contactNo, address, privacyPolicies } = form.value
+
+    if (firstname.length <= 1) {
+      showAlert('Error!', 'First name must be longer than 1 character')
+
+      return false
+    }
+
+    if (lastname.length <= 3) {
+      showAlert('Error!', 'Last name must be longer than 3 characters')
+
+      return false
+    }
+
+    if (email.length <= 3) {
+      showAlert('Error!', 'Email must be longer than 3 characters')
+
+      return false
+    }
+
+    if (password.length <= 5) {
+      showAlert('Error!', 'Password must be longer than 5 characters')
+
+      return false
+    }
+
+    if (confirm_password.length <= 8) {
+      showAlert('Error!', 'Confirm password must be longer than 8 characters')
+
+      return false
+    }
+
+    if (contactNo.length <= 10) {
+      showAlert('Error!', 'Contact number must be longer than 10 characters')
+
+      return false
+    }
+
+    if (address.length <= 5) {
+      showAlert('Error!', 'Address must be longer than 5 characters')
+
+      return false
+    }
+
+    if (!privacyPolicies) {
+      showAlert('Unable to Sign up!', 'You must accept the Terms and Condition')
+
+      return false
+    }
+
+    return true
   }
-  else {
-    // Show an error message using Swal (SweetAlert)
+
+  function showAlert(title, text) {
     Swal.fire({
-      title: 'Error!',
-      text: 'Complete the signup form',
+      title,
+      text,
       icon: 'error',
       confirmButtonColor: '#1A4E19',
     })
   }
+
+  if (isFormValid()) {
+    Swal.fire({
+      title: 'Successfully Signed Up!',
+      icon: 'success',
+      confirmButtonColor: '#1A4E19',
+      confirmButtonText: 'Login Now',
+    }).then(result => {
+      if (result.isConfirmed)
+        router.replace(route.query.to ? String(route.query.to) : '/login')
+    })
+  }
+
+  // router.replace(route.query.to ? String(route.query.to) : '/login')
 }
 </script>
 
@@ -77,9 +134,11 @@ function signup() {
       >
         <VCardItem class="justify-start">
           <template #prepend>
-            <div class="d-flex">
-              <VNodeRenderer :nodes="themeConfig.app.logo" />
-            </div>
+            <RouterLink to="/">
+              <div class="d-flex">
+                <VNodeRenderer :nodes="themeConfig.app.logo" />
+              </div>
+            </RouterLink>
           </template>
 
           <VCardTitle class="auth-title">

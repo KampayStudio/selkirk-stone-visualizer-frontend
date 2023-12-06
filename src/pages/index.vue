@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 // router.replace(route.query.to ? String(route.query.to) : '/login')
 const route = useRoute()
 const router = useRouter()
@@ -14,9 +13,9 @@ if (localStorage.getItem('loggedIn') === '0') {
   <!-- 1st Section -->
   <section
     id="section1"
-    style=" position: relative; background-image: url('/selkirk-stone-visualizer-frontend/image/landing-page-house.png'); background-size:cover; block-size: 50rem; inline-size: 100%"
+    style=" position: relative;  background-image: url('/selkirk-stone-visualizer-frontend/image/landing-page-house.png'); background-size:cover; block-size: 50rem; inline-size: 100%;"
   >
-    <VCard style="position: absolute; background-color: #F4F2E9; inset-block-end: 15rem; inset-inline-end: 40px;max-inline-size: 30rem;">
+    <VCard style="position: absolute; background-color: #F4F2E9; inset-block-start: 15rem; inset-inline-start: 32rem;max-inline-size: 30rem;">
       <VCardText
         class="d-flex gap-y-3"
         style="flex-direction: column; padding: 2rem;"
@@ -85,7 +84,7 @@ if (localStorage.getItem('loggedIn') === '0') {
     </section>
   -->
   <!-- 4th section -->
-  <section style="padding-block-start: 5rem; padding-inline-end: 5rem; padding-inline-start: 5rem;">
+  <section style="padding-block-start: 5rem; padding-inline: 25rem;">
     <VRow>
       <VCol style=" padding: .35rem;padding-inline-start: 10rem;">
         <img

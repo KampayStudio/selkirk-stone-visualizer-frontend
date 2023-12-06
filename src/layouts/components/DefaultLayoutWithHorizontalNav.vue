@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import NavbarThemeSwitcher from './NavbarThemeSwitcher.vue'
-import UserProfile from './UserProfile.vue'
 import navItems from '@/navigation/horizontal'
 import { useThemeConfig } from '@core/composable/useThemeConfig'
 import { themeConfig } from '@themeConfig'
@@ -29,8 +27,19 @@ const { appRouteTransition } = useThemeConfig()
         Collection
       </VBtn>
       <VSpacer />
-      <NavbarThemeSwitcher class="me-2" />
-      <UserProfile />
+      <!-- <NavbarThemeSwitcher class="me-2" /> -->
+      <RouterLink to="/login">
+        <VBtn class="mr-3">
+          Sign in
+        </VBtn>
+      </RouterLink>
+      <RouterLink to="/register">
+        <VBtn variant="outlined">
+          Create Account
+        </VBtn>
+      </RouterLink>
+
+      <!-- <UserProfile /> -->
     </template>
 
     <!-- 👉 Pages -->
