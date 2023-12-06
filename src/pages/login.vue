@@ -1,7 +1,11 @@
 <script setup lang="ts">
+import Swal from 'sweetalert2'
 import background from '@images/pages/login-background.png'
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 import { themeConfig } from '@themeConfig'
+
+const route = useRoute()
+const router = useRouter()
 
 const form = ref({
   userid: '',
@@ -9,6 +13,20 @@ const form = ref({
   remember: false,
 })
 
+function login() {
+  if (form.value.password.length > 8 && form.value.userid.length > 8) {
+    router.replace(route.query.to ? String(route.query.to) : '/')
+  }
+  else {
+    // Show an error message using Swal (SweetAlert)
+    Swal.fire({
+      title: 'Error!',
+      text: 'Complete the login form',
+      icon: 'error',
+      confirmButtonColor: '#1A4E19',
+    })
+  }
+}
 const isPasswordVisible = ref(false)
 </script>
 
@@ -52,7 +70,7 @@ const isPasswordVisible = ref(false)
         </VCardText>
 
         <VCardText>
-          <VForm @submit.prevent="() => {}">
+          <VForm @submit.prevent="login">
             <VRow>
               <!-- email -->
               <VCol cols="12">
@@ -71,6 +89,7 @@ const isPasswordVisible = ref(false)
                   label="Password"
                   :type="isPasswordVisible ? 'text' : 'password'"
                   :append-inner-icon="isPasswordVisible ? 'bx-hide' : 'bx-show'"
+                  required
                   @click:append-inner="isPasswordVisible = !isPasswordVisible"
                 />
 

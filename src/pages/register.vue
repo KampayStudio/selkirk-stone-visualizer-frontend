@@ -1,6 +1,10 @@
 <script setup lang="ts">
+import Swal from 'sweetalert2'
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 import { themeConfig } from '@themeConfig'
+
+const route = useRoute()
+const router = useRouter()
 
 const form = ref({
   firstname: '',
@@ -14,6 +18,28 @@ const form = ref({
 })
 
 const isPasswordVisible = ref(false)
+
+function signup() {
+  if (
+    form.value.firstname.length > 8
+    && form.value.lastname.length > 8
+    && form.value.email.length > 8
+    && form.value.password.length > 8
+    && form.value.confirm_password.length > 8
+    && form.value.contactNo.length > 8
+    && form.value.address.length > 8) {
+    router.replace(route.query.to ? String(route.query.to) : '/')
+  }
+  else {
+    // Show an error message using Swal (SweetAlert)
+    Swal.fire({
+      title: 'Error!',
+      text: 'Complete the signup form',
+      icon: 'error',
+      confirmButtonColor: '#1A4E19',
+    })
+  }
+}
 </script>
 
 <template>
@@ -77,7 +103,7 @@ const isPasswordVisible = ref(false)
         </VCardText>
 
         <VCardText>
-          <VForm @submit.prevent="() => {}">
+          <VForm @submit.prevent="signup">
             <VRow>
               <!-- Username -->
               <VCol cols="12">

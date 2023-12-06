@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { HorizontalNav } from '@layouts/components'
 import type { HorizontalNavItems } from '@layouts/types'
 
 // ℹ️ Using import from `@layouts` causing build to hangup
@@ -36,17 +35,22 @@ const { _layoutClasses: layoutClasses, isNavbarBlurEnabled } = useLayouts()
       :class="isNavbarBlurEnabled && 'header-blur'"
     >
       <!-- 👉 Navbar -->
-      <div class="layout-navbar">
+      <div
+        class="layout-navbar"
+        style="block-size: 6rem;"
+      >
         <div class="navbar-content-container">
           <slot name="navbar" />
         </div>
       </div>
       <!-- 👉 Navigation -->
-      <div class="layout-horizontal-nav">
+      <!--
+        <div class="layout-horizontal-nav">
         <div class="horizontal-nav-content-container">
-          <HorizontalNav :nav-items="navItems" />
+        <HorizontalNav :nav-items="navItems" />
         </div>
-      </div>
+        </div>
+      -->
     </div>
 
     <main class="layout-page-content">

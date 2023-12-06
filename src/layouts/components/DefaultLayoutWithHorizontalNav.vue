@@ -1,12 +1,11 @@
 <script lang="ts" setup>
+import NavbarThemeSwitcher from './NavbarThemeSwitcher.vue'
+import UserProfile from './UserProfile.vue'
 import navItems from '@/navigation/horizontal'
 import { useThemeConfig } from '@core/composable/useThemeConfig'
 import { themeConfig } from '@themeConfig'
 
 // Components
-import Footer from '@/layouts/components/Footer.vue'
-import NavbarThemeSwitcher from '@/layouts/components/NavbarThemeSwitcher.vue'
-import UserProfile from '@/layouts/components/UserProfile.vue'
 import { HorizontalNavLayout } from '@layouts'
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 
@@ -19,16 +18,17 @@ const { appRouteTransition } = useThemeConfig()
     <template #navbar>
       <RouterLink
         to="/"
-        class="d-flex align-center gap-x-2"
+        class="d-flex align-center pr-10"
       >
         <VNodeRenderer :nodes="themeConfig.app.logo" />
-
-        <h1 class="leading-normal">
-          {{ themeConfig.app.title }}
-        </h1>
       </RouterLink>
+      <VBtn variant="text">
+        Home
+      </VBtn>
+      <VBtn variant="text">
+        Collection
+      </VBtn>
       <VSpacer />
-
       <NavbarThemeSwitcher class="me-2" />
       <UserProfile />
     </template>
@@ -44,9 +44,11 @@ const { appRouteTransition } = useThemeConfig()
     </RouterView>
 
     <!-- 👉 Footer -->
-    <template #footer>
+    <!--
+      <template #footer>
       <Footer />
-    </template>
+      </template>
+    -->
 
     <!-- 👉 Customizer -->
     <!-- <TheCustomizer /> -->
