@@ -44,6 +44,7 @@ const { appRouteTransition } = useThemeConfig()
     </RouterView>
 
     <!-- 👉 Footer -->
+
     <!--
       <template #footer>
       <Footer />

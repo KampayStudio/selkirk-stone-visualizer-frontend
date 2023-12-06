@@ -79,9 +79,11 @@ if (localStorage.getItem('loggedIn') === '0') {
     </div>
   </section>
   <!-- 3rd Section -->
-  <section style=" background-color: #FFFDF3;block-size: 25rem;">
+  <!--
+    <section style=" background-color: #FFFDF3;block-size: 25rem;">
     3rd section
-  </section>
+    </section>
+  -->
   <!-- 4th section -->
   <section style="padding-block-start: 5rem; padding-inline-end: 5rem; padding-inline-start: 5rem;">
     <VRow>
@@ -107,7 +109,57 @@ if (localStorage.getItem('loggedIn') === '0') {
     </VRow>
   </section>
   <!-- Footer -->
-  <section style=" background-color: #5F2726;block-size: 15rem;">
-    Footer
+  <section style=" background-color: #5F2726;color:white; padding-block: 2rem; padding-inline: 15rem;">
+    <div>
+      <VRow>
+        <VCol>
+          <img src="/image/selkirk-logo-white.png">
+          <p class="text-sm">
+            www.selkirkstone.com
+          </p>
+
+          <p class="text-sm">
+            Office (587) 352-8046 <br>
+            Mobile (403) 975-3707 <br>
+
+            5308 4th Street SECalgary, <br>
+            Alberta T2H 1K5
+          </p>
+        </VCol>
+        <VCol class="d-flex flex-column justify-content-center">
+          <div>
+            <p>Stay updated from us!</p>
+            <div class="d-flex gap-x-1">
+              <input
+                type="text"
+                style=" padding:1rem; background-color: white; block-size: 2.5rem;color: #7C7C7C; inline-size: 100%;max-inline-size: 20rem;"
+                class="rounded text-sm"
+                placeholder="Enter your email"
+              >
+              <button
+                style=" padding:.69rem;background-color: #1A4E19;"
+                class="text-sm rounded"
+              >
+                SUBSCRIBE
+              </button>
+            </div>
+          </div>
+        </VCol>
+      </VRow>
+      <hr class="text-white mb-1">
+      <div>
+        <VRow>
+          <VCol class="text-xs">
+            © Selkirk Stone 2023
+          </VCol>
+          <VCol
+            class="d-flex text-xs"
+            style="justify-content: flex-end;"
+          >
+            Website Design and Development © Kampay Studio 2023
+          </VCol>
+        </VRow>
+      </div>
+    </div>
   </section>
 </template>
