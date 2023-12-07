@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" href="/selkirk-stone-visualizer-frontend/favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Selkirk Stone Visualizer</title>
+  <link rel="stylesheet" type="text/css" href="/selkirk-stone-visualizer-frontend/loader.css" />
+  <script type="module" crossorigin src="/selkirk-stone-visualizer-frontend/assets/index-42734473.js"></script>
+  <link rel="stylesheet" href="/selkirk-stone-visualizer-frontend/assets/index-9619b6e8.css">
+</head>
+
+<body>
+  <div id="app">
+    <div id="loading-bg">
+      <div class=" loading">
+        <div class="effect-1 effects"></div>
+        <div class="effect-2 effects"></div>
+        <div class="effect-3 effects"></div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    sessionStorage.redirect = location.pathname
+    window.location.replace('/')
+
+    if (sessionStorage.redirect) {
+      const path = sessionStorage.redirect
+
+      delete sessionStorage.redirect
+      window.history.replaceState(null, null, path)
+    }
+
+    const loaderColor = localStorage.getItem('sneat-initial-loader-bg') || '#FFFFFF'
+    const primaryColor = localStorage.getItem('sneat-initial-loader-color') || '#696CFF'
+
+    if (loaderColor)
+      document.documentElement.style.setProperty('--initial-loader-bg', loaderColor)
+
+    if (primaryColor)
+      document.documentElement.style.setProperty('--initial-loader-color', primaryColor)
+  </script>
+</body>
+
+</html>
