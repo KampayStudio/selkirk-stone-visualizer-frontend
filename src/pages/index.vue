@@ -11,10 +11,7 @@ if (localStorage.getItem('loggedIn') === '0') {
 
 <template>
   <!-- 1st Section -->
-  <section
-    id="section1"
-    style=" position: relative;  background-image: url('/selkirk-stone-visualizer-frontend/image/landing-page-house.png'); background-size:cover; block-size: 50rem; inline-size: 100%;"
-  >
+  <section id="section1">
     <VCard style="position: absolute; background-color: #F4F2E9; inset-block-start: 15rem; inset-inline-start: 32rem;max-inline-size: 30rem;">
       <VCardText
         class="d-flex gap-y-3"
@@ -162,3 +159,13 @@ if (localStorage.getItem('loggedIn') === '0') {
     </div>
   </section>
 </template>
+
+<style lang="scss">
+#section1{
+  position: relative;
+  background-image: url('/image/landing-page-house.png');
+  background-size:cover;
+  block-size: 50rem;
+  inline-size: 100%;
+}
+</style>
