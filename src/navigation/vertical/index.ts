@@ -2,7 +2,7 @@ import type { VerticalNavItems } from '@/@layouts/types'
 
 export default [
   {
-    title: 'Home',
+    title: 'Dashboard',
     to: { name: 'index' },
     icon: { icon: 'bx-home-alt' },
   },

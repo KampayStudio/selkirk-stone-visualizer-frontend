@@ -20,12 +20,17 @@ const { appRouteTransition } = useThemeConfig()
       >
         <VNodeRenderer :nodes="themeConfig.app.logo" />
       </RouterLink>
-      <VBtn variant="text">
-        Home
-      </VBtn>
-      <VBtn variant="text">
-        Collection
-      </VBtn>
+      <RouterLink to="/">
+        <VBtn variant="text">
+          Home
+        </VBtn>
+      </RouterLink>
+      <RouterLink to="/collection">
+        <VBtn variant="text">
+          Collection
+        </VBtn>
+      </RouterLink>
+
       <VSpacer />
       <!-- <NavbarThemeSwitcher class="me-2" /> -->
       <RouterLink to="/login">
