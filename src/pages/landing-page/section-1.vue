@@ -62,7 +62,7 @@
 
 #section1 {
   background-color: white;
-  background-image: url('/image/landing-page-house.png');
+  background-image: url('/image/landing-page-house.jpeg');
   background-position: center;
   background-size: cover;
   block-size: 50rem;

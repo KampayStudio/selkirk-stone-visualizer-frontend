@@ -14,7 +14,7 @@
         </VCardTitle>
         <VCardItem
           class="text-sm mx-auto bg-gray-600 text-left"
-          style=" background-color: #fff; inline-size: 90%; overflow-y: scroll;"
+          style=" background-color: #fff; inline-size: 90%;"
         >
           <h2>
             Welcome to Selkirk Stone Visualizer!

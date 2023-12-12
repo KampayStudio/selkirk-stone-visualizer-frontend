@@ -4,7 +4,6 @@ import navItems from '@/navigation/vertical'
 import { useThemeConfig } from '@core/composable/useThemeConfig'
 
 // Components
-import NavbarThemeSwitcher from '@/layouts/components/NavbarThemeSwitcher.vue'
 import UserProfile from '@/layouts/components/UserProfile.vue'
 
 // @layouts plugin
@@ -24,6 +23,9 @@ const actionArrowInitialRotation = isVerticalNavCollapsed.value ? '180deg' : '0d
 
 const { global } = useTheme()
 const globalThemeBackground = computed(() => global.current.value.colors.background)
+
+const authToken = ref(localStorage.getItem('authToken'))
+const isAuthenticated = computed(() => !authToken.value)
 </script>
 
 <template>
@@ -39,11 +41,16 @@ const globalThemeBackground = computed(() => global.current.value.colors.backgro
           <VIcon icon="bx-menu" />
         </IconBtn>
 
-        <NavbarThemeSwitcher />
+        <!-- <NavbarThemeSwitcher /> -->
 
         <VSpacer />
 
-        <UserProfile />
+        <UserProfile v-if="!isAuthenticated" />
+        <RouterLink to="/login">
+          <VBtn variant="text">
+            Login
+          </VBtn>
+        </RouterLink>
       </div>
     </template>
 

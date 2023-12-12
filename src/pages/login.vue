@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import Swal from 'sweetalert2'
+import { VForm } from 'vuetify/components/VForm'
+import axios from '@axios'
 import background from '@images/pages/login-background.png'
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 import { themeConfig } from '@themeConfig'
+import { emailValidator, passwordValidator, requiredValidator } from '@validators'
 
 const route = useRoute()
 const router = useRouter()
@@ -13,22 +15,29 @@ const form = ref({
   remember: false,
 })
 
-function login() {
-  if (form.value.password.length > 8 && form.value.userid.length > 8) {
+const login = async () => {
+  try {
+    const response = await axios.post('/login/', {
+      email: form.value.userid,
+      password: form.value.password,
+    }, {
+      withCredentials: true, // Include this line
+    })
+
+    localStorage.setItem('authToken', response.data.jwt)
+    localStorage.setItem('first_name', response.data.first_name)
+    localStorage.setItem('last_name', response.data.last_name)
+    localStorage.setItem('address', response.data.address)
+    localStorage.setItem('contact_number', response.data.contact_number)
+    localStorage.setItem('email', response.data.email)
+
     router.replace(route.query.to ? String(route.query.to) : '/')
   }
-  else {
-    localStorage.setItem('loggedIn', '1')
-
-    // Show an error message using Swal (SweetAlert)
-    Swal.fire({
-      title: 'Error!',
-      text: 'Complete the login form',
-      icon: 'error',
-      confirmButtonColor: '#1A4E19',
-    })
+  catch (error) {
+    console.error('Login error:', error)
   }
 }
+
 const isPasswordVisible = ref(false)
 </script>
 
@@ -83,6 +92,7 @@ const isPasswordVisible = ref(false)
                   autofocus
                   label="Email"
                   type="text"
+                  :rules="[requiredValidator, emailValidator]"
                 />
               </VCol>
 
@@ -94,6 +104,7 @@ const isPasswordVisible = ref(false)
                   :type="isPasswordVisible ? 'text' : 'password'"
                   :append-inner-icon="isPasswordVisible ? 'bx-hide' : 'bx-show'"
                   required
+                  :rules="[requiredValidator, passwordValidator]"
                   @click:append-inner="isPasswordVisible = !isPasswordVisible"
                 />
 

@@ -19,7 +19,7 @@
           md="4"
         >
           <img
-            src="/image/section2card1.png"
+            src="/image/section2card1.jpeg"
             style=" max-block-size: 20rem;min-block-size: 20rem;"
           >
           <p>Interior</p>
@@ -29,7 +29,7 @@
           md="4"
         >
           <img
-            src="/image/section2card2.png"
+            src="/image/section2card2.jpeg"
             style=" max-block-size: 20rem;min-block-size: 20rem;"
           >
           <p>Exterior</p>
@@ -39,7 +39,7 @@
           md="4"
         >
           <img
-            src="/image/section2card3.png"
+            src="/image/section2card3.jpeg"
             style=" max-block-size: 20rem;min-block-size: 20rem;"
           >
           <p>Fireplace</p>

@@ -2,13 +2,13 @@ import type { VerticalNavItems } from '@/@layouts/types'
 
 export default [
   {
-    title: 'Dashboard',
+    title: 'Home',
     to: { name: 'index' },
     icon: { icon: 'bx-home-alt' },
   },
   {
-    title: 'Second page',
-    to: { name: 'second-page' },
+    title: 'Collection',
+    to: { name: 'collection' },
     icon: { icon: 'bx-file-blank' },
   },
 ] as VerticalNavItems

@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import UserProfile from './UserProfile.vue'
 import navItems from '@/navigation/horizontal'
 import { useThemeConfig } from '@core/composable/useThemeConfig'
 import { themeConfig } from '@themeConfig'
@@ -8,6 +9,10 @@ import { HorizontalNavLayout } from '@layouts'
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 
 const { appRouteTransition } = useThemeConfig()
+
+const authToken = ref(localStorage.getItem('authToken'))
+
+const isAuthenticated = computed(() => !authToken.value)
 </script>
 
 <template>
@@ -33,18 +38,20 @@ const { appRouteTransition } = useThemeConfig()
 
       <VSpacer />
       <!-- <NavbarThemeSwitcher class="me-2" /> -->
-      <RouterLink to="/login">
-        <VBtn class="mr-3">
-          Sign in
-        </VBtn>
-      </RouterLink>
-      <RouterLink to="/register">
-        <VBtn variant="outlined">
-          Create Account
-        </VBtn>
-      </RouterLink>
+      <div v-if="isAuthenticated">
+        <RouterLink to="/login">
+          <VBtn class="mr-3">
+            Sign in
+          </VBtn>
+        </RouterLink>
+        <RouterLink to="/register">
+          <VBtn variant="outlined">
+            Create Account
+          </VBtn>
+        </RouterLink>
+      </div>
 
-      <!-- <UserProfile /> -->
+      <UserProfile v-if="!isAuthenticated" />
     </template>
 
     <!-- 👉 Pages -->
