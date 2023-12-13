@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import Swal from 'sweetalert2'
 import { VForm } from 'vuetify/components/VForm'
 import axios from '@axios'
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
@@ -20,17 +21,15 @@ const form = ref({
   privacyPolicies: false,
 })
 
-// const form = ref({
-//   firstname: '',
-//   lastname: '',
-//   email: '',
-//   password: '',
-//   confirm_password: '',
-//   contact_number: '',
-//   address: '',
-// })
-
 const isPasswordVisible = ref(false)
+function showAlert(title, text) {
+  Swal.fire({
+    title,
+    text,
+    icon: 'error',
+    confirmButtonColor: '#1A4E19',
+  })
+}
 
 async function signup() {
   try {
@@ -52,8 +51,17 @@ async function signup() {
         },
       })
 
-    console.log(response.data)
-    router.replace(route.query.to ? String(route.query.to) : '/login')
+    Swal.fire({
+      title: 'Successfully Signed Up!',
+      icon: 'success',
+      confirmButtonColor: '#1A4E19',
+      confirmButtonText: 'Login Now',
+    }).then(result => {
+      if (result.isConfirmed)
+        router.replace(route.query.to ? String(route.query.to) : '/login')
+    })
+
+    // router.replace(route.query.to ? String(route.query.to) : '/login')
   }
   catch (error) {
     console.error('Signup error:', error)
