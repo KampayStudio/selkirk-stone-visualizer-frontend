@@ -11,7 +11,7 @@
         Browse The Range
       </h3>
       <h4 style="color: #7E7E7E;">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        For quality and consistency, Selkirk Stone is there for you.
       </h4>
       <VRow class="d-flex mx-auto">
         <VCol
@@ -68,13 +68,12 @@
 }
 
 .image-mask {
+  display: flex; /* Added to ensure proper alignment */
   overflow: hidden;
+  align-items: center; /* Center images vertically */
+  justify-content: center; /* Center images horizontally */
+  border-radius:10px;
   max-block-size: 20rem;
   max-inline-size: 15rem;
-}
-
-.image-mask img {
-  block-size: auto; /* This ensures the image scales proportionally */
-  inline-size: 100%;
 }
 </style>

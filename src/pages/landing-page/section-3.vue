@@ -23,7 +23,7 @@ import { Carousel, Navigation, Pagination, Slide } from 'vue3-carousel'
             class="d-flex gap-y-6 flex-column"
           >
             <h1 class="text-5xl text-primary">
-              Design <br> Inspirations
+              Our Previous Projects
             </h1>
             <p>
               Our designer already made a lot of beautiful prototipe of rooms that inspire you.

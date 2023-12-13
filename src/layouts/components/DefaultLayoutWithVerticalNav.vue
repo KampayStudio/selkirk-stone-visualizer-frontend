@@ -46,7 +46,10 @@ const isAuthenticated = computed(() => !authToken.value)
         <VSpacer />
 
         <UserProfile v-if="!isAuthenticated" />
-        <RouterLink to="/login">
+        <RouterLink
+          v-if="isAuthenticated"
+          to="/login"
+        >
           <VBtn variant="text">
             Login
           </VBtn>
