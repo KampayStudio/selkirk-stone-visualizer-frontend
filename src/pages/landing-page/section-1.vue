@@ -14,16 +14,18 @@
         <h3 class="text-secondary">
           Introducing Our Visualizer App!
         </h3>
-        <h5>
+        <p class="text-p">
           Begin by selecting from our sample scenes or uploading your own project image.
           Our advanced A.I. technology will then process it, enabling you to visualize our
           range of high-quality manufactured stone and brick veneers tailored to your specifications.
-        </h5>
+        </p>
         <div
           id="section-1-buttons"
           class="d-flex gap-x-5"
         >
-          <VBtn>Try Sample Scenes</VBtn>
+          <VBtn id="section-1-first-button">
+            Try Sample Scenes
+          </VBtn>
           <VBtn variant="outlined">
             Upload a photo
           </VBtn>
@@ -79,6 +81,7 @@
   @media (max-width: 1440px){
     padding-inline: 2rem;
   }
+
 }
 
 #section-1-card{

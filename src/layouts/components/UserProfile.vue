@@ -10,7 +10,7 @@ const logout = async () => {
   try {
     // Call your API endpoint for logout
     // Replace 'your-logout-endpoint' with your actual logout API endpoint
-    await axios.post('/logout/', {}, { withCredentials: true })
+    await axios.post('/users/logout/', {}, { withCredentials: true })
 
     // Clear client-side authentication state
     localStorage.removeItem('authToken')

@@ -33,7 +33,7 @@ const isPasswordVisible = ref(false)
 
 async function signup() {
   try {
-    const response = await axios.post('/register/',
+    const response = await axios.post('/users/register/',
       {
         first_name: form.value.firstname,
         last_name: form.value.lastname,
@@ -41,6 +41,14 @@ async function signup() {
         password: form.value.password,
         contact_number: form.value.contact_number,
         address: form.value.address,
+        is_admin: false,
+        permissions: {
+          is_administrator: false,
+          is_content_managing: false,
+          is_support: false,
+          is_analytics: false,
+          is_product_managing: false,
+        },
       })
 
     console.log(response.data)

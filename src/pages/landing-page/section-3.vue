@@ -22,7 +22,7 @@ import { Carousel, Navigation, Pagination, Slide } from 'vue3-carousel'
             style="margin-inline-start: auto;"
             class="d-flex gap-y-6 flex-column"
           >
-            <h1 class="text-5xl">
+            <h1 class="text-5xl text-primary">
               Design <br> Inspirations
             </h1>
             <p>

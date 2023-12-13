@@ -1,6 +1,5 @@
 import type { VuetifyOptions } from 'vuetify'
 import { resolveVuetifyTheme } from '@core/utils/vuetify'
-import { themeConfig } from '@themeConfig'
 
 export const staticPrimaryColor = '#696CFF'
 
@@ -58,9 +57,9 @@ const theme: VuetifyOptions['theme'] = {
     dark: {
       dark: true,
       colors: {
-        'primary': localStorage.getItem(`${themeConfig.app.title}-darkThemePrimaryColor`) || staticPrimaryColor,
+        'primary': '#c9d3c9',
         'on-primary': '#fff',
-        'secondary': '#8592A3',
+        'secondary': '#bda1a1',
         'on-secondary': '#fff',
         'success': '#71DD37',
         'on-success': '#fff',
@@ -69,11 +68,11 @@ const theme: VuetifyOptions['theme'] = {
         'warning': '#FFAB00',
         'on-warning': '#fff',
         'error': '#FF3E1D',
-        'background': '#232333',
-        'on-background': '#DBDBEB',
-        'surface': '#2B2C40',
+        'background': '#374533',
+        'on-background': '#382B28',
+        'surface': '#382B28',
         'on-surface': '#DBDBEB',
-        'grey-50': '#2A2E42',
+        'grey-50': '#ced8ce',
         'grey-100': '#444463',
         'grey-200': '#4A5072',
         'grey-300': '#5E6692',

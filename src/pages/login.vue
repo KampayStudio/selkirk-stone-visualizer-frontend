@@ -4,7 +4,7 @@ import axios from '@axios'
 import background from '@images/pages/login-background.png'
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 import { themeConfig } from '@themeConfig'
-import { emailValidator, passwordValidator, requiredValidator } from '@validators'
+import { emailValidator, requiredValidator } from '@validators'
 
 const route = useRoute()
 const router = useRouter()
@@ -17,7 +17,7 @@ const form = ref({
 
 const login = async () => {
   try {
-    const response = await axios.post('/login/', {
+    const response = await axios.post('/users/login/', {
       email: form.value.userid,
       password: form.value.password,
     }, {
@@ -104,10 +104,10 @@ const isPasswordVisible = ref(false)
                   :type="isPasswordVisible ? 'text' : 'password'"
                   :append-inner-icon="isPasswordVisible ? 'bx-hide' : 'bx-show'"
                   required
-                  :rules="[requiredValidator, passwordValidator]"
+                  :rules="[requiredValidator]"
                   @click:append-inner="isPasswordVisible = !isPasswordVisible"
                 />
-
+                <!-- :rules="[requiredValidator, passwordValidator]" -->
                 <div class="d-flex align-center flex-wrap justify-space-between mt-2 mb-4">
                   <VCheckbox
                     v-model="form.remember"

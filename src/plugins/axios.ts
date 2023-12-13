@@ -3,7 +3,8 @@ import axios from 'axios'
 const axiosIns = axios.create({
   // You can add your headers here
   // ================================
-  baseURL: 'https://ff57-136-158-64-212.ngrok-free.app/api',
+  // baseURL: 'https://selkirkistonesapi.azurewebsites.net/api',
+  baseURL: 'https://selkirkistonesapi.azurewebsites.net/api',
 
   // timeout: 1000,
   // headers: {'X-Custom-Header': 'foobar'}
@@ -20,7 +21,7 @@ axiosIns.interceptors.request.use(config => {
     config.headers = config.headers || {}
 
     // Set authorization header directly with the token string
-    config.headers.Authorization = `Bearer ${token}`
+    config.headers.Authorization = `${token}`
   }
 
   // Return modified config

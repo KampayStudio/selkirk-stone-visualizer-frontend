@@ -21,15 +21,15 @@
         class="d-flex"
       >
         <div class="my-auto d-flex gap-y-3 flex-column">
-          <h1 class="text-4xl mb-2">
+          <h1 class="text-4xl mb-2 text-primary">
             FAQs and Tips
           </h1>
-          <p>
+          <p class="text-primary">
             Begin by selecting from our sample scenes or uploading your own project image. Our advanced A.I.
             technology will then process it, enabling you to visualize our range of high-quality manufactured
             stone and brick veneers tailored to your specifications.
           </p>
-          <p>
+          <p class="text-primary">
             Begin by selecting from our sample scenes or uploading your own project image. Our advanced A.I. technology will then process it.
           </p>
         </div>

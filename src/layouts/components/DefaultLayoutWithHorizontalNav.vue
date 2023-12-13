@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import NavbarThemeSwitcher from './NavbarThemeSwitcher.vue'
 import UserProfile from './UserProfile.vue'
 import navItems from '@/navigation/horizontal'
 import { useThemeConfig } from '@core/composable/useThemeConfig'
@@ -30,7 +31,10 @@ const isAuthenticated = computed(() => !authToken.value)
           Home
         </VBtn>
       </RouterLink>
-      <RouterLink to="/collection">
+      <RouterLink
+        v-if="!isAuthenticated"
+        to="/collection"
+      >
         <VBtn variant="text">
           Collection
         </VBtn>
@@ -50,6 +54,7 @@ const isAuthenticated = computed(() => !authToken.value)
           </VBtn>
         </RouterLink>
       </div>
+      <NavbarThemeSwitcher />
 
       <UserProfile v-if="!isAuthenticated" />
     </template>
