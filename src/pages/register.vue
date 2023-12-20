@@ -9,6 +9,7 @@ import { confirmedValidator, emailValidator, lengthValidator, passwordValidator,
 const route = useRoute()
 const router = useRouter()
 const isDialogVisible = ref(false)
+const isLoading = ref(false)
 
 const form = ref({
   firstname: '',
@@ -22,16 +23,8 @@ const form = ref({
 })
 
 const isPasswordVisible = ref(false)
-function showAlert(title, text) {
-  Swal.fire({
-    title,
-    text,
-    icon: 'error',
-    confirmButtonColor: '#1A4E19',
-  })
-}
-
 async function signup() {
+  isLoading.value = true
   try {
     const response = await axios.post('/users/register/',
       {
@@ -53,18 +46,25 @@ async function signup() {
 
     Swal.fire({
       title: 'Successfully Signed Up!',
+      text: 'We\'ve sent you an email. Please check and verify your account.',
       icon: 'success',
       confirmButtonColor: '#1A4E19',
-      confirmButtonText: 'Login Now',
+      confirmButtonText: 'Go to Login Page',
     }).then(result => {
       if (result.isConfirmed)
         router.replace(route.query.to ? String(route.query.to) : '/login')
     })
+    isLoading.value = false
 
     // router.replace(route.query.to ? String(route.query.to) : '/login')
   }
   catch (error) {
-    console.error('Signup error:', error)
+    Swal.fire({
+      title: `${Object.keys(error.response.data)[0].replace(/[^A-Za-z0-9]+/g, ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}: ${Object.values(error.response.data)[0]}`,
+      icon: 'error',
+    })
+    console.error('Signup error:', Object.values(error.response.data)[0])
+    isLoading.value = false
   }
 }
 </script>
@@ -313,7 +313,14 @@ async function signup() {
                     class="ms-auto"
                   >
                     <VBtn type="submit">
-                      Sign up
+                      <div v-show="!isLoading">
+                        Sign up
+                      </div>
+                      <VProgressCircular
+                        v-show="isLoading"
+                        indeterminate
+                        color="white"
+                      />
                     </VBtn>
                   </VCol>
                 </VRow>

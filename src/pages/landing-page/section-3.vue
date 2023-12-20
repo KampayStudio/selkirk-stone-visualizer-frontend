@@ -6,10 +6,10 @@ import { Carousel, Navigation, Pagination, Slide } from 'vue3-carousel'
 <template>
   <section
     id="section-3"
-    class="max-section-width"
+    class="index-max-section-width"
   >
     <div
-      class="max-content-width d-flex"
+      class="index-max-content-width d-flex"
       style="block-size: 100%"
     >
       <VRow class="my-auto">
@@ -72,12 +72,12 @@ import { Carousel, Navigation, Pagination, Slide } from 'vue3-carousel'
 </template>
 
 <style lang="scss">
-.max-section-width {
+.index-max-section-width {
   margin-inline: auto;
   max-inline-size: 135rem;
 }
 
-.max-content-width {
+.index-max-content-width {
   box-sizing: border-box; // Ensures padding is included in the width calculation
   inline-size: 100%; // Container takes full width of the viewport
   max-inline-size: 100vw; // Max width is 100% of the viewport width

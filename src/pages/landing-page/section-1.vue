@@ -1,7 +1,7 @@
 <template>
   <section
     id="section1"
-    class="max-section-width max-content-width"
+    class="index-max-section-width index-max-content-width"
   >
     <VCard id="section-1-card">
       <VCardText
@@ -23,10 +23,16 @@
           id="section-1-buttons"
           class="d-flex gap-x-5"
         >
-          <VBtn id="section-1-first-button">
+          <VBtn
+            id="section-1-first-button"
+            :to="{ name: 'sample-scenes' }"
+          >
             Try Sample Scenes
           </VBtn>
-          <VBtn variant="outlined">
+          <VBtn
+            variant="outlined"
+            :to="{ name: 'visualizer-upload' }"
+          >
             Upload a photo
           </VBtn>
         </div>
@@ -37,12 +43,12 @@
 </template>
 
 <style lang="scss">
-.max-section-width {
+.index-max-section-width {
   margin-inline: auto;
   max-inline-size: 135rem;
 }
 
-.max-content-width {
+.index-max-content-width {
   box-sizing: border-box; // Ensures padding is included in the width calculation
   inline-size: 100%; // Container takes full width of the viewport
   max-inline-size: 100vw; // Max width is 100% of the viewport width

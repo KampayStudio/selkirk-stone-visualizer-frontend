@@ -9,6 +9,8 @@ import { emailValidator, requiredValidator } from '@validators'
 const route = useRoute()
 const router = useRouter()
 
+const isLoading = ref(false)
+
 const form = ref({
   userid: '',
   password: '',
@@ -16,6 +18,7 @@ const form = ref({
 })
 
 const login = async () => {
+  isLoading.value = true
   try {
     const response = await axios.post('/users/login/', {
       email: form.value.userid,
@@ -30,11 +33,12 @@ const login = async () => {
     localStorage.setItem('address', response.data.address)
     localStorage.setItem('contact_number', response.data.contact_number)
     localStorage.setItem('email', response.data.email)
-
+    isLoading.value = false
     router.replace(route.query.to ? String(route.query.to) : '/')
   }
   catch (error) {
     console.error('Login error:', error)
+    isLoading.value = false
   }
 }
 
@@ -126,13 +130,21 @@ const isPasswordVisible = ref(false)
                     md="4"
                   >
                     <VBtn
-                      block
                       type="submit"
+                      block
                     >
-                      Login
+                      <div v-show="!isLoading">
+                        Login
+                      </div>
+                      <VProgressCircular
+                        v-show="isLoading"
+                        indeterminate
+                        color="white"
+                      />
                     </VBtn>
                   </VCol>
                   <VCol
+
                     cols="12"
                     md="4"
                   >
