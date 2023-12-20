@@ -1,1 +1,0 @@
-import{at as r,e as n,m as u,A as f}from"./index-3df34c37.js";const c=r({eager:Boolean},"lazy");function m(a,o){const e=n(!1),t=u(()=>e.value||a.eager||o.value);f(o,()=>e.value=!0);function s(){a.eager||(e.value=!1)}return{isBooted:e,hasContent:t,onAfterLeave:s}}export{c as m,m as u};

@@ -18,11 +18,13 @@
           cols="12"
           md="4"
         >
-          <div class="image-mask">
-            <img
-              src="/image/section2card1.jpeg"
-              style=" max-block-size: 20rem;min-block-size: 20rem;"
-            >
+          <div class="index-image-mask">
+            <RouterLink :to="{ name: 'sample-scenes' }">
+              <img
+                src="/image/section2card1.jpeg"
+                style=" max-block-size: 20rem;min-block-size: 20rem;"
+              >
+            </RouterLink>
           </div>
           <p>Interior</p>
         </VCol>
@@ -30,23 +32,28 @@
           cols="12"
           md="4"
         >
-          <div class="image-mask">
-            <img
-              src="/image/section2card2.jpeg"
-              style=" max-block-size: 20rem;min-block-size: 20rem;"
-            >
+          <div class="index-image-mask">
+            <RouterLink :to="{ name: 'sample-scenes' }">
+              <img
+                src="/image/section2card2.jpeg"
+                style=" max-block-size: 20rem;min-block-size: 20rem;"
+              >
+            </RouterLink>
           </div>
+
           <p>Exterior</p>
         </VCol>
         <VCol
           cols="12"
           md="4"
         >
-          <div class="image-mask">
-            <img
-              src="/image/section2card3.jpeg"
-              style=" max-block-size: 20rem;min-block-size: 20rem;"
-            >
+          <div class="index-image-mask">
+            <RouterLink :to="{ name: 'sample-scenes' }">
+              <img
+                src="/image/section2card3.jpeg"
+                style=" max-block-size: 20rem;min-block-size: 20rem;"
+              >
+            </RouterLink>
           </div>
           <p>Fireplace</p>
         </VCol>
@@ -67,7 +74,7 @@
   }
 }
 
-.image-mask {
+.index-image-mask {
   display: flex; /* Added to ensure proper alignment */
   overflow: hidden;
   align-items: center; /* Center images vertically */
