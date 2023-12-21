@@ -81,7 +81,7 @@ onMounted(() => {
   <VCardText>
     <VRow>
       <VCol
-        cols="7"
+        cols="6"
         class="d-flex justify-center"
       >
         <div class="image-container">
@@ -107,7 +107,7 @@ onMounted(() => {
       </VCol>
       <VCol
         class="d-flex align-center"
-        cols="5"
+        cols="6"
       >
         <div>
           <VRow>

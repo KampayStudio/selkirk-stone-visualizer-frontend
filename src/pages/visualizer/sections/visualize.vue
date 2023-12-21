@@ -1,34 +1,161 @@
 <script setup lang="ts">
-import { Carousel, Navigation, Slide } from 'vue3-carousel'
-
-const props = defineProps(['image', 'selectedWall'])
-const canvasRefs = ref([])
-const labelRefs = ref([])
+const props = defineProps(['image', 'selected-wall'])
+const emit = defineEmits(['proceed'])
 
 const stones = ref([
-  { image: '/temp/stone.jpeg' },
-  { image: '/temp/stone.jpeg' },
-  { image: '/temp/stone.jpeg' },
-  { image: '/temp/stone.jpeg' },
+  {
+    name: 'Aged Brick',
+    image: '/temp/stones/aged_brick/Ashen.jpg',
+    status: true,
+    isInStock: true,
+    colors: [
+      {
+        name: 'Ashen',
+        image: '/temp/stones/aged_brick/Ashen.jpg',
+        show: true,
+      },
+    ],
+  },
+  {
+    name: 'Chiseled Limestone',
+    image: '/temp/stones/chiseled_limestone/Alabaster.jpg',
+    status: true,
+    isInStock: true,
+    colors: [
+      {
+        name: 'Alabaster',
+        image: '/temp/stones/chiseled_limestone/Alabaster.jpg',
+        show: true,
+      },
+    ],
+  },
+  {
+    name: 'Contemporary Brick',
+    image: '/temp/stones/contemporary_brick/Ashen.jpg',
+    status: true,
+    isInStock: true,
+    colors: [
+      {
+        name: 'Alabaster',
+        image: '/temp/stones/contemporary_brick/Ashen.jpg',
+        show: true,
+      },
+    ],
+  },
+  {
+    name: 'Country Cliffstone',
+    image: '/temp/stones/country_cliffstone/CC_Alabaster.jpg',
+    status: true,
+    isInStock: true,
+    colors: [
+      {
+        name: 'Alabaster',
+        image: '/temp/stones/contemporary_brick/Ashen.jpg',
+        show: true,
+      },
+    ],
+  },
+  {
+    name: 'Field Stone',
+    image: '/temp/stones/field_stone/F_Alpine.jpg',
+    status: true,
+    isInStock: true,
+    colors: [
+      {
+        name: 'Alpine',
+        image: '/temp/stones/field_stone/F_Alpine.jpg',
+        show: true,
+      },
+    ],
+  },
+  {
+    name: 'Glacier Stone',
+    image: '/temp/stones/glacier_stone/GlacierStone_Aspen.png',
+    status: true,
+    isInStock: true,
+    colors: [
+      {
+        name: 'Aspen',
+        image: '/temp/stones/glacier_stone/GlacierStone_Aspen.png',
+        show: true,
+      },
+    ],
+  },
+  {
+    name: 'Mountain Ledge',
+    image: '/temp/stones/mountain_ledge/ML_Alpine.jpg',
+    status: true,
+    isInStock: true,
+    colors: [
+      {
+        name: 'Aspen',
+        image: '/temp/stones/mountain_ledge/ML_Alpine.jpg',
+        show: true,
+      },
+    ],
+  },
+  {
+    name: 'Northen Ledgestone',
+    image: '/temp/stones/northern_ledgestone/NL_Alberta.jpg',
+    status: true,
+    isInStock: true,
+    colors: [
+      {
+        name: 'Alberta',
+        image: '/temp/stones/northern_ledgestone/NL_Alberta.jpg',
+        show: true,
+      },
+    ],
+  },
+  {
+    name: 'Rustic Ledgestone',
+    image: '/temp/stones/rustic_ledgestone/RL_Alpine.jpg',
+    status: true,
+    isInStock: true,
+    colors: [
+      {
+        name: 'Alpine',
+        image: '/temp/stones/rustic_ledgestone/RL_Alpine.jpg',
+        show: true,
+      },
+    ],
+  },
+  {
+    name: 'Shadow Ledgestone',
+    image: '/temp/stones/shadow_ledgestone/SL_Alpine.jpg',
+    status: true,
+    isInStock: true,
+    colors: [
+      {
+        name: 'Alpine',
+        image: '/temp/stones/shadow_ledgestone/SL_Alpine.jpg',
+        show: true,
+      },
+    ],
+  },
+  {
+    name: 'Strip Ledge',
+    image: '/temp/stones/strip_ledge/SL_Alabaster.jpg',
+    status: true,
+    isInStock: true,
+    colors: [
+      {
+        name: 'Alabaster',
+        image: '/temp/stones/strip_ledge/SL_Alabaster.jpg',
+        show: true,
+      },
+    ],
+  },
+
 ])
 
-const settings = ref({
-  itemsToShow: itemsToShow || 1,
-  snapAlign: snapAlign || 'center',
-})
-
-const breakpoints = {
-  700: {
-    itemsToShow: 3.5,
-    snapAlign: 'center',
-  },
-  1024: {
-    itemsToShow: 5,
-    snapAlign: 'start',
-  },
-}
-
+const canvasRefs = ref([])
+const labelRefs = ref([])
 const currentStone = ref()
+const currentSection = ref('categories')
+const selectedColor = ref()
+const imageX = ref()
+const imageY = ref()
 
 const scaleShapeCoordinates = (shape, scaleX, scaleY) => {
   return shape.map(point => ({
@@ -37,10 +164,24 @@ const scaleShapeCoordinates = (shape, scaleX, scaleY) => {
   }))
 }
 
+const loadImagePattern = src => {
+  return new Promise((resolve, reject) => {
+    const img = new Image()
+
+    img.src = src
+    img.onload = () => resolve(img)
+    img.onerror = () => reject(new Error('Failed to load image'))
+  })
+}
+
 const drawShapeOnCanvas = (canvas, shape, label) => {
   const context = canvas.getContext('2d')
 
-  let minX = Infinity; let minY = Infinity; let maxX = -Infinity; let maxY = -Infinity
+  let minX = Infinity
+  let minY = Infinity
+  let maxX = -Infinity
+  let maxY = -Infinity
+
   shape.forEach(point => {
     minX = Math.min(minX, point.x)
     minY = Math.min(minY, point.y)
@@ -75,25 +216,94 @@ const drawShapeOnCanvas = (canvas, shape, label) => {
   context.fill()
 }
 
-const drawShapes = () => {
-  const imgElement = document.querySelector('.image-container img')
-  if (!imgElement)
-    return
+const drawShapeOnCanvasWithImage = (canvas, shape, label, img) => {
+  const context = canvas.getContext('2d')
 
-  const scaleX = imgElement.clientWidth / imgElement.naturalWidth
-  const scaleY = imgElement.clientHeight / imgElement.naturalHeight
+  let minX = Infinity
+  let minY = Infinity
+  let maxX = -Infinity
+  let maxY = -Infinity
 
-  props.image.wall_shape.shapes.forEach((shape, index) => {
-    const scaledShape = scaleShapeCoordinates(shape, scaleX, scaleY)
-    if (canvasRefs.value[index])
-      drawShapeOnCanvas(canvasRefs.value[index], scaledShape, labelRefs.value[index])
+  shape.forEach(point => {
+    minX = Math.min(minX, point.x)
+    minY = Math.min(minY, point.y)
+    maxX = Math.max(maxX, point.x)
+    maxY = Math.max(maxY, point.y)
   })
+
+  const width = maxX - minX
+  const height = maxY - minY
+
+  canvas.width = width
+  canvas.height = height
+
+  canvas.style.left = `${minX}px`
+  canvas.style.top = `${minY}px`
+  label.style.left = `${minX}px`
+  label.style.top = `${minY}px`
+
+  context.clearRect(0, 0, width, height)
+
+  if (img) {
+    // Create an offscreen canvas to draw the scaled image
+    const offscreenCanvas = document.createElement('canvas')
+    const scale = 0.03 // Adjust this scale to control the size of the tiles
+
+    offscreenCanvas.width = img.width * scale
+    offscreenCanvas.height = img.height * scale
+
+    const offscreenCtx = offscreenCanvas.getContext('2d')
+
+    offscreenCtx.drawImage(img, 0, 0, offscreenCanvas.width, offscreenCanvas.height)
+
+    // Create a pattern from the offscreen canvas
+    const pattern = context.createPattern(offscreenCanvas, 'repeat')
+
+    context.fillStyle = pattern
+  }
+  else {
+    console.error('Image pattern is not available')
+
+    return
+  }
+
+  context.beginPath()
+  shape.forEach((point, index) => {
+    const x = point.x - minX
+    const y = point.y - minY
+    if (index === 0)
+      context.moveTo(x, y)
+
+    else
+      context.lineTo(x, y)
+  })
+  context.closePath()
+
+  context.fill()
+}
+
+const drawShapes = async () => {
+  const shape = props.image.wall_shape.shapes[props.selectedWall]
+
+  const scaledShape = scaleShapeCoordinates(shape, imageX.value, imageY.value)
+
+  if (!currentStone.value) {
+    drawShapeOnCanvas(canvasRefs.value, scaledShape, labelRefs.value)
+  }
+  else {
+    const imgPattern = await loadImagePattern(selectedColor.value.image)
+
+    drawShapeOnCanvasWithImage(canvasRefs.value, scaledShape, labelRefs.value, imgPattern)
+  }
 }
 
 onMounted(() => {
   const imgElement = document.querySelector('.image-container img')
   if (imgElement.complete) {
     // If image is already loaded
+
+    imageX.value = imgElement.clientWidth / imgElement.naturalWidth
+    imageY.value = imgElement.clientHeight / imgElement.naturalHeight
     drawShapes()
   }
   else {
@@ -101,13 +311,26 @@ onMounted(() => {
     imgElement.addEventListener('load', drawShapes)
   }
 })
+
+const selectStone = (stone: any) => {
+  currentStone.value = stone
+  currentSection.value = 'colors'
+
+  // drawShapes()
+}
+
+const selectColor = (stone: any) => {
+  selectedColor.value = stone
+  console.log(selectedColor.value)
+  drawShapes()
+}
 </script>
 
 <template>
   <VCardText>
     <VRow>
       <VCol
-        cols="7"
+        cols="6"
         class="d-flex justify-center"
       >
         <div class="image-container">
@@ -116,80 +339,139 @@ onMounted(() => {
             class="img-background"
           >
           <canvas
-            v-for="(shape, index) in image.wall_shape.shapes"
-            :key="index"
             ref="canvasRefs"
+            style="opacity: 100;"
             class="shape-canvas"
           />
           <div
-            v-for="(shape, index) in image.wall_shape.shapes"
-            :key="index"
             ref="labelRefs"
             class="box-index"
           >
-            {{ index + 1 }}
+            {{ props.selectedWall + 1 }}
           </div>
         </div>
       </VCol>
+
       <VCol
         class="d-flex align-center"
-        cols="5"
+        cols="6"
       >
-        <div>
-          <VRow>
-            <VCol>
-              <h4 class="text-h6 text-secondary">
-                Wall {{ props.selectedWall + 1 }} Selected
-              </h4>
-              <h1 class="text-h4">
-                Choose Stone
-              </h1>
-              <p class="text-body-2 mt-3">
-                Please choose a stone category you want to apply on the wall.
-              </p>
-            </VCol>
-          </VRow>
-          <VRow>
-            <VCol>
-              <Carousel :breakpoints="breakpoints">
-                <Slide
-                  v-for="stone in stones"
-                  :key="stone.image"
-                >
-                  <div class="carousel_item">
-                    <div class="image-mask">
-                      <img :src="stone.image">
-                    </div>
+        <VWindow v-model="currentSection">
+          <VWindowItem value="categories">
+            <div>
+              <VRow>
+                <VCol>
+                  <div
+                    class="d-flex align-center text-gray text-body-2"
+                    style="margin-block-end: 35px;"
+                  >
+                    <h6 class="text-body-2">
+                      <b>Categories</b>
+                    </h6>
                   </div>
-                </Slide>
+                  <div>
+                    <h4 class="text-h6 text-secondary ">
+                      Wall {{ props.selectedWall + 1 }} Selected
+                    </h4>
+                  </div>
+                  <h1 class="text-h4">
+                    Choose Stone Category
+                  </h1>
+                  <p class="text-body-2 mt-3">
+                    Please choose a stone category you want to apply on the wall.
+                  </p>
+                </VCol>
+              </VRow>
+              <VRow>
+                <VCol
+                  v-for="(stone, index) in stones"
+                  :key="index"
+                  style="position: relative; max-inline-size: 12rem;"
+                  class="d-flex justify-center align-center"
+                  @click="selectStone(stone)"
+                >
+                  <div style="position: absolute; z-index: 2; color: white;">
+                    <b>{{ stone.name }}</b>
+                  </div>
+                  <VImg
+                    :src="stone.image"
+                    width="12rem"
+                    height="5rem"
+                    cover
+                    style="border-radius: 10px;"
+                  />
+                </VCol>
+              </VRow>
+            </div>
+          </VWindowItem>
+          <VWindowItem value="colors">
+            <div>
+              <VRow>
+                <VCol>
+                  <div
+                    class="d-flex align-center text-gray text-body-2"
+                    style="margin-block-end: 35px;"
+                  >
+                    <h6 class="text-body-2">
+                      <span @click="currentSection = 'categories'">Categories </span><VIcon icon="mdi-chevron-right" /> <b>Colors</b>
+                    </h6>
+                  </div>
 
-                <template #addons>
-                  <Navigation />
-                </template>
-              </Carousel>
-            </VCol>
-          </VRow>
-          <VRow>
-            <VCol class="d-flex gap-x-3">
-              <VBtn :to="{ name: 'visualizer-editing' }">
-                Edit Wall
-              </VBtn>
-              <VBtn @click="() => emit('proceed', 'selectWall')">
-                Proceed
-              </VBtn>
-            </VCol>
-          </VRow>
-        </div>
+                  <h4 class="text-h6 text-secondary">
+                    Wall {{ props.selectedWall + 1 }} Selected
+                  </h4>
+
+                  <h1 class="text-h4">
+                    Choose Stone Color
+                  </h1>
+                  <p class="text-body-2 mt-3">
+                    Please choose only one stone color you want to apply on the wall.
+                  </p>
+                </VCol>
+              </VRow>
+              <VRow>
+                <VCol
+                  v-for="(stone, index) in currentStone.colors"
+                  :key="index"
+                  style="position: relative; max-inline-size: 12rem;"
+                  class="d-flex justify-center align-center"
+                  @click="selectColor(stone)"
+                >
+                  <div style="position: absolute; z-index: 2; color: white;">
+                    <b>{{ stone.name }}</b>
+                  </div>
+                  <VImg
+                    :src="stone.image"
+                    width="12rem"
+                    height="5rem"
+                    cover
+                    style="border-radius: 10px;"
+                  />
+                </VCol>
+              </VRow>
+            </div>
+          </VWindowItem>
+        </VWindow>
+      </VCol>
+    </VRow>
+
+    <VRow>
+      <VCol class="d-flex gap-x-3">
+        <VBtn
+          variant="outlined"
+          @click="() => emit('proceed', 'selectWall')"
+        >
+          Back
+        </VBtn>
+        <VBtn @click="() => emit('proceed', 'main')">
+          Next
+        </VBtn>
       </VCol>
     </VRow>
   </VCardText>
 </template>
 
 <style lang="scss">
-.carousel-image{
-
-}
-
 .image-container {
   position: relative;
 
@@ -197,19 +479,6 @@ onMounted(() => {
     border-radius: 10px;
     inline-size: 100%;
     max-block-size:60vh;
-  }
-}
-
-canvas {
-  position: absolute;
-  z-index: 1;
-  inset-block-start: 0;
-  inset-inline-start: 0;
-  opacity: 0.1; // Base opacity
-  transition: opacity 0.3s ease; // Smooth transition for opacity change
-
-  &:hover {
-    opacity: 0.7; // Opacity on hover
   }
 }
 
@@ -224,20 +493,5 @@ canvas {
   block-size: 2rem;
   color: white;
   inline-size: 2rem;
-}
-
-.image-mask {
-  display: flex;
-  overflow: hidden;
-  align-items: center;
-  justify-content: center;
-  border-radius: 10px;
-  block-size: 5rem;
-  inline-size: 9rem;
-
-  img {
-    block-size: auto;
-    inline-size: 100%;
-  }
 }
 </style>

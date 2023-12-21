@@ -112,7 +112,7 @@ const onMouseOver = index => {
   <VCardText>
     <VRow>
       <VCol
-        cols="7"
+        cols="6"
         class="d-flex justify-center"
       >
         <div class="image-container">
@@ -141,7 +141,7 @@ const onMouseOver = index => {
       </VCol>
       <VCol
         class="d-flex align-center"
-        cols="5"
+        cols="6"
       >
         <div>
           <VRow>

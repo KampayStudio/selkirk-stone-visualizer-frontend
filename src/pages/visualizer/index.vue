@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Main from './sections/main.vue'
 
-// import Visualize from './sections/visualize.vue'
+import Visualize from './sections/visualize.vue'
 import WallSelection from './sections/wall-selection.vue'
 
 const image = ref({
@@ -89,7 +89,7 @@ const image = ref({
 })
 
 const selectedWall = ref()
-const currentWindow = ref('main')
+const currentWindow = ref('selectWall')
 
 const changeSection = (section: string) => {
   currentWindow.value = section
@@ -103,7 +103,10 @@ const changeWall = wall => {
 <template>
   <section>
     <VCard>
-      <VWindow v-model="currentWindow">
+      <VWindow
+        v-model="currentWindow"
+        :touch="false"
+      >
         <VWindowItem
           key="main"
           value="main"
@@ -126,13 +129,11 @@ const changeWall = wall => {
           />
         </VWindowItem>
         <VWindowItem value="visualize">
-          <!--
-            <Visualize
+          <Visualize
             :image="image"
             :selected-wall="selectedWall"
-            />
-          -->
-          <VCardText>In Progress</VCardText>
+            @proceed="changeSection"
+          />
         </VWindowItem>
       </VWindow>
     </VCard>
