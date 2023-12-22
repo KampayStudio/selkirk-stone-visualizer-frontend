@@ -14,6 +14,46 @@ const stones = ref([
         image: '/temp/stones/aged_brick/Ashen.jpg',
         show: true,
       },
+      {
+        name: 'Bisque',
+        image: '/temp/stones/aged_brick/Bisque.jpg',
+        show: true,
+      },
+      {
+        name: 'Brownstone',
+        image: '/temp/stones/aged_brick/Brownstone.jpg',
+        show: true,
+      },
+      {
+        name: 'Coral',
+        image: '/temp/stones/aged_brick/Coral.jpg',
+        show: true,
+      },
+      {
+        name: 'Ebony',
+        image: '/temp/stones/aged_brick/Ebony.jpg',
+        show: true,
+      },
+      {
+        name: 'Granite Ridge',
+        image: '/temp/stones/aged_brick/Granite\ Ridge.jpg',
+        show: true,
+      },
+      {
+        name: 'Old Chicago',
+        image: '/temp/stones/aged_brick/old_chicago.jpg',
+        show: true,
+      },
+      {
+        name: 'Oxford',
+        image: '/temp/stones/aged_brick/Oxford.jpg',
+        show: true,
+      },
+      {
+        name: 'Winterton',
+        image: '/temp/stones/aged_brick/Winterton.jpg',
+        show: true,
+      },
     ],
   },
   {
@@ -27,6 +67,47 @@ const stones = ref([
         image: '/temp/stones/chiseled_limestone/Alabaster.jpg',
         show: true,
       },
+      {
+        name: 'Alpine',
+        image: '/temp/stones/chiseled_limestone/Alpine.jpg',
+        show: true,
+      },
+      {
+        name: 'Bisque',
+        image: '/temp/stones/chiseled_limestone/Bisque.jpg',
+        show: true,
+      },
+      {
+        name: 'Charcoal',
+        image: '/temp/stones/chiseled_limestone/Charcoal.jpg',
+        show: true,
+      },
+      {
+        name: 'Conifer',
+        image: '/temp/stones/chiseled_limestone/Conifer.jpg',
+        show: true,
+      },
+      {
+        name: 'Durango Brown',
+        image: '/temp/stones/chiseled_limestone/Durango\ Brown.jpg',
+        show: true,
+      },
+      {
+        name: 'Granite Ridge',
+        image: '/temp/stones/chiseled_limestone/Granite\ Ridge.jpg',
+        show: true,
+      },
+      {
+        name: 'Sahara',
+        image: '/temp/stones/chiseled_limestone/Sahara.jpg',
+        show: true,
+      },
+      {
+        name: 'Sandstone',
+        image: '/temp/stones/chiseled_limestone/Sandstone.jpg',
+        show: true,
+      },
+
     ],
   },
   {
@@ -36,8 +117,28 @@ const stones = ref([
     isInStock: true,
     colors: [
       {
-        name: 'Alabaster',
-        image: '/temp/stones/contemporary_brick/Ashen.jpg',
+        name: 'Ashen',
+        image: '/temp/stones/contemporary_brick/CB_Ashen.jpg',
+        show: true,
+      },
+      {
+        name: 'Brownstone',
+        image: '/temp/stones/contemporary_brick/CB_Brownstone.jpg',
+        show: true,
+      },
+      {
+        name: 'Bisque',
+        image: '/temp/stones/contemporary_brick/CB_Bisque.jpg',
+        show: true,
+      },
+      {
+        name: 'Coral',
+        image: '/temp/stones/contemporary_brick/CB_Coral.jpg',
+        show: true,
+      },
+      {
+        name: 'Ebony',
+        image: '/temp/stones/contemporary_brick/CB_Ebony.jpg',
         show: true,
       },
     ],
@@ -50,7 +151,47 @@ const stones = ref([
     colors: [
       {
         name: 'Alabaster',
-        image: '/temp/stones/contemporary_brick/Ashen.jpg',
+        image: '/temp/stones/country_cliffstone/CC_Alabaster.jpg',
+        show: true,
+      },
+      {
+        name: 'Alpine',
+        image: '/temp/stones/country_cliffstone/CC_Alpine.jpg',
+        show: true,
+      },
+      {
+        name: 'Bisque',
+        image: '/temp/stones/country_cliffstone/CC_Bisque.jpg',
+        show: true,
+      },
+      {
+        name: 'Bow Valley',
+        image: '/temp/stones/country_cliffstone/CC_Bow\ Valley.jpg',
+        show: true,
+      },
+      {
+        name: 'Driftwood',
+        image: '/temp/stones/country_cliffstone/CC_Driftwood.jpg',
+        show: true,
+      },
+      {
+        name: 'Durango Brown',
+        image: '/temp/stones/country_cliffstone/CC_Durango\ Brown.jpg',
+        show: true,
+      },
+      {
+        name: 'Granite Ridge',
+        image: '/temp/stones/country_cliffstone/CC_Granite\ Ridge.jpg',
+        show: true,
+      },
+      {
+        name: 'Montana Slate',
+        image: '/temp/stones/country_cliffstone/CC_Montana\ Slate.jpg',
+        show: true,
+      },
+      {
+        name: 'Rundle',
+        image: '/temp/stones/country_cliffstone/CC_Rundle.jpg',
         show: true,
       },
     ],
@@ -66,6 +207,31 @@ const stones = ref([
         image: '/temp/stones/field_stone/F_Alpine.jpg',
         show: true,
       },
+      {
+        name: 'Aspen',
+        image: '/temp/stones/field_stone/F_Aspen.jpg',
+        show: true,
+      },
+      {
+        name: 'Bitteroot',
+        image: '/temp/stones/field_stone/F_Bitteroot.jpg',
+        show: true,
+      },
+      {
+        name: 'Driftwood',
+        image: '/temp/stones/field_stone/F_Driftwood.jpg',
+        show: true,
+      },
+      {
+        name: 'Durango Brown',
+        image: '/temp/stones/field_stone/F_Durango\ Brown.jpg',
+        show: true,
+      },
+      {
+        name: 'Granite Ridge',
+        image: '/temp/stones/field_stone/F_Granite Ridge.jpg',
+        show: true,
+      },
     ],
   },
   {
@@ -79,6 +245,16 @@ const stones = ref([
         image: '/temp/stones/glacier_stone/GlacierStone_Aspen.png',
         show: true,
       },
+      {
+        name: 'Biteroot',
+        image: '/temp/stones/glacier_stone/GlacierStone_Biteroot.png',
+        show: true,
+      },
+      {
+        name: 'Northwest',
+        image: '/temp/stones/glacier_stone/GlacierStone_Northwest\ Blend.png',
+        show: true,
+      },
     ],
   },
   {
@@ -88,10 +264,56 @@ const stones = ref([
     isInStock: true,
     colors: [
       {
-        name: 'Aspen',
+        name: 'Alpine',
         image: '/temp/stones/mountain_ledge/ML_Alpine.jpg',
         show: true,
       },
+      {
+        name: 'Charcoal',
+        image: '/temp/stones/mountain_ledge/ML_Charcoal.jpg',
+        show: true,
+      },
+      {
+        name: 'Cool River',
+        image: '/temp/stones/mountain_ledge/ML_Cool\ River.jpg',
+        show: true,
+      },
+      {
+        name: 'Driftwood',
+        image: '/temp/stones/mountain_ledge/ML_Driftwood.jpg',
+        show: true,
+      },
+      {
+        name: 'Durango',
+        image: '/temp/stones/mountain_ledge/ML_Durango.jpg',
+        show: true,
+      },
+      {
+        name: 'Granite Ridge',
+        image: '/temp/stones/mountain_ledge/ML_Granite\ Ridge.jpg',
+        show: true,
+      },
+      {
+        name: 'Montana Slate',
+        image: '/temp/stones/mountain_ledge/ML_Montana\ Slate.jpg',
+        show: true,
+      },
+      {
+        name: 'Rocky Mountain',
+        image: '/temp/stones/mountain_ledge/ML_Rocky\ Mountain.jpg',
+        show: true,
+      },
+      {
+        name: 'Rundle',
+        image: '/temp/stones/mountain_ledge/ML_Rundle.jpg',
+        show: true,
+      },
+      {
+        name: 'Valley',
+        image: '/temp/stones/mountain_ledge/ML_Valley.jpg',
+        show: true,
+      },
+
     ],
   },
   {
@@ -105,6 +327,77 @@ const stones = ref([
         image: '/temp/stones/northern_ledgestone/NL_Alberta.jpg',
         show: true,
       },
+      {
+        name: 'Alpine',
+        image: '/temp/stones/northern_ledgestone/NL_Alpine.jpg',
+        show: true,
+      },
+      {
+        name: 'Bisque',
+        image: '/temp/stones/northern_ledgestone/NL_Bisque.jpg',
+        show: true,
+      },
+      {
+        name: 'Bonner',
+        image: '/temp/stones/northern_ledgestone/NL_Bonner.jpg',
+        show: true,
+      },
+      {
+        name: 'Bow Valley',
+        image: '/temp/stones/northern_ledgestone/NL_Bow\ Valley.jpg',
+        show: true,
+      },
+      {
+        name: 'Charcoal',
+        image: '/temp/stones/northern_ledgestone/NL_Charcoal.jpg',
+        show: true,
+      },
+      {
+        name: 'Coal River',
+        image: '/temp/stones/northern_ledgestone/NL_Coal\ River.jpg',
+        show: true,
+      },
+      {
+        name: 'Driftwood',
+        image: '/temp/stones/northern_ledgestone/NL_Driftwood.jpg',
+        show: true,
+      },
+      {
+        name: 'Durango Brown',
+        image: '/temp/stones/northern_ledgestone/NL_Durango\ Brown.jpg',
+        show: true,
+      },
+      {
+        name: 'Granite Ridge',
+        image: '/temp/stones/northern_ledgestone/NL_Granite\ Ridge.jpg',
+        show: true,
+      },
+      {
+        name: 'Harvest Blend',
+        image: '/temp/stones/northern_ledgestone/NL_Harvest\ Blend.jpg',
+        show: true,
+      },
+      {
+        name: 'High Country',
+        image: '/temp/stones/northern_ledgestone/NL_HIgh\ Country.jpg',
+        show: true,
+      },
+      {
+        name: 'Montana Slate',
+        image: '/temp/stones/northern_ledgestone/NL_Montana\ Slate.jpg',
+        show: true,
+      },
+      {
+        name: 'Rocky Mountain',
+        image: '/temp/stones/northern_ledgestone/NL_Rocky\ Mountain.jpg',
+        show: true,
+      },
+      {
+        name: 'Rundle',
+        image: '/temp/stones/northern_ledgestone/NL_Rundle.jpg',
+        show: true,
+      },
+
     ],
   },
   {
@@ -118,6 +411,47 @@ const stones = ref([
         image: '/temp/stones/rustic_ledgestone/RL_Alpine.jpg',
         show: true,
       },
+      {
+        name: 'Biteroot',
+        image: '/temp/stones/rustic_ledgestone/RL_Biteroot.jpg',
+        show: true,
+      },
+      {
+        name: 'Bonner Country',
+        image: '/temp/stones/rustic_ledgestone/RL_Bonner\ Country.jpg',
+        show: true,
+      },
+      {
+        name: 'Charcoal',
+        image: '/temp/stones/rustic_ledgestone/RL_Charcoal.jpg',
+        show: true,
+      },
+      {
+        name: 'Coal River',
+        image: '/temp/stones/rustic_ledgestone/RL_Coal\ River.jpg',
+        show: true,
+      },
+      {
+        name: 'Durango Brown',
+        image: '/temp/stones/rustic_ledgestone/RL_Durango\ Brown.jpg',
+        show: true,
+      },
+      {
+        name: 'Granite Ridge',
+        image: '/temp/stones/rustic_ledgestone/RL_Granite Ridge.jpg',
+        show: true,
+      },
+      {
+        name: 'Harvest Blend',
+        image: '/temp/stones/rustic_ledgestone/RL_Harvest\ Blend.jpg',
+        show: true,
+      },
+      {
+        name: 'Montana Slate',
+        image: '/temp/stones/rustic_ledgestone/RL_Montana\ Slate.jpg',
+        show: true,
+      },
+
     ],
   },
   {
@@ -131,6 +465,36 @@ const stones = ref([
         image: '/temp/stones/shadow_ledgestone/SL_Alpine.jpg',
         show: true,
       },
+      {
+        name: 'Biteroot',
+        image: '/temp/stones/shadow_ledgestone/SL_Biteroot.jpg',
+        show: true,
+      },
+      {
+        name: 'Bonner Country',
+        image: '/temp/stones/shadow_ledgestone/SL_Bonner\ Country.jpg',
+        show: true,
+      },
+      {
+        name: 'Conifer',
+        image: '/temp/stones/shadow_ledgestone/SL_Conifer.jpeg',
+        show: true,
+      },
+      {
+        name: 'Durango Brown',
+        image: '/temp/stones/shadow_ledgestone/SL_Durango Brown.jpg',
+        show: true,
+      },
+      {
+        name: 'Granite Ridge',
+        image: '/temp/stones/shadow_ledgestone/SL_Granite\ Ridge.jpg',
+        show: true,
+      },
+      {
+        name: 'Montana Slate',
+        image: '/temp/stones/shadow_ledgestone/SL_Montana\ Slate.jpg',
+        show: true,
+      },
     ],
   },
   {
@@ -142,6 +506,21 @@ const stones = ref([
       {
         name: 'Alabaster',
         image: '/temp/stones/strip_ledge/SL_Alabaster.jpg',
+        show: true,
+      },
+      {
+        name: 'Bisque',
+        image: '/temp/stones/strip_ledge/SL_Bisque.jpg',
+        show: true,
+      },
+      {
+        name: 'Dark Ocean',
+        image: '/temp/stones/strip_ledge/SL_Dark\ Ocean.jpg',
+        show: true,
+      },
+      {
+        name: 'Granite Ridge',
+        image: '/temp/stones/strip_ledge/SL_Granite\ Ridge.jpg',
         show: true,
       },
     ],
