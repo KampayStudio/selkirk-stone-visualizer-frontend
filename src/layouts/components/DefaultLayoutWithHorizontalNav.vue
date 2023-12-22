@@ -32,19 +32,19 @@ const isAuthenticated = computed(() => !authToken.value)
         </VBtn>
       </RouterLink>
       <RouterLink
+        v-if="isAuthenticated"
+        to="/sample-scenes"
+      >
+        <VBtn variant="text">
+          Sample Scenes
+        </VBtn>
+      </RouterLink>
+      <RouterLink
         v-if="!isAuthenticated"
         to="/collection"
       >
         <VBtn variant="text">
           Collection
-        </VBtn>
-      </RouterLink>
-      <RouterLink
-        v-if="!isAuthenticated"
-        to="/sample-scenes"
-      >
-        <VBtn variant="text">
-          Sample Scenes
         </VBtn>
       </RouterLink>
 
