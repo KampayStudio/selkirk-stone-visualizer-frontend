@@ -11,4 +11,9 @@ export default [
     to: { name: 'collection' },
     icon: { icon: 'bx-file-blank' },
   },
+  {
+    title: 'Sample Scenes',
+    to: { name: 'sample-scenes' },
+    icon: { icon: 'bx-file-blank' },
+  },
 ] as HorizontalNavItems

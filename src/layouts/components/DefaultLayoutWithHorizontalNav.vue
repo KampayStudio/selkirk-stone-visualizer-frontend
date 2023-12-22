@@ -39,6 +39,14 @@ const isAuthenticated = computed(() => !authToken.value)
           Collection
         </VBtn>
       </RouterLink>
+      <RouterLink
+        v-if="!isAuthenticated"
+        to="/sample-scenes"
+      >
+        <VBtn variant="text">
+          Sample Scenes
+        </VBtn>
+      </RouterLink>
 
       <VSpacer />
       <!-- <NavbarThemeSwitcher class="me-2" /> -->
