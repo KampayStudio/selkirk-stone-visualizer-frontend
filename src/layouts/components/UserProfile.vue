@@ -31,6 +31,10 @@ const logout = async () => {
     // Possibly show an error notification to the user
   }
 }
+
+const profile = () => {
+  router.push('/profile')
+}
 </script>
 
 <template>
@@ -96,7 +100,10 @@ const logout = async () => {
 
           <!-- 👉 Profile -->
 
-          <VListItem link>
+          <VListItem
+            link
+            @click="profile"
+          >
             <template #prepend>
               <VIcon
                 class="me-2"
@@ -125,7 +132,10 @@ const logout = async () => {
           <!-- Divider -->
 
           <!-- 👉 Logout -->
-          <VListItem @click="logout">
+          <VListItem
+            link
+            @click="logout"
+          >
             Logout
           </VListItem>
         </VList>

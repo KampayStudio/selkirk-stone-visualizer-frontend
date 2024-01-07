@@ -76,12 +76,6 @@ const isAuthenticated = computed(() => !authToken.value)
 
     <!-- 👉 Footer -->
 
-    <!--
-      <template #footer>
-      <Footer />
-      </template>
-    -->
-
     <!-- 👉 Customizer -->
     <!-- <TheCustomizer /> -->
   </HorizontalNavLayout>

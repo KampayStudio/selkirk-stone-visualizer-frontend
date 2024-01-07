@@ -15,18 +15,20 @@ if (localStorage.getItem('loggedIn') === '0') {
 </script>
 
 <template>
-  <!-- 1st Section -->
-  <Section1 />
+  <div>
+    <!-- 1st Section -->
+    <Section1 />
 
-  <!-- 2nd Section -->
-  <Section2 />
+    <!-- 2nd Section -->
+    <Section2 />
 
-  <!-- 3rd Section -->
-  <Section3 />
+    <!-- 3rd Section -->
+    <Section3 />
 
-  <!-- 4th section -->
-  <Section4 />
+    <!-- 4th section -->
+    <Section4 />
 
-  <!-- Footer -->
-  <Footer />
+    <!-- Footer -->
+    <Footer />
+  </div>
 </template>

@@ -68,11 +68,13 @@ const { _layoutClasses: layoutClasses, isNavbarBlurEnabled } = useLayouts()
     </main>
 
     <!-- 👉 Footer -->
-    <footer class="layout-footer">
+    <!--
+      <footer class="layout-footer">
       <div class="footer-content-container">
-        <slot name="footer" />
+      <slot name="footer" />
       </div>
-    </footer>
+      </footer>
+    -->
   </div>
 </template>
 
