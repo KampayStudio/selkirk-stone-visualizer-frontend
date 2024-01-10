@@ -1,7 +1,35 @@
+<script setup lang="ts">
+import axios from '@axios'
+
+const section_content = ref({
+  banner: '',
+  heading_1: '',
+  heading_2: '',
+  body: '',
+})
+
+const get_content = async () => {
+  try {
+    const response = await axios.get('/contents/section1/')
+
+    section_content.value = response.data[0]
+  }
+  catch (error) {
+    console.log(error)
+  }
+}
+
+onMounted(() => {
+  get_content()
+})
+</script>
+
 <template>
   <section
+    v-if="section_content.body"
     id="section1"
     class="index-max-section-width index-max-content-width"
+    :style="{ backgroundImage: `url(${section_content.banner})` }"
   >
     <VCard id="section-1-card">
       <VCardText
@@ -9,15 +37,13 @@
         style="flex-direction: column;"
       >
         <h1 class="text-primary text-5xl">
-          See Your Project<br> Come to Life!
+          {{ section_content.heading_1 }}
         </h1>
         <h3 class="text-secondary">
-          Introducing Our Visualizer App!
+          {{ section_content.heading_2 }}
         </h3>
         <p class="text-p">
-          Begin by selecting from our sample scenes or uploading your own project image.
-          Our advanced A.I. technology will then process it, enabling you to visualize our
-          range of high-quality manufactured stone and brick veneers tailored to your specifications.
+          {{ section_content.body }}
         </p>
         <div
           id="section-1-buttons"
@@ -70,7 +96,8 @@
 
 #section1 {
   background-color: white;
-  background-image: url('/image/landing-page-house.jpeg');
+
+  // background-image: url('/image/landing-page-house.jpeg');
   background-position: center;
   background-size: cover;
   block-size: 50rem;

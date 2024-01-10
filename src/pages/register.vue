@@ -67,6 +67,29 @@ async function signup() {
     isLoading.value = false
   }
 }
+
+const section_content = ref({
+  logo: '',
+  banner: '',
+  heading_1: '',
+  heading_2: '',
+  body: '',
+})
+
+const get_content = async () => {
+  try {
+    const response = await axios.get('/contents/signup_page/')
+
+    section_content.value = response.data[0]
+  }
+  catch (error) {
+    console.log(error)
+  }
+}
+
+onMounted(() => {
+  get_content()
+})
 </script>
 
 <template>
@@ -81,9 +104,10 @@ async function signup() {
       <!-- illustration -->
       <div class="position-relative w-100">
         <div
-          id="backdrop"
+
           class="d-flex align-center justify-center"
           style=" background-size: cover; block-size: 100vh;"
+          :style="{ backgroundImage: `url(${section_content.banner})` }"
         >
           <!-- <VImg :src="backdrop" /> -->
         </div>
@@ -118,10 +142,10 @@ async function signup() {
 
         <VCardText>
           <h6 class="text-h4 mb-1">
-            Get Started
+            {{ section_content.heading_1 }}
           </h6>
           <p class="mb-0">
-            <span>Already have an account?</span>
+            <span>{{ section_content.body }}</span>
             <RouterLink
               class="text-primary ms-2"
               :to="{ name: 'login' }"

@@ -1,6 +1,6 @@
 <template>
   <section class="max-section-width">
-    Hello
+    Settings Page
   </section>
 </template>
 

@@ -1,5 +1,32 @@
+<script setup lang="ts">
+import axios from '@axios'
+
+const section_content = ref({
+  photo_1: '',
+  heading_1: '',
+  heading_2: '',
+  body: '',
+})
+
+const get_content = async () => {
+  try {
+    const response = await axios.get('/contents/section4/')
+
+    section_content.value = response.data[0]
+  }
+  catch (error) {
+    console.log(error)
+  }
+}
+
+onMounted(() => {
+  get_content()
+})
+</script>
+
 <template>
   <section
+    v-if="section_content.body"
     id="section-4"
     class="max-section-width"
   >
@@ -11,7 +38,7 @@
         class="d-flex"
         style="justify-content: flex-end;"
       >
-        <img src="/image/hand-mockup_1.png">
+        <img :src="section_content.photo_1">
       </VCol>
       <VCol
         id="col-2"
@@ -22,15 +49,10 @@
       >
         <div class="my-auto d-flex gap-y-3 flex-column">
           <h1 class="text-4xl mb-2 text-primary">
-            FAQs and Tips
+            {{ section_content.heading_1 }}
           </h1>
           <p class="text-primary">
-            Begin by selecting from our sample scenes or uploading your own project image. Our advanced A.I.
-            technology will then process it, enabling you to visualize our range of high-quality manufactured
-            stone and brick veneers tailored to your specifications.
-          </p>
-          <p class="text-primary">
-            Begin by selecting from our sample scenes or uploading your own project image. Our advanced A.I. technology will then process it.
+            {{ section_content.body }}
           </p>
         </div>
       </VCol>

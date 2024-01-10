@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { VForm } from 'vuetify/components/VForm'
 import axios from '@axios'
-import background from '@images/pages/login-background.png'
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 import { themeConfig } from '@themeConfig'
 import { emailValidator, requiredValidator } from '@validators'
@@ -43,10 +42,34 @@ const login = async () => {
 }
 
 const isPasswordVisible = ref(false)
+
+const section_content = ref({
+  logo: '',
+  banner: '',
+  heading_1: '',
+  heading_2: '',
+  body: '',
+})
+
+const get_content = async () => {
+  try {
+    const response = await axios.get('/contents/login_page/')
+
+    section_content.value = response.data[0]
+  }
+  catch (error) {
+    console.log(error)
+  }
+}
+
+onMounted(() => {
+  get_content()
+})
 </script>
 
 <template>
   <VRow
+    v-if="section_content.body"
     class="auth-wrapper"
     style="
       max-inline-size: 300rem;
@@ -79,10 +102,10 @@ const isPasswordVisible = ref(false)
 
         <VCardText>
           <h6 class="text-h4 mb-1">
-            Welcome
+            {{ section_content.heading_1 }}
           </h6>
           <p class="mb-0">
-            Sign in your account
+            {{ section_content.body }}
           </p>
         </VCardText>
 
@@ -195,7 +218,7 @@ const isPasswordVisible = ref(false)
           class="d-flex align-center justify-center w-100"
           style="max-block-size: 100vh; object-fit: cover;"
         >
-          <VImg :src="background" />
+          <VImg :src="section_content.banner" />
         </div>
       </div>
     </VCol>

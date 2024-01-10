@@ -35,6 +35,18 @@ const logout = async () => {
 const profile = () => {
   router.push('/profile')
 }
+
+const settings = () => {
+  router.push('/settings')
+}
+
+const quotation = () => {
+  router.push('/quotation')
+}
+
+const collection = () => {
+  router.push('/collection')
+}
 </script>
 
 <template>
@@ -115,9 +127,46 @@ const profile = () => {
             <VListItemTitle>Profile</VListItemTitle>
           </VListItem>
 
+          <!-- 👉 Collection -->
+
+          <VListItem
+            link
+            @click="collection"
+          >
+            <template #prepend>
+              <VIcon
+                class="me-2"
+                icon="mdi-image"
+                size="22"
+              />
+            </template>
+
+            <VListItemTitle>Collection</VListItemTitle>
+          </VListItem>
+
+          <!-- 👉 Quotation -->
+
+          <VListItem
+            link
+            @click="quotation"
+          >
+            <template #prepend>
+              <VIcon
+                class="me-2"
+                icon="mdi-list-box-outline"
+                size="22"
+              />
+            </template>
+
+            <VListItemTitle>Quotation</VListItemTitle>
+          </VListItem>
+
           <!-- 👉 Settings -->
 
-          <VListItem link>
+          <VListItem
+            link
+            @click="settings"
+          >
             <template #prepend>
               <VIcon
                 class="me-2"

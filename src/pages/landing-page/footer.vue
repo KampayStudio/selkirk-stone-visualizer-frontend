@@ -1,9 +1,36 @@
+<script setup lang="ts">
+import axios from '@axios'
+
+const section_content = ref({
+  logo: '',
+  website: '',
+  contact1: '',
+  contact2: '',
+  address: '',
+  subtitle: '',
+})
+
+const get_content = async () => {
+  try {
+    const response = await axios.get('/contents/footer/')
+
+    section_content.value = response.data[0]
+  }
+  catch (error) {
+    console.log(error)
+  }
+}
+
+onMounted(() => {
+  get_content()
+})
+</script>
+
 <template>
   <section
+    v-if="section_content.subtitle"
     id="section-5"
     style=" background-color: #5F2726;color:white;"
-
-    class="max-section-width"
   >
     <div class="max-content-width">
       <VRow>
@@ -11,17 +38,16 @@
           cols="12"
           md="6"
         >
-          <img src="/image/selkirk-logo-white.png">
+          <img :src="section_content.logo">
           <p class="text-sm">
-            www.selkirkstone.com
+            {{ section_content.website }}
           </p>
 
           <p class="text-sm">
-            Office (587) 352-8046 <br>
-            Mobile (403) 975-3707 <br>
+            {{ section_content.contact1 }} <br>
+            {{ section_content.contact2 }} <br>
 
-            5308 4th Street SECalgary, <br>
-            Alberta T2H 1K5
+            {{ section_content.address }}
           </p>
         </VCol>
         <VCol
@@ -30,7 +56,7 @@
           md="6"
         >
           <div>
-            <p>Stay updated from us!</p>
+            <p>{{ section_content.subtitle }}</p>
             <div class="d-flex gap-x-1">
               <input
                 type="text"
