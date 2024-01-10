@@ -163,20 +163,22 @@ const collection = () => {
 
           <!-- 👉 Settings -->
 
-          <VListItem
+          <!--
+            <VListItem
             link
             @click="settings"
-          >
+            >
             <template #prepend>
-              <VIcon
-                class="me-2"
-                icon="bx-cog"
-                size="22"
-              />
+            <VIcon
+            class="me-2"
+            icon="bx-cog"
+            size="22"
+            />
             </template>
 
             <VListItemTitle>Settings</VListItemTitle>
-          </VListItem>
+            </VListItem>
+          -->
 
           <!-- Divider -->
 
