@@ -25,39 +25,73 @@ onMounted(() => {
 </script>
 
 <template>
-  <section
-    v-if="section_content.body"
-    id="section-4"
-    class="max-section-width"
-  >
-    <VRow class="max-content-width">
-      <VCol
-        id="col-1"
-        md="6"
-        cols="12"
-        class="d-flex"
-        style="justify-content: flex-end;"
-      >
-        <img :src="section_content.photo_1">
-      </VCol>
-      <VCol
-        id="col-2"
-        md="6"
-        cols="12"
-        style="max-inline-size:30rem;"
-        class="d-flex"
-      >
-        <div class="my-auto d-flex gap-y-3 flex-column">
-          <h1 class="text-4xl mb-2 text-primary">
-            {{ section_content.heading_1 }}
-          </h1>
-          <p class="text-primary">
-            {{ section_content.body }}
-          </p>
-        </div>
-      </VCol>
-    </VRow>
-  </section>
+  <div>
+    <section
+      v-if="!section_content.body"
+      class="max-section-width"
+    >
+      <VRow class="max-content-width">
+        <VCol
+          id="col-1"
+          md="6"
+          cols="12"
+          class="d-flex"
+          style="justify-content: flex-end;"
+        >
+          <PuSkeleton height="10rem" />
+        </VCol>
+        <VCol
+          id="col-2"
+          md="6"
+          cols="12"
+          style="max-inline-size:30rem;"
+          class="d-flex"
+        >
+          <div class="my-auto d-flex gap-y-3 flex-column">
+            <h1 class="text-4xl mb-2 text-primary">
+              <PuSkeleton />
+            </h1>
+            <p class="text-primary">
+              <PuSkeleton />
+            </p>
+          </div>
+        </VCol>
+      </VRow>
+    </section>
+    <section
+      v-if="section_content.body"
+      id="section-4"
+      class="max-section-width"
+    >
+      <VRow class="max-content-width">
+        <VCol
+          id="col-1"
+          md="6"
+          cols="12"
+          class="d-flex"
+          style="justify-content: flex-end;"
+        >
+          <img :src="section_content.photo_1">
+        </VCol>
+        <VCol
+          id="col-2"
+          md="6"
+          cols="12"
+          style="max-inline-size:30rem;"
+          class="d-flex"
+        >
+          <div class="my-auto d-flex gap-y-3 flex-column">
+            <h1 class="text-4xl mb-2 text-primary">
+              {{ section_content.heading_1 }}
+            </h1>
+            <p class="text-primary">
+              {{ section_content.body }}
+            </p>
+          </div>
+        </VCol>
+      </VRow>
+    </section>
+  </div>
 </template>
 
 <style lang="scss">

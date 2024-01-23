@@ -29,68 +29,96 @@ onMounted(() => {
 </script>
 
 <template>
-  <section
-    v-if="section_content.body"
-    id="section-2"
-    style=" padding: 50px;"
-  >
-    <div class="text-center d-flex flex-column gap-y-3">
-      <h3
-        class="text-3xl text-primary"
-        style="color:#3E3E3E"
-      >
-        {{ section_content.heading_1 }}
-      </h3>
-      <h4 style="color: #7E7E7E;">
-        {{ section_content.body }}
-      </h4>
-      <VRow class="d-flex mx-auto">
-        <VCol
-          cols="12"
-          md="4"
+  <div>
+    <!-- Skeleton Loading -->
+    <section
+      v-if="!section_content.body"
+      id="section-2"
+      style=" padding: 50px;"
+    >
+      <div class="text-center d-flex flex-column gap-y-3">
+        <h3
+          class="text-3xl text-primary"
+          style="color:#3E3E3E"
         >
-          <div class="index-image-mask">
-            <RouterLink :to="{ name: 'sample-scenes' }">
-              <img
-                :src="section_content.banner_1"
-                style=" max-block-size: 20rem;min-block-size: 20rem;"
-              >
-            </RouterLink>
-          </div>
-          <p>{{ section_content.photo_caption_1 }}</p>
-        </VCol>
-        <VCol
-          cols="12"
-          md="4"
+          <PuSkeleton />
+        </h3>
+        <h4 style="color: #7E7E7E;">
+          <PuSkeleton />
+        </h4>
+        <VRow>
+          <VCol
+            v-for="i in 3"
+            :key="i"
+          >
+            <PuSkeleton height="20rem" />
+          </VCol>
+        </VRow>
+      </div>
+    </section>
+    <section
+      v-if="section_content.body"
+      id="section-2"
+      style=" padding: 50px;"
+    >
+      <div class="text-center d-flex flex-column gap-y-3">
+        <h3
+          class="text-3xl text-primary"
+          style="color:#3E3E3E"
         >
-          <div class="index-image-mask">
-            <RouterLink :to="{ name: 'sample-scenes' }">
-              <img
-                :src="section_content.banner_2"
-                style=" max-block-size: 20rem;min-block-size: 20rem;"
-              >
-            </RouterLink>
-          </div>
+          {{ section_content.heading_1 }}
+        </h3>
+        <h4 style="color: #7E7E7E;">
+          {{ section_content.body }}
+        </h4>
+        <VRow class="d-flex mx-auto">
+          <VCol
+            cols="12"
+            md="4"
+          >
+            <div class="index-image-mask">
+              <RouterLink :to="{ name: 'sample-scenes' }">
+                <img
+                  :src="section_content.banner_1"
+                  style=" max-block-size: 20rem;min-block-size: 20rem;"
+                >
+              </RouterLink>
+            </div>
+            <p>{{ section_content.photo_caption_1 }}</p>
+          </VCol>
+          <VCol
+            cols="12"
+            md="4"
+          >
+            <div class="index-image-mask">
+              <RouterLink :to="{ name: 'sample-scenes' }">
+                <img
+                  :src="section_content.banner_2"
+                  style=" max-block-size: 20rem;min-block-size: 20rem;"
+                >
+              </RouterLink>
+            </div>
 
-          <p>{{ section_content.photo_caption_2 }}</p>
-        </VCol>
-        <VCol
-          cols="12"
-          md="4"
-        >
-          <div class="index-image-mask">
-            <RouterLink :to="{ name: 'sample-scenes' }">
-              <img
-                :src="section_content.banner_3"
-                style=" max-block-size: 20rem;min-block-size: 20rem;"
-              >
-            </RouterLink>
-          </div>
-          <p>{{ section_content.photo_caption_3 }}</p>
-        </VCol>
-      </VRow>
-    </div>
-  </section>
+            <p>{{ section_content.photo_caption_2 }}</p>
+          </VCol>
+          <VCol
+            cols="12"
+            md="4"
+          >
+            <div class="index-image-mask">
+              <RouterLink :to="{ name: 'sample-scenes' }">
+                <img
+                  :src="section_content.banner_3"
+                  style=" max-block-size: 20rem;min-block-size: 20rem;"
+                >
+              </RouterLink>
+            </div>
+            <p>{{ section_content.photo_caption_3 }}</p>
+          </VCol>
+        </VRow>
+      </div>
+    </section>
+  </div>
 </template>
 
 <style lang="scss">
