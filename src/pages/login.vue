@@ -68,120 +68,211 @@ onMounted(() => {
 </script>
 
 <template>
-  <VRow
-    v-if="section_content.body"
-    class="auth-wrapper"
-    style="
+  <div>
+    <VRow
+      v-if="!section_content.body"
+      class="auth-wrapper"
+      style="
       max-inline-size: 300rem;
     "
-  >
-    <VCol
-      cols="12"
-      md="4"
-      class="auth-card-v2 d-flex align-center justify-center"
-      style="background-color: rgb(var(--v-theme-surface));"
     >
-      <VCard
-        flat
-        :max-width="800"
-        class="mt-12 mt-sm-0 pa-6"
+      <VCol
+        cols="12"
+        md="4"
+        class="auth-card-v2 d-flex align-center justify-center"
+        style="background-color: rgb(var(--v-theme-surface));"
       >
-        <VCardItem class="justify-start">
-          <template #prepend>
-            <RouterLink to="/">
-              <div class="d-flex">
-                <VNodeRenderer :nodes="themeConfig.app.logo" />
-              </div>
-            </RouterLink>
-          </template>
+        <VCard
+          flat
+          :max-width="800"
+          class="mt-12 mt-sm-0 pa-6"
+        >
+          <VCardItem class="justify-start">
+            <PuSkeleton
+              width="200px"
+              height="2rem"
+            />
 
-          <VCardTitle class="auth-title">
-            {{ themeConfig.app.title }}
-          </VCardTitle>
-        </VCardItem>
+            <VCardTitle class="auth-title">
+              <PuSkeleton />
+            </VCardTitle>
+          </VCardItem>
 
-        <VCardText>
-          <h6 class="text-h4 mb-1">
-            {{ section_content.heading_1 }}
-          </h6>
-          <p class="mb-0">
-            {{ section_content.body }}
-          </p>
-        </VCardText>
+          <VCardText>
+            <h6 class="text-h4 mb-1">
+              <PuSkeleton />
+            </h6>
+            <p class="mb-0">
+              <PuSkeleton />
+            </p>
+          </VCardText>
 
-        <VCardText>
-          <VForm @submit.prevent="login">
-            <VRow>
-              <!-- email -->
-              <VCol cols="12">
-                <VTextField
-                  v-model="form.userid"
-                  autofocus
-                  label="Email"
-                  type="text"
-                  :rules="[requiredValidator, emailValidator]"
-                />
-              </VCol>
+          <VCardText>
+            <VForm @submit.prevent="login">
+              <VRow>
+                <!-- email -->
+                <VCol cols="12">
+                  <PuSkeleton height="2rem" />
+                </VCol>
 
-              <!-- password -->
-              <VCol cols="12">
-                <VTextField
-                  v-model="form.password"
-                  label="Password"
-                  :type="isPasswordVisible ? 'text' : 'password'"
-                  :append-inner-icon="isPasswordVisible ? 'bx-hide' : 'bx-show'"
-                  required
-                  :rules="[requiredValidator]"
-                  @click:append-inner="isPasswordVisible = !isPasswordVisible"
-                />
-                <!-- :rules="[requiredValidator, passwordValidator]" -->
-                <div class="d-flex align-center flex-wrap justify-space-between mt-2 mb-4">
-                  <VCheckbox
-                    v-model="form.remember"
-                    label="Remember me"
-                  />
-                  <RouterLink
-                    class="text-primary ms-2"
-                    :to="{ name: 'forgot-password' }"
-                  >
-                    Forgot Password?
-                  </RouterLink>
+                <!-- password -->
+                <VCol cols="12">
+                  <PuSkeleton height="2rem" />
+                  <div class="d-flex align-center flex-wrap justify-space-between mt-2 mb-4">
+                    <PuSkeleton width="150px" />
+                    <PuSkeleton width="150px" />
+                  </div>
+                  <VRow>
+                    <VCol
+                      cols="12"
+                      md="4"
+                    >
+                      <PuSkeleton height="2rem" />
+                    </VCol>
+                    <VCol
+
+                      cols="12"
+                      md="4"
+                    >
+                      <PuSkeleton height="2rem" />
+                    </VCol>
+                  </VRow>
+                </VCol>
+              </VRow>
+            </VForm>
+          </VCardText>
+        </VCard>
+      </VCol>
+
+      <VCol
+        md="8"
+        class="d-none d-md-flex"
+      >
+        <!-- illustration -->
+        <div class="position-relative w-100">
+          <div
+            class="d-flex align-center justify-center w-100"
+            style="max-block-size: 100vh; object-fit: cover;"
+          >
+            <VImg :src="section_content.banner" />
+          </div>
+        </div>
+      </VCol>
+    </VRow>
+    <VRow
+      v-if="section_content.body"
+      class="auth-wrapper"
+      style="
+      max-inline-size: 300rem;
+    "
+    >
+      <VCol
+        cols="12"
+        md="4"
+        class="auth-card-v2 d-flex align-center justify-center"
+        style="background-color: rgb(var(--v-theme-surface));"
+      >
+        <VCard
+          flat
+          :max-width="800"
+          class="mt-12 mt-sm-0 pa-6"
+        >
+          <VCardItem class="justify-start">
+            <template #prepend>
+              <RouterLink to="/">
+                <div class="d-flex">
+                  <VNodeRenderer :nodes="themeConfig.app.logo" />
                 </div>
-                <VRow>
-                  <VCol
-                    cols="12"
-                    md="4"
-                  >
-                    <VBtn
-                      type="submit"
-                      block
-                    >
-                      <div v-show="!isLoading">
-                        Login
-                      </div>
-                      <VProgressCircular
-                        v-show="isLoading"
-                        indeterminate
-                        color="white"
-                      />
-                    </VBtn>
-                  </VCol>
-                  <VCol
+              </RouterLink>
+            </template>
 
-                    cols="12"
-                    md="4"
-                  >
-                    <VBtn
-                      block
-                      class="mb-1"
-                      variant="outlined"
-                      :to="{ name: 'register' }"
+            <VCardTitle class="auth-title">
+              {{ themeConfig.app.title }}
+            </VCardTitle>
+          </VCardItem>
+
+          <VCardText>
+            <h6 class="text-h4 mb-1">
+              {{ section_content.heading_1 }}
+            </h6>
+            <p class="mb-0">
+              {{ section_content.body }}
+            </p>
+          </VCardText>
+
+          <VCardText>
+            <VForm @submit.prevent="login">
+              <VRow>
+                <!-- email -->
+                <VCol cols="12">
+                  <VTextField
+                    v-model="form.userid"
+                    autofocus
+                    label="Email"
+                    type="text"
+                    :rules="[requiredValidator, emailValidator]"
+                  />
+                </VCol>
+
+                <!-- password -->
+                <VCol cols="12">
+                  <VTextField
+                    v-model="form.password"
+                    label="Password"
+                    :type="isPasswordVisible ? 'text' : 'password'"
+                    :append-inner-icon="isPasswordVisible ? 'bx-hide' : 'bx-show'"
+                    required
+                    :rules="[requiredValidator]"
+                    @click:append-inner="isPasswordVisible = !isPasswordVisible"
+                  />
+                  <!-- :rules="[requiredValidator, passwordValidator]" -->
+                  <div class="d-flex align-center flex-wrap justify-space-between mt-2 mb-4">
+                    <VCheckbox
+                      v-model="form.remember"
+                      label="Remember me"
+                    />
+                    <RouterLink
+                      class="text-primary ms-2"
+                      :to="{ name: 'forgot-password' }"
                     >
-                      Signup
-                    </VBtn>
-                  </VCol>
-                </VRow>
-              </VCol>
+                      Forgot Password?
+                    </RouterLink>
+                  </div>
+                  <VRow>
+                    <VCol
+                      cols="12"
+                      md="4"
+                    >
+                      <VBtn
+                        type="submit"
+                        block
+                      >
+                        <div v-show="!isLoading">
+                          Login
+                        </div>
+                        <VProgressCircular
+                          v-show="isLoading"
+                          indeterminate
+                          color="white"
+                        />
+                      </VBtn>
+                    </VCol>
+                    <VCol
+
+                      cols="12"
+                      md="4"
+                    >
+                      <VBtn
+                        block
+                        class="mb-1"
+                        variant="outlined"
+                        :to="{ name: 'register' }"
+                      >
+                        Signup
+                      </VBtn>
+                    </VCol>
+                  </VRow>
+                </VCol>
               <!--
                 <VCol
                 cols="12"
@@ -202,27 +293,28 @@ onMounted(() => {
                 <AuthProvider />
                 </VCol>
               -->
-            </VRow>
-          </VForm>
-        </VCardText>
-      </VCard>
-    </VCol>
+              </VRow>
+            </VForm>
+          </VCardText>
+        </VCard>
+      </VCol>
 
-    <VCol
-      md="8"
-      class="d-none d-md-flex"
-    >
-      <!-- illustration -->
-      <div class="position-relative w-100">
-        <div
-          class="d-flex align-center justify-center w-100"
-          style="max-block-size: 100vh; object-fit: cover;"
-        >
-          <VImg :src="section_content.banner" />
+      <VCol
+        md="8"
+        class="d-none d-md-flex"
+      >
+        <!-- illustration -->
+        <div class="position-relative w-100">
+          <div
+            class="d-flex align-center justify-center w-100"
+            style="max-block-size: 100vh; object-fit: cover;"
+          >
+            <VImg :src="section_content.banner" />
+          </div>
         </div>
-      </div>
-    </VCol>
-  </VRow>
+      </VCol>
+    </VRow>
+  </div>
 </template>
 
 <style lang="scss">
