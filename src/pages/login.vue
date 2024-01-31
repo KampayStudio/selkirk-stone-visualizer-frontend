@@ -45,7 +45,7 @@ const isPasswordVisible = ref(false)
 
 const section_content = ref({
   logo: '',
-  banner: '',
+  banner: 'https://images.squarespace-cdn.com/content/v1/5df2e96175170a0bfdc2f31c/1663082905449-BZSYII4RA5ZKF5E019VY/CB+-+Granite+Ridge+12.jpeg?format=2500w',
   heading_1: '',
   heading_2: '',
   body: '',
@@ -84,7 +84,6 @@ onMounted(() => {
       >
         <VCard
           flat
-          :max-width="800"
           class="mt-12 mt-sm-0 pa-6"
         >
           <VCardItem class="justify-start">
@@ -146,17 +145,9 @@ onMounted(() => {
 
       <VCol
         md="8"
-        class="d-none d-md-flex"
+        class="px-0"
       >
-        <!-- illustration -->
-        <div class="position-relative w-100">
-          <div
-            class="d-flex align-center justify-center w-100"
-            style="max-block-size: 100vh; object-fit: cover;"
-          >
-            <VImg :src="section_content.banner" />
-          </div>
-        </div>
+        <PuSkeleton height="100vh" />
       </VCol>
     </VRow>
     <VRow
@@ -273,26 +264,6 @@ onMounted(() => {
                     </VCol>
                   </VRow>
                 </VCol>
-              <!--
-                <VCol
-                cols="12"
-                class="d-flex align-center"
-                >
-                <VDivider />
-                <span class="mx-4">or</span>
-                <VDivider />
-                </VCol>
-              -->
-
-              <!-- auth providers -->
-              <!--
-                <VCol
-                cols="12"
-                class="text-center"
-                >
-                <AuthProvider />
-                </VCol>
-              -->
               </VRow>
             </VForm>
           </VCardText>
@@ -301,18 +272,9 @@ onMounted(() => {
 
       <VCol
         md="8"
-        class="d-none d-md-flex"
-      >
-        <!-- illustration -->
-        <div class="position-relative w-100">
-          <div
-            class="d-flex align-center justify-center w-100"
-            style="max-block-size: 100vh; object-fit: cover;"
-          >
-            <VImg :src="section_content.banner" />
-          </div>
-        </div>
-      </VCol>
+        class="d-none d-md-flex pa-0"
+        :style="`background-image: url('${section_content.banner}'); background-position: center; background-size: cover;`"
+      />
     </VRow>
   </div>
 </template>

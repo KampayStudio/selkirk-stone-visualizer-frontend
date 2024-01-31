@@ -62,6 +62,36 @@ const goToVisualizer = (sampleImage: any) => {
                 value="interior"
                 style="padding: 1rem;"
               >
+                <!-- Skeleton Loading -->
+                <VRow
+                  v-if="interior.length === 0"
+                  class="d-flex"
+                  style="justify-content: center;"
+                >
+                  <VCol
+                    v-for="i in 7"
+                    :key="i"
+                    class="text-center d-flex justify-center flex-column"
+                    cols="12"
+                    sm="6"
+                    md="3"
+                    lg="2"
+                    style="align-items: center;"
+                  >
+                    <div class="image-mask image-container">
+                      <PuSkeleton
+                        width="200px"
+                        height="8rem"
+                      />
+                    </div>
+                    <VLabel
+                      class="text-body-2 "
+                      style="font-size: .9rem;"
+                    >
+                      <PuSkeleton width="5rem" />
+                    </VLabel>
+                  </VCol>
+                </VRow>
                 <VRow
                   class="d-flex"
                   style="justify-content: center;"
@@ -97,6 +127,36 @@ const goToVisualizer = (sampleImage: any) => {
                 value="exterior"
                 style="padding: 1rem;"
               >
+                <!-- Skeleton Loading -->
+                <VRow
+                  v-if="exterior.length === 0"
+                  class="d-flex"
+                  style="justify-content: center;"
+                >
+                  <VCol
+                    v-for="i in 7"
+                    :key="i"
+                    class="text-center d-flex justify-center flex-column"
+                    cols="12"
+                    sm="6"
+                    md="3"
+                    lg="2"
+                    style="align-items: center;"
+                  >
+                    <div class="image-mask image-container">
+                      <PuSkeleton
+                        width="200px"
+                        height="8rem"
+                      />
+                    </div>
+                    <VLabel
+                      class="text-body-2 "
+                      style="font-size: .9rem;"
+                    >
+                      <PuSkeleton width="5rem" />
+                    </VLabel>
+                  </VCol>
+                </VRow>
                 <VRow
                   class="d-flex"
                   style="justify-content: center;"
@@ -131,6 +191,36 @@ const goToVisualizer = (sampleImage: any) => {
                 value="mantle"
                 style="padding: 1rem;"
               >
+                <!-- Skeleton Loading -->
+                <VRow
+                  v-if="mantle.length === 0"
+                  class="d-flex"
+                  style="justify-content: center;"
+                >
+                  <VCol
+                    v-for="i in 7"
+                    :key="i"
+                    class="text-center d-flex justify-center flex-column"
+                    cols="12"
+                    sm="6"
+                    md="3"
+                    lg="2"
+                    style="align-items: center;"
+                  >
+                    <div class="image-mask image-container">
+                      <PuSkeleton
+                        width="200px"
+                        height="8rem"
+                      />
+                    </div>
+                    <VLabel
+                      class="text-body-2 "
+                      style="font-size: .9rem;"
+                    >
+                      <PuSkeleton width="5rem" />
+                    </VLabel>
+                  </VCol>
+                </VRow>
                 <VRow
                   class="d-flex"
                   style="justify-content: center;"
