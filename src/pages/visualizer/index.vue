@@ -4,8 +4,11 @@ import Main from './sections/main.vue'
 import Visualize from './sections/visualize.vue'
 import WallSelection from './sections/wall-selection.vue'
 
+// import wallImage from '@images/1692044741530.jpeg'
+
 const image = ref(JSON.parse(localStorage.getItem('visualizeImage')))
 
+// const image = ref(wallImage)
 const selectedWall = ref()
 const currentWindow = ref('selectWall')
 

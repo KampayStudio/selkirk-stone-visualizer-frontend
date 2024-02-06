@@ -1,21 +1,91 @@
 <script setup lang="ts">
+import { ref } from 'vue'
+import axios from '@axios'
+
+const route = useRoute()
+const router = useRouter()
+
+const fileInput = ref(null)
 const selectionGroup = ref('interior')
 
-const files = ref([])
-const fileInput = ref(null)
+const uploadImage = async selectedFile => {
+  const reader = new FileReader()
 
-const onDragOver = event => {
-  // Add any on-drag-over styles or effects here
+  reader.onload = async e => {
+    const imageBase64 = e.target.result.split(',')[1]
+
+    try {
+      if (selectionGroup.value === 'interior') {
+        const response = await axios({
+          method: 'POST',
+          url: 'https://detect.roboflow.com/kp-ss-indoor-wall-segmentation/1',
+          params: {
+            api_key: 'XVVN1vofu0gxVx4Ez6IC',
+          },
+          data: imageBase64,
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+        })
+
+        localStorage.setItem('visualizeImage', JSON.stringify(convertResponseToDesiredFormat(response.data, e.target.result)))
+        router.replace(route.query.to ? String(route.query.to) : '/visualizer')
+      }
+      else if (selectionGroup.value === 'exterior') {
+        const response = await axios({
+          method: 'POST',
+          url: 'https://detect.roboflow.com/kp-ss-outdoor-wall-segmentation/1',
+          params: {
+            api_key: 'XVVN1vofu0gxVx4Ez6IC',
+          },
+          data: imageBase64,
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+        })
+
+        localStorage.setItem('visualizeImage', JSON.stringify(convertResponseToDesiredFormat(response.data, e.target.result)))
+        router.replace(route.query.to ? String(route.query.to) : '/visualizer')
+      }
+      else if (selectionGroup.value === 'mantle') {
+        console.log('not yet available')
+      }
+    }
+    catch (error) {
+      console.error(error.message)
+    }
+  }
+
+  reader.readAsDataURL(selectedFile)
 }
 
-const onFileDrop = event => {
-  const droppedFiles = event.dataTransfer.files
-  if (droppedFiles.length > 0)
-    files.value = [...files.value, ...Array.from(droppedFiles)]
+const convertResponseToDesiredFormat = (originalResponse, base64image) => {
+  const predictions = originalResponse.predictions
+
+  const newFormat = {
+    image: base64image, // Set the image path as required
+    wall_shape: {
+      shapes: [],
+    },
+  }
+
+  predictions.forEach(prediction => {
+    const shape = prediction.points.map(point => {
+      return { x: Math.round(point.x), y: Math.round(point.y) }
+    })
+
+    newFormat.wall_shape.shapes.push(shape)
+  })
+
+  return newFormat
 }
 
 const onFileChange = event => {
-  files.value = [...files.value, ...Array.from(event.target.files)]
+  if (event.target.files.length > 0) {
+    const selectedFile = event.target.files[0]
+
+    uploadImage(selectedFile)
+  }
 }
 
 const openFileDialog = () => {
@@ -93,7 +163,7 @@ const openFileDialog = () => {
             ref="fileInput"
             type="file"
             class="d-none"
-            multiple
+            accept="image/*"
             @change="onFileChange"
           >
           <VIcon class="upload-icon">

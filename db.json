@@ -1,0 +1,21 @@
+{
+    "users": [
+        {
+            "permissions": {
+                "is_administrator": true,
+                "is_content_managing": false,
+                "is_support": false,
+                "is_analytics": false,
+                "is_product_managing": false
+            },
+            "profile_picture": "data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAbwAAAG8B8aLcQwAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAABfSURBVDiNY/z//z8DUWAR4wOG/wzyKGKMDA+ZiNPNwIChGSpGvAE4wMAbwIJV9DAHZoCR5AIiNeM2gAQw8AawkBJg2F1AgWaIARSCwWAAI8NDLOJ/MERYGDHFGBkeAgBjFBRvsGT1gAAAAABJRU5ErkJggg==",
+            "id": "1",
+            "first_name": "james8",
+            "last_name": "grim",
+            "email": "jcd.grimaldo@mseuf.edu.ph",
+            "contact_number": "0999999999",
+            "address": "kampay st.",
+            "is_admin": "true"
+        }
+    ]
+}
