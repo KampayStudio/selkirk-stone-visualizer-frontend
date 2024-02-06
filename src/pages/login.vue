@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { VForm } from 'vuetify/components/VForm'
 import axios from '@axios'
-import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
-import { themeConfig } from '@themeConfig'
 import { emailValidator, requiredValidator } from '@validators'
 
 const route = useRoute()
@@ -45,7 +43,7 @@ const isPasswordVisible = ref(false)
 
 const section_content = ref({
   logo: '',
-  banner: 'https://images.squarespace-cdn.com/content/v1/5df2e96175170a0bfdc2f31c/1663082905449-BZSYII4RA5ZKF5E019VY/CB+-+Granite+Ridge+12.jpeg?format=2500w',
+  banner: '',
   heading_1: '',
   heading_2: '',
   body: '',
@@ -53,7 +51,7 @@ const section_content = ref({
 
 const get_content = async () => {
   try {
-    const response = await axios.get('/contents/login_page/')
+    const response = await axios.get('/contents/login-page/')
 
     section_content.value = response.data[0]
   }
@@ -69,13 +67,7 @@ onMounted(() => {
 
 <template>
   <div>
-    <VRow
-      v-if="!section_content.body"
-      class="auth-wrapper"
-      style="
-      max-inline-size: 300rem;
-    "
-    >
+    <VRow v-if="!section_content.body">
       <VCol
         cols="12"
         md="4"
@@ -152,10 +144,7 @@ onMounted(() => {
     </VRow>
     <VRow
       v-if="section_content.body"
-      class="auth-wrapper"
-      style="
-      max-inline-size: 300rem;
-    "
+      style="block-size: 101vh;"
     >
       <VCol
         cols="12"
@@ -172,14 +161,14 @@ onMounted(() => {
             <template #prepend>
               <RouterLink to="/">
                 <div class="d-flex">
-                  <VNodeRenderer :nodes="themeConfig.app.logo" />
+                  <img
+                    :src="section_content.logo"
+                    alt="logo"
+                    style="max-inline-size: 9rem;"
+                  >
                 </div>
               </RouterLink>
             </template>
-
-            <VCardTitle class="auth-title">
-              {{ themeConfig.app.title }}
-            </VCardTitle>
           </VCardItem>
 
           <VCardText>
@@ -187,7 +176,7 @@ onMounted(() => {
               {{ section_content.heading_1 }}
             </h6>
             <p class="mb-0">
-              {{ section_content.body }}
+              {{ section_content.heading_2 }}
             </p>
           </VCardText>
 

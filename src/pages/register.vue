@@ -2,8 +2,6 @@
 import Swal from 'sweetalert2'
 import { VForm } from 'vuetify/components/VForm'
 import axios from '@axios'
-import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
-import { themeConfig } from '@themeConfig'
 import { confirmedValidator, emailValidator, lengthValidator, passwordValidator, requiredValidator } from '@validators'
 
 const route = useRoute()
@@ -32,6 +30,7 @@ async function signup() {
         last_name: form.value.lastname,
         email: form.value.email,
         password: form.value.password,
+        profile_picture: 'data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAbwAAAG8B8aLcQwAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAABfSURBVDiNY/z//z8DUWAR4wOG/wzyKGKMDA+ZiNPNwIChGSpGvAE4wMAbwIJV9DAHZoCR5AIiNeM2gAQw8AawkBJg2F1AgWaIARSCwWAAI8NDLOJ/MERYGDHFGBkeAgBjFBRvsGT1gAAAAABJRU5ErkJggg==',
         contact_number: form.value.contact_number,
         address: form.value.address,
         is_admin: false,
@@ -55,15 +54,15 @@ async function signup() {
         router.replace(route.query.to ? String(route.query.to) : '/login')
     })
     isLoading.value = false
-
-    // router.replace(route.query.to ? String(route.query.to) : '/login')
   }
   catch (error) {
     Swal.fire({
       title: `${Object.keys(error.response.data)[0].replace(/[^A-Za-z0-9]+/g, ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}: ${Object.values(error.response.data)[0]}`,
       icon: 'error',
     })
-    console.error('Signup error:', Object.values(error.response.data)[0])
+
+    // console.error('Signup error:', Object.values(error.response.data)[0])
+    console.log(error)
     isLoading.value = false
   }
 }
@@ -78,7 +77,7 @@ const section_content = ref({
 
 const get_content = async () => {
   try {
-    const response = await axios.get('/contents/signup_page/')
+    const response = await axios.get('/contents/signup-page/')
 
     section_content.value = response.data[0]
   }
@@ -243,14 +242,14 @@ onMounted(() => {
             <template #prepend>
               <RouterLink to="/">
                 <div class="d-flex">
-                  <VNodeRenderer :nodes="themeConfig.app.logo" />
+                  <img
+                    :src="section_content.logo"
+                    alt="logo"
+                    style="inline-size: 8rem;"
+                  >
                 </div>
               </RouterLink>
             </template>
-
-            <VCardTitle class="auth-title">
-              {{ themeConfig.app.title }}
-            </VCardTitle>
           </VCardItem>
 
           <VCardText>
@@ -258,7 +257,7 @@ onMounted(() => {
               {{ section_content.heading_1 }}
             </h6>
             <p class="mb-0">
-              <span>{{ section_content.body }}</span>
+              <span>{{ section_content.heading_1 }}</span>
               <RouterLink
                 class="text-primary ms-2"
                 :to="{ name: 'login' }"
