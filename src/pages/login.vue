@@ -24,13 +24,16 @@ const login = async () => {
       withCredentials: true, // Include this line
     })
 
-    localStorage.setItem('authToken', response.data.jwt)
-    localStorage.setItem('first_name', response.data.first_name)
-    localStorage.setItem('last_name', response.data.last_name)
-    localStorage.setItem('address', response.data.address)
-    localStorage.setItem('contact_number', response.data.contact_number)
-    localStorage.setItem('email', response.data.email)
+    sessionStorage.setItem('authToken', response.data.jwt)
+    sessionStorage.setItem('first_name', response.data.first_name)
+    sessionStorage.setItem('last_name', response.data.last_name)
+    sessionStorage.setItem('address', response.data.address)
+    sessionStorage.setItem('contact_number', response.data.contact_number)
+    sessionStorage.setItem('email', response.data.email)
+    sessionStorage.setItem('id', response.data.id)
+
     isLoading.value = false
+
     router.replace(route.query.to ? String(route.query.to) : '/')
   }
   catch (error) {

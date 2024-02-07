@@ -1,3 +1,30 @@
+<script setup lang="ts">
+import ChangePasswordModal from '@/layouts/components/profile/ChangePasswordModal.vue'
+import DeleteAccountConfirmation from '@/layouts/components/profile/DeleteAccountConfirmation.vue'
+import axios from '@axios'
+
+const profile = ref({
+  profile_picture: 'https://img.freepik.com/free-psd/3d-illustration-human-avatar-profile_23-2150671122.jpg',
+  id: '',
+  first_name: sessionStorage.getItem('first_name'),
+  last_name: sessionStorage.getItem('last_name'),
+  email: sessionStorage.getItem('email'),
+  contact_number: sessionStorage.getItem('contact_number'),
+  address: sessionStorage.getItem('address'),
+})
+
+const saveChanges = async () => {
+  try {
+    const response = await axios.patch(`/users/get-users/${sessionStorage.getItem('id')}/`, profile.value)
+
+    console.log(response.data)
+  }
+  catch (error) {
+    console.log(error)
+  }
+}
+</script>
+
 <template>
   <section class="max-section-width">
     <VCard>
@@ -6,7 +33,7 @@
           <VCol class="d-flex align-center gap-x-5">
             <div>
               <VImg
-                src="https://img.freepik.com/free-psd/3d-illustration-human-avatar-profile_23-2150671122.jpg"
+                :src="profile.profile_picture"
                 style="border-radius: 10px; inline-size: 9.375rem;"
               />
             </div>
@@ -38,37 +65,43 @@
             cols="12"
             md="6"
           >
-            <VTextField label="First Name" />
+            <VTextField
+              v-model="profile.first_name"
+              label="First Name"
+            />
           </VCol>
           <VCol
             cols="12"
             md="6"
           >
-            <VTextField label="Last Name" />
+            <VTextField
+              v-model="profile.last_name"
+              label="Last Name"
+            />
           </VCol>
           <VCol
             cols="12"
             md="6"
           >
-            <VTextField label="Email" />
+            <VTextField
+              v-model="profile.email"
+              label="Email"
+            />
           </VCol>
           <VCol
             cols="12"
             md="6"
           >
-            <VTextField label="Contact Number" />
+            <VTextField
+              v-model="profile.contact_number"
+              label="Contact Number"
+            />
           </VCol>
-          <VCol
-            cols="12"
-            md="6"
-          >
-            <VTextField label="Address" />
-          </VCol>
-          <VCol
-            cols="12"
-            md="6"
-          >
-            <VTextField label="Zip Code" />
+          <VCol cols="12">
+            <VTextarea
+              v-model="profile.address"
+              label="Address"
+            />
           </VCol>
         </VRow>
         <VRow>
@@ -81,20 +114,16 @@
 
         <VRow>
           <VCol class="d-flex gap-x-2">
-            <VBtn variant="outlined">
-              Change Password
-            </VBtn>
-            <VBtn variant="outlined">
-              Delete Account
-            </VBtn>
+            <ChangePasswordModal />
+
+            <DeleteAccountConfirmation />
           </VCol>
         </VRow>
         <VRow>
           <VCol class="d-flex justify-end gap-x-2">
-            <VBtn variant="outlined">
-              Cancel
+            <VBtn @click="saveChanges">
+              Save Changes
             </VBtn>
-            <VBtn>Save Changes</VBtn>
           </VCol>
         </VRow>
       </VCardItem>

@@ -27,13 +27,13 @@ const updateModelValue = (val: boolean) => {
 const onConfirmation = () => {
   emit('confirm', true)
   updateModelValue(false)
-  unsubscribed.value = true
+
+  // unsubscribed.value = true
 }
 
 const onCancel = () => {
   emit('confirm', false)
   emit('update:isDialogVisible', false)
-  cancelled.value = true
 }
 </script>
 
@@ -51,7 +51,7 @@ const onCancel = () => {
           variant="outlined"
           color="warning"
           class="my-4"
-          style="width: 88px; height: 88px; pointer-events: none;"
+          style=" block-size: 88px;inline-size: 88px; pointer-events: none;"
         >
           <span class="text-5xl">!</span>
         </VBtn>
@@ -92,7 +92,7 @@ const onCancel = () => {
           variant="outlined"
           color="success"
           class="my-4"
-          style="width: 88px; height: 88px; pointer-events: none;"
+          style=" block-size: 88px;inline-size: 88px; pointer-events: none;"
         >
           <span class="text-3xl">
             <VIcon icon="bx-check" />
@@ -127,7 +127,7 @@ const onCancel = () => {
           variant="outlined"
           color="error"
           class="my-4"
-          style="width: 88px; height: 88px; pointer-events: none;"
+          style=" block-size: 88px;inline-size: 88px; pointer-events: none;"
         >
           <span class="text-5xl font-weight-light">X</span>
         </VBtn>

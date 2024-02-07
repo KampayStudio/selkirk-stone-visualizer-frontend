@@ -11,7 +11,7 @@ import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 
 const { appRouteTransition } = useThemeConfig()
 
-const authToken = ref(localStorage.getItem('authToken'))
+const authToken = ref(sessionStorage.getItem('authToken'))
 
 const isAuthenticated = computed(() => !authToken.value)
 </script>

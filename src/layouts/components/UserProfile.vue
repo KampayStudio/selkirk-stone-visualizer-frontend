@@ -3,8 +3,8 @@ import axios from '@axios'
 
 const route = useRoute()
 const router = useRouter()
-const firstname = localStorage.getItem('first_name')
-const lastname = localStorage.getItem('last_name')
+const firstname = sessionStorage.getItem('first_name')
+const lastname = sessionStorage.getItem('last_name')
 
 const logout = async () => {
   try {
@@ -13,12 +13,13 @@ const logout = async () => {
     await axios.post('/users/logout/', {}, { withCredentials: true })
 
     // Clear client-side authentication state
-    localStorage.removeItem('authToken')
-    localStorage.removeItem('first_name')
-    localStorage.removeItem('last_name')
-    localStorage.removeItem('address')
-    localStorage.removeItem('contact_number')
-    localStorage.removeItem('email')
+    sessionStorage.removeItem('authToken')
+    sessionStorage.removeItem('first_name')
+    sessionStorage.removeItem('last_name')
+    sessionStorage.removeItem('address')
+    sessionStorage.removeItem('contact_number')
+    sessionStorage.removeItem('email')
+    sessionStorage.removeItem('id')
 
     // Redirect to login page or perform other actions after logout
     // For example, using Vue Router to navigate to the login page
