@@ -4,15 +4,17 @@ import axios from '@axios'
 const section_content = ref({
   photo_1: '',
   heading_1: '',
-  heading_2: '',
   body: '',
 })
+
+const pageLoading = ref(true)
 
 const get_content = async () => {
   try {
     const response = await axios.get('/contents/section4/')
 
     section_content.value = response.data[0]
+    pageLoading.value = false
   }
   catch (error) {
     console.log(error)
@@ -27,10 +29,10 @@ onMounted(() => {
 <template>
   <div>
     <section
-      v-if="!section_content.body"
-      class="max-section-width"
+      v-if="pageLoading"
+      class="section4"
     >
-      <VRow class="max-content-width">
+      <VRow class="content">
         <VCol
           id="col-1"
           md="6"
@@ -59,16 +61,15 @@ onMounted(() => {
       </VRow>
     </section>
     <section
-      v-if="section_content.body"
-      id="section-4"
-      class="max-section-width"
+      v-if="!pageLoading"
+      id="section4"
     >
-      <VRow class="max-content-width">
+      <VRow class="content">
         <VCol
           id="col-1"
           md="6"
           cols="12"
-          class="d-flex"
+          class="d-none d-md-flex"
           style="justify-content: flex-end;"
         >
           <img :src="section_content.photo_1">
@@ -95,36 +96,23 @@ onMounted(() => {
 </template>
 
 <style lang="scss">
-.max-section-width {
-  margin-inline: auto;
-  max-inline-size: 135rem;
-}
+#section4 {
+  color: white;
 
-.max-content-width {
-  box-sizing: border-box; // Ensures padding is included in the width calculation
-  inline-size: 100%; // Container takes full width of the viewport
-  max-inline-size: 100vw; // Max width is 100% of the viewport width
-
-  @media (min-width: 1440px) {
-    padding-inline: calc((100vw - 1440px) / 2);
-  }
-}
-
-#section-4{
-  #col-1{
+  .content {
+    margin-inline: auto;
+    max-inline-size: 1440px;
     padding-block-start: 3rem;
-  }
 
-  @media (max-width: 975px) {
-    #col-1{
-      display:none!important;
-    }
+    @media (max-width: 960px) {
+      #col-2{
+        margin-inline:auto;
+        text-align: center;
+      }
 
-    #col-2{
-      margin-inline:auto;
-      padding-block-start: 5rem;
-      padding-inline: 2rem;
-      text-align: center;
+      padding-block: 3rem;
+      padding-inline: 1.2rem;
+
     }
   }
 }

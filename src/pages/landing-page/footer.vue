@@ -10,11 +10,14 @@ const section_content = ref({
   subtitle: '',
 })
 
+const pageLoading = ref(true)
+
 const get_content = async () => {
   try {
     const response = await axios.get('/contents/footer/')
 
     section_content.value = response.data[0]
+    pageLoading.value = false
   }
   catch (error) {
     console.log(error)
@@ -29,17 +32,18 @@ onMounted(() => {
 <template>
   <div>
     <section
-      v-if="!section_content.subtitle"
-      id="section-5"
-      style=" background-color: #5F2726;color:white;"
+      v-if="pageLoading"
+      id="section5"
     >
-      <div class="max-content-width">
+      <div class="content">
         <VRow>
           <VCol
             cols="12"
             md="6"
           >
-            <img :src="section_content.logo">
+            <p class="text-sm">
+              <PuSkeleton />
+            </p>
             <p class="text-sm">
               <PuSkeleton />
             </p>
@@ -57,7 +61,9 @@ onMounted(() => {
             md="6"
           >
             <div>
-              <p>{{ section_content.subtitle }}</p>
+              <p class="text-sm">
+                <PuSkeleton />
+              </p>
               <div class="gap-x-1">
                 <PuSkeleton height="2rem" />
                 <PuSkeleton height="2rem" />
@@ -85,11 +91,10 @@ onMounted(() => {
       </div>
     </section>
     <section
-      v-if="section_content.subtitle"
-      id="section-5"
-      style=" background-color: #5F2726;color:white;"
+      v-if="!pageLoading"
+      id="section5"
     >
-      <div class="max-content-width">
+      <div class="content">
         <VRow>
           <VCol
             cols="12"
@@ -154,31 +159,14 @@ onMounted(() => {
 </template>
 
 <style lang="scss">
-.max-section-width {
-  margin-inline: auto;
-  max-inline-size: 135rem;
-}
+#section5{
+  background-color: #5F2726;
+  color:white;
 
-.max-content-width {
-  box-sizing: border-box; // Ensures padding is included in the width calculation
-  inline-size: 100%; // Container takes full width of the viewport
-  max-inline-size: 100vw; // Max width is 100% of the viewport width
-
-  @media (min-width: 1440px) {
-    padding-inline: calc((100vw - 1440px) / 2);
-  }
-}
-
-#section-5{
-  padding-block:3rem;
-
-  @media (max-width: 975px) {
-    padding: 3rem;
-    margin-block-start: 4rem;
-
-    #footer-credits{
-      margin-block-start:2rem;
-    }
+  .content{
+    margin-inline:auto;
+    max-inline-size: 1440px;
+    padding-block-start: 3rem;
   }
 }
 </style>
