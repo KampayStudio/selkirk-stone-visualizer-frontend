@@ -3,11 +3,9 @@ import NavbarThemeSwitcher from './NavbarThemeSwitcher.vue'
 import UserProfile from './UserProfile.vue'
 import navItems from '@/navigation/horizontal'
 import { useThemeConfig } from '@core/composable/useThemeConfig'
-import { themeConfig } from '@themeConfig'
 
 // Components
 import { HorizontalNavLayout } from '@layouts'
-import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 
 const { appRouteTransition } = useThemeConfig()
 
@@ -24,7 +22,10 @@ const isAuthenticated = computed(() => !authToken.value)
         to="/"
         class="d-flex align-center pr-10"
       >
-        <VNodeRenderer :nodes="themeConfig.app.logo" />
+        <img
+          :src="$vuetify.theme.name !== 'dark' ? '/image/selkirk-logo-full.png' : '/image/selkirk-logo-white.png' "
+          style="inline-size: 9rem;"
+        >
       </RouterLink>
       <RouterLink to="/">
         <VBtn variant="text">
@@ -80,3 +81,30 @@ const isAuthenticated = computed(() => !authToken.value)
     <!-- <TheCustomizer /> -->
   </HorizontalNavLayout>
 </template>
+
+<style lang="scss">
+#main-logo{
+  img {
+    inline-size: 9rem;
+
+  }
+
+  #light{
+    display: block;
+  }
+
+  #dark{
+    display: none;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    #light{
+      display: none;
+    }
+
+    #dark{
+      display: block;
+    }
+  }
+}
+</style>
