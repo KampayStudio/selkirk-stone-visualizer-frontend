@@ -139,6 +139,7 @@ onMounted(() => {
   align-items: center; /* Center images vertically */
   justify-content: center; /* Center images horizontally */
   border-radius:10px;
+  margin-inline: auto;
   max-block-size: 20rem;
   max-inline-size: 15rem;
 }
