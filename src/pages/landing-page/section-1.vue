@@ -68,60 +68,47 @@ onMounted(() => {
       class="index-max-section-width index-max-content-width"
       :style="{ backgroundImage: `url(${section_content.banner})` }"
     >
-      <VCard id="section-1-card">
-        <VCardText
-          class="d-flex gap-y-3"
-          style="flex-direction: column;"
-        >
-          <h1 class="text-primary text-5xl">
-            {{ section_content.heading_1 }}
-          </h1>
-          <h3 class="text-secondary">
-            {{ section_content.heading_2 }}
-          </h3>
-          <p class="text-p">
-            {{ section_content.body }}
-          </p>
-          <div
-            id="section-1-buttons"
-            class="d-flex gap-x-5"
+      <div style="inline-size: 1380px;">
+        <VCard id="section-1-card">
+          <VCardText
+            class="d-flex gap-y-3"
+            style="flex-direction: column;"
           >
-            <VBtn
-              id="section-1-first-button"
-              :to="{ name: 'sample-scenes' }"
+            <h1 class="text-primary text-5xl">
+              {{ section_content.heading_1 }}
+            </h1>
+            <h3 class="text-secondary">
+              {{ section_content.heading_2 }}
+            </h3>
+            <p class="text-p">
+              {{ section_content.body }}
+            </p>
+            <div
+              id="section-1-buttons"
+              class="d-flex gap-x-5"
             >
-              Try Sample Scenes
-            </VBtn>
-            <VBtn
-              variant="outlined"
-              :to="{ name: 'visualizer-upload' }"
-            >
-              Upload a photo
-            </VBtn>
-          </div>
-        </VCardText>
-      </VCard>
+              <VBtn
+                id="section-1-first-button"
+                :to="{ name: 'sample-scenes' }"
+              >
+                Try Sample Scenes
+              </VBtn>
+              <VBtn
+                variant="outlined"
+                :to="{ name: 'visualizer-upload' }"
+              >
+                Upload a photo
+              </VBtn>
+            </div>
+          </VCardText>
+        </VCard>
+      </div>
     </section>
     <section id="dummy" />
   </div>
 </template>
 
 <style lang="scss">
-.index-max-section-width {
-  margin-inline: auto;
-  max-inline-size: 135rem;
-}
-
-.index-max-content-width {
-  box-sizing: border-box; // Ensures padding is included in the width calculation
-  inline-size: 100%; // Container takes full width of the viewport
-  max-inline-size: 100vw; // Max width is 100% of the viewport width
-
-  @media (min-width: 1440px) {
-    padding-inline: calc((100vw - 1440px) / 2);
-  }
-}
-
 #dummy{
   display:none;
 
@@ -133,6 +120,8 @@ onMounted(() => {
 }
 
 #section1 {
+  display: flex;
+  justify-content: center;
   background-color: white;
 
   // background-image: url('/image/landing-page-house.jpeg');

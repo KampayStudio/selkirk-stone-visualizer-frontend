@@ -94,65 +94,66 @@ onMounted(() => {
       v-if="!pageLoading"
       id="section5"
     >
-      <div class="content">
+      <VRow
+        style="max-inline-size: 1280px;"
+        class="d-flex align-center mx-auto pt-5"
+      >
+        <VCol
+          cols="12"
+          md="6"
+        >
+          <img :src="section_content.logo">
+          <p class="text-sm">
+            {{ section_content.website }}
+          </p>
+
+          <p class="text-sm">
+            {{ section_content.contact1 }} <br>
+            {{ section_content.contact2 }} <br>
+
+            {{ section_content.address }}
+          </p>
+        </VCol>
+        <VCol
+          class="d-flex flex-column justify-content-center"
+          cols="12"
+          md="6"
+        >
+          <div>
+            <p>{{ section_content.subtitle }}</p>
+            <div class="d-flex gap-x-1">
+              <input
+                type="text"
+                style=" padding:1rem; background-color: white; block-size: 2.5rem;color: #7C7C7C; inline-size: 100%;max-inline-size: 20rem;"
+                class="rounded text-sm"
+                placeholder="Enter your email"
+              >
+              <button
+                style=" padding:.69rem;background-color: #1A4E19;"
+                class="text-sm rounded"
+              >
+                SUBSCRIBE
+              </button>
+            </div>
+          </div>
+        </VCol>
+      </VRow>
+      <hr
+        id="footer-credits"
+        class="text-white mb-1 "
+      >
+      <div>
         <VRow>
-          <VCol
-            cols="12"
-            md="6"
-          >
-            <img :src="section_content.logo">
-            <p class="text-sm">
-              {{ section_content.website }}
-            </p>
-
-            <p class="text-sm">
-              {{ section_content.contact1 }} <br>
-              {{ section_content.contact2 }} <br>
-
-              {{ section_content.address }}
-            </p>
+          <VCol class="text-xs">
+            © Selkirk Stone 2023
           </VCol>
           <VCol
-            class="d-flex flex-column justify-content-center"
-            cols="12"
-            md="6"
+            class="d-flex text-xs"
+            style="justify-content: flex-end;"
           >
-            <div>
-              <p>{{ section_content.subtitle }}</p>
-              <div class="d-flex gap-x-1">
-                <input
-                  type="text"
-                  style=" padding:1rem; background-color: white; block-size: 2.5rem;color: #7C7C7C; inline-size: 100%;max-inline-size: 20rem;"
-                  class="rounded text-sm"
-                  placeholder="Enter your email"
-                >
-                <button
-                  style=" padding:.69rem;background-color: #1A4E19;"
-                  class="text-sm rounded"
-                >
-                  SUBSCRIBE
-                </button>
-              </div>
-            </div>
+            Website Design and Development © Kampay Studio 2023
           </VCol>
         </VRow>
-        <hr
-          id="footer-credits"
-          class="text-white mb-1 "
-        >
-        <div>
-          <VRow>
-            <VCol class="text-xs">
-              © Selkirk Stone 2023
-            </VCol>
-            <VCol
-              class="d-flex text-xs"
-              style="justify-content: flex-end;"
-            >
-              Website Design and Development © Kampay Studio 2023
-            </VCol>
-          </VRow>
-        </div>
       </div>
     </section>
   </div>
