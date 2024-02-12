@@ -109,7 +109,6 @@ onMounted(() => {
   img{
     border-radius: 10px;
     inline-size: 100%;
-    max-block-size:60vh;
   }
 }
 

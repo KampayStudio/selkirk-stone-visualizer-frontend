@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import VisualizerMain from '@/layouts/components/visualizer/VisualizerMain.vue'
 
+const route = useRoute()
+const router = useRouter()
+
 const image = ref(JSON.parse(localStorage.getItem('visualizeImage')))
 </script>
 
@@ -11,13 +14,13 @@ const image = ref(JSON.parse(localStorage.getItem('visualizeImage')))
         <VRow>
           <VCol
             cols="12"
-            md="6"
+            md="8"
           >
             <VisualizerMain :image="image" />
           </VCol>
           <VCol
             cols="12"
-            md="6"
+            md="4"
             class="d-flex flex-column justify-center gap-y-3"
           >
             <div class="d-flex flex-row gap-x-5">
@@ -47,7 +50,7 @@ const image = ref(JSON.parse(localStorage.getItem('visualizeImage')))
               >
                 Edit Wall
               </VBtn>
-              <VBtn>
+              <VBtn @click="router.replace(route.query.to ? String(route.query.to) : '/visualizer/wall-selection')">
                 Proceed
               </VBtn>
             </div>
