@@ -1,70 +1,69 @@
 <script setup lang="ts">
-import Main from './sections/main.vue'
-
-import Visualize from './sections/visualize.vue'
-import WallSelection from './sections/wall-selection.vue'
-
-// import wallImage from '@images/1692044741530.jpeg'
+import VisualizerMain from '@/layouts/components/visualizer/VisualizerMain.vue'
 
 const image = ref(JSON.parse(localStorage.getItem('visualizeImage')))
-
-// const image = ref(wallImage)
-const selectedWall = ref()
-const currentWindow = ref('selectWall')
-
-const changeSection = (section: string) => {
-  currentWindow.value = section
-}
-
-const changeWall = wall => {
-  selectedWall.value = wall
-}
 </script>
 
 <template>
   <section>
     <VCard>
-      <VWindow
-        v-model="currentWindow"
-        :touch="false"
-      >
-        <VWindowItem
-          key="main"
-          value="main"
-        >
-          <Main
-            :image="image"
-            @proceed="changeSection"
-          />
-        </VWindowItem>
-
-        <VWindowItem
-          key="selectWall"
-          value="selectWall"
-        >
-          <WallSelection
-            :image="image"
-            :selected-wall="selectedWall"
-            @proceed="changeSection"
-            @wall-select="changeWall"
-          />
-        </VWindowItem>
-        <VWindowItem value="visualize">
-          <Visualize
-            :image="image"
-            :selected-wall="selectedWall"
-            @proceed="changeSection"
-          />
-        </VWindowItem>
-      </VWindow>
+      <VCardText>
+        <VRow>
+          <VCol
+            cols="12"
+            md="6"
+          >
+            <VisualizerMain :image="image" />
+          </VCol>
+          <VCol
+            cols="12"
+            md="6"
+            class="d-flex flex-column justify-center gap-y-3"
+          >
+            <div class="d-flex flex-row gap-x-5">
+              <div class="text-sm d-flex align-center gap-x-1">
+                <VIcon
+                  icon="mdi-square"
+                  color="#38A736"
+                /> Detected Wall
+              </div>
+              <div class="text-sm d-flex align-center gap-x-1">
+                <VIcon
+                  icon="mdi-square"
+                  color="#D8BF3A"
+                /> Added Wall
+              </div>
+            </div>
+            <h6 class="text-h4">
+              {{ image.wall_shape.shapes.length }} Detected Walls
+            </h6>
+            <p class="text-body-2">
+              Are you satisfied with the wall detection? <br> Proceeding will not allow further changes.
+            </p>
+            <div class="d-flex gap-x-3">
+              <VBtn
+                variant="outlined"
+                disabled
+              >
+                Edit Wall
+              </VBtn>
+              <VBtn>
+                Proceed
+              </VBtn>
+            </div>
+          </VCol>
+        </VRow>
+      </VCardText>
     </VCard>
   </section>
 </template>
 
 <style lang="scss">
 section{
-  padding: 2rem;
-  margin-inline: auto;
-  max-inline-size: 1440px;
+  margin: 3rem;
+
+  @media (max-width: 60rem) {
+    margin-inline: 1rem;
+  }
 }
 </style>

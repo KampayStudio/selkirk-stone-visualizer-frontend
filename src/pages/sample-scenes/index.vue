@@ -95,7 +95,8 @@ const mantle = ref([])
 
 const goToVisualizer = (sampleImage: any) => {
   localStorage.setItem('visualizeImage', JSON.stringify(sampleImage))
-  router.replace(route.query.to ? String(route.query.to) : '/visualizer')
+
+  // router.replace(route.query.to ? String(route.query.to) : '/visualizer')
 }
 </script>
 
@@ -115,16 +116,18 @@ const goToVisualizer = (sampleImage: any) => {
         </p>
       </VCol>
     </VRow>
-    <VRow>
+    <!--
+      <VRow>
       <VCol>
-        <VBtn
-          variant="outlined"
-          :to="{ name: 'visualizer-upload' }"
-        >
-          Upload Photo
-        </VBtn>
+      <VBtn
+      variant="outlined"
+      :to="{ name: 'visualizer-upload' }"
+      >
+      Upload Photo
+      </VBtn>
       </VCol>
-    </VRow>
+      </VRow>
+    -->
     <VRow>
       <VCol>
         <VCard>
