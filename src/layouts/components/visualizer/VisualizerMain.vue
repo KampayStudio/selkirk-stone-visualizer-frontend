@@ -1,8 +1,12 @@
 <script setup lang="ts">
+import localForage from 'localforage'
+
 const props = defineProps(['image'])
 const emit = defineEmits(['proceed'])
 const canvasRefs = ref([])
 const labelRefs = ref([])
+const route = useRoute()
+const router = useRouter()
 
 const scaleShapeCoordinates = (shape, scaleX, scaleY) => {
   return shape.map(point => ({
@@ -75,6 +79,11 @@ onMounted(() => {
     imgElement.addEventListener('load', drawShapes)
   }
 })
+
+const wallClicked = shape => {
+  localForage.setItem('selectedWall', JSON.stringify(shape))
+  router.replace(route.query.to ? String(route.query.to) : '/visualizer/visualize-wall')
+}
 </script>
 
 <template>
@@ -89,6 +98,7 @@ onMounted(() => {
         :key="index"
         ref="canvasRefs"
         class="shape-canvas"
+        @click="wallClicked(shape)"
       />
       <div
         v-for="(shape, index) in image.wall_shape.shapes"
@@ -117,11 +127,11 @@ canvas {
   z-index: 1;
   inset-block-start: 0;
   inset-inline-start: 0;
-  opacity: 0.1; // Base opacity
-  transition: opacity 0.3s ease; // Smooth transition for opacity change
+  opacity: 0.1;
+  transition: opacity 0.3s ease;
 
   &:hover {
-    opacity: 0.7; // Opacity on hover
+    opacity: 0.7;
   }
 }
 

@@ -1,14 +1,32 @@
 <script setup lang="ts">
+import localForage from 'localforage'
 import VisualizerMain from '@/layouts/components/visualizer/VisualizerMain.vue'
 
 const route = useRoute()
 const router = useRouter()
+const image = ref()
 
-const image = ref(JSON.parse(localStorage.getItem('visualizeImage')))
+onMounted(async () => {
+  try {
+    const storedImage = await localForage.getItem('visualizeImage')
+
+    if (storedImage) {
+      try {
+        image.value = JSON.parse(storedImage)
+      }
+      catch (e) {
+        console.error('Error parsing image data:', e)
+      }
+    }
+  }
+  catch (e) {
+    console.error('Error fetching image from localForage:', e)
+  }
+})
 </script>
 
 <template>
-  <section>
+  <section v-if="image">
     <VCard>
       <VCardText>
         <VRow>

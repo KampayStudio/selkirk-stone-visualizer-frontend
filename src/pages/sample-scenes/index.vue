@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import localForage from 'localforage'
+
 const selectedSection = ref()
 const route = useRoute()
 const router = useRouter()
@@ -909,10 +911,42 @@ const exterior = ref([{
 
 const mantle = ref([])
 
-const goToVisualizer = (sampleImage: any) => {
-  localStorage.setItem('visualizeImage', JSON.stringify(sampleImage))
+const convertImageToBase64 = imageUrl => {
+  return new Promise((resolve, reject) => {
+    try {
+      fetch(imageUrl)
+        .then(response => response.blob())
+        .then(blob => {
+          const reader = new FileReader()
 
-  router.replace(route.query.to ? String(route.query.to) : '/visualizer')
+          reader.onloadend = () => {
+            resolve(reader.result)
+          }
+          reader.onerror = reject
+          reader.readAsDataURL(blob)
+        })
+        .catch(reject)
+    }
+    catch (error) {
+      console.error('Error converting image:', error)
+      reject(error)
+    }
+  })
+}
+
+const goToVisualizer = async sampleImage => {
+  try {
+    const toVisualize = { ...sampleImage }
+
+    toVisualize.image = await convertImageToBase64(sampleImage.image)
+
+    localForage.setItem('visualizeImage', JSON.stringify(toVisualize))
+
+    router.replace(route.query.to ? String(route.query.to) : '/visualizer')
+  }
+  catch (error) {
+    console.error('Error in goToVisualizer:', error)
+  }
 }
 </script>
 
