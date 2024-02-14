@@ -30,37 +30,25 @@ onMounted(() => {
       v-if="!section_content.body"
       id="section1"
       class="index-max-section-width index-max-content-width"
-      :style="{ backgroundImage: `url(${section_content.banner})` }"
     >
-      <VCard id="section-1-card">
-        <VCardText
-          class="d-flex gap-y-3"
-          style="flex-direction: column;"
-        >
-          <h1 class="text-primary text-5xl">
-            <PuSkeleton />
-          </h1>
-          <h3 class="text-secondary">
-            <PuSkeleton />
-          </h3>
-          <p class="text-p">
-            <PuSkeleton />
-          </p>
-          <div
-            id="section-1-buttons"
-            class="d-flex gap-x-5"
+      <div style="inline-size: 1380px;">
+        <VCard id="section-1-card">
+          <VCardText
+            class="d-flex gap-y-3"
+            style="flex-direction: column;"
           >
-            <VRow>
-              <VCol>
-                <PuSkeleton height="2rem" />
-              </VCol>
-              <VCol>
-                <PuSkeleton height="2rem" />
-              </VCol>
-            </VRow>
-          </div>
-        </VCardText>
-      </VCard>
+            <h1 class="text-primary text-5xl">
+              <PuSkeleton />
+            </h1>
+            <h3 class="text-secondary">
+              <PuSkeleton />
+            </h3>
+            <p class="text-p">
+              <PuSkeleton />
+            </p>
+          </VCardText>
+        </VCard>
+      </div>
     </section>
     <section
       v-if="section_content.body"
