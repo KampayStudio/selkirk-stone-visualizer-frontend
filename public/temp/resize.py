@@ -21,4 +21,4 @@ def resize_images_in_directory(directory, max_width=600):
                 resize_image(full_path, max_width)
 
 # Replace 'your_directory_path' with the path to the directory containing your images
-resize_images_in_directory('stones')
+resize_images_in_directory('stones', 230)
