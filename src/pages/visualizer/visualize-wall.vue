@@ -694,7 +694,7 @@ const selectColor = async (stone: any) => {
   </section>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 section{
   margin: 3rem;
 

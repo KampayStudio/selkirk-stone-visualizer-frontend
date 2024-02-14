@@ -966,18 +966,16 @@ const goToVisualizer = async sampleImage => {
         </p>
       </VCol>
     </VRow>
-    <!--
-      <VRow>
+    <VRow>
       <VCol>
-      <VBtn
-      variant="outlined"
-      :to="{ name: 'visualizer-upload' }"
-      >
-      Upload Photo
-      </VBtn>
+        <VBtn
+          variant="outlined"
+          :to="{ name: 'visualizer-upload' }"
+        >
+          Upload Photo
+        </VBtn>
       </VCol>
-      </VRow>
-    -->
+    </VRow>
     <VRow>
       <VCol>
         <VCard>

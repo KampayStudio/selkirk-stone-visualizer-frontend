@@ -36,7 +36,7 @@ const image = ref(JSON.parse(localStorage.getItem('visualizeImage')))
   </section>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 section{
   margin: 3rem;
 

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import localforage from 'localforage'
 import { ref } from 'vue'
 import axios from '@axios'
 
@@ -28,7 +29,7 @@ const uploadImage = async selectedFile => {
           },
         })
 
-        localStorage.setItem('visualizeImage', JSON.stringify(convertResponseToDesiredFormat(response.data, e.target.result)))
+        localforage.setItem('visualizeImage', JSON.stringify(convertResponseToDesiredFormat(response.data, e.target.result)))
         router.replace(route.query.to ? String(route.query.to) : '/visualizer')
       }
       else if (selectionGroup.value === 'exterior') {
@@ -44,7 +45,7 @@ const uploadImage = async selectedFile => {
           },
         })
 
-        localStorage.setItem('visualizeImage', JSON.stringify(convertResponseToDesiredFormat(response.data, e.target.result)))
+        localforage.setItem('visualizeImage', JSON.stringify(convertResponseToDesiredFormat(response.data, e.target.result)))
         router.replace(route.query.to ? String(route.query.to) : '/visualizer')
       }
       else if (selectionGroup.value === 'mantle') {
@@ -198,7 +199,7 @@ const openFileDialog = () => {
   </section>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .max-section-width {
   margin-inline: auto;
   max-inline-size: 1440px;

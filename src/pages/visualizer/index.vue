@@ -79,7 +79,7 @@ onMounted(async () => {
   </section>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 section{
   margin: 3rem;
 
