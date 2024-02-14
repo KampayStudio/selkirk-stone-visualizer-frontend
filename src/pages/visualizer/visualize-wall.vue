@@ -671,21 +671,27 @@ const selectColor = async (stone: any) => {
                       />
                     </VCol>
                   </VRow>
-                  <VRow>
-                    <VCol class="d-flex gap-x-2">
-                      <RouterLink to="/visualizer">
-                        <VBtn variant="outlined">
-                          Back
-                        </VBtn>
-                      </RouterLink>
-
-                      <VBtn>
-                        Next
-                      </VBtn>
-                    </VCol>
-                  </VRow>
                 </div>
               </VWindowItem>
+              <VRow>
+                <VCol class="d-flex gap-x-2 mt-5">
+                  <RouterLink to="/visualizer">
+                    <VBtn variant="outlined">
+                      Back
+                    </VBtn>
+                  </RouterLink>
+
+                  <RouterLink to="/visualizer">
+                    <VBtn>
+                      Next
+                    </VBtn>
+                  </routerlink>
+
+                  <VBtn disabled>
+                    Finish
+                  </VBtn>
+                </VCol>
+              </VRow>
             </VWindow>
           </VCol>
         </VRow>

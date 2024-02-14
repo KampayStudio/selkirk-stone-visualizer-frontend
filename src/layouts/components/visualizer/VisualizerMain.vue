@@ -116,9 +116,11 @@ const wallClicked = shape => {
 .image-container {
   position: relative;
 
-  img{
+  img {
     border-radius: 10px;
+    block-size: auto;
     inline-size: 100%;
+    max-block-size: 80vh;
   }
 }
 

@@ -278,7 +278,10 @@ defineExpose({ changeWall })
 </script>
 
 <template>
-  <div class="d-flex justify-center">
+  <div
+    class="d-flex justify-center"
+    style="margin-inline: auto;"
+  >
     <div class="image-container">
       <img
         v-if="image"
@@ -301,6 +304,7 @@ defineExpose({ changeWall })
     border-radius: 10px;
     block-size: auto;
     inline-size: 100%;
+    max-block-size: 80vh;
   }
 }
 </style>
