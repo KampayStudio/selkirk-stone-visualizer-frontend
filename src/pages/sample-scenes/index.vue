@@ -9933,12 +9933,6 @@ const goToVisualizer = async sampleImage => {
                       >
                       <VCheckbox class="checkbox" />
                     </div>
-                    <VLabel
-                      class="text-body-2 "
-                      style="font-size: .9rem;"
-                    >
-                      {{ `Total Area: ${Math.ceil(Math.random() * 1000)}sqm.` }}
-                    </VLabel>
                   </VCol>
                 </VRow>
               </VWindowItem>
@@ -9997,12 +9991,6 @@ const goToVisualizer = async sampleImage => {
                       >
                       <VCheckbox class="checkbox" />
                     </div>
-                    <VLabel
-                      class="text-p "
-                      style=" font-size: .9rem; margin-block-start: .4rem;"
-                    >
-                      {{ `Total Area: ${Math.ceil(Math.random() * 1000)}sqm.` }}
-                    </VLabel>
                   </VCol>
                 </VRow>
               </VWindowItem>
@@ -10058,12 +10046,6 @@ const goToVisualizer = async sampleImage => {
                       <img :src="i.image">
                       <VCheckbox class="checkbox" />
                     </div>
-                    <VLabel
-                      class="text-p "
-                      style=" font-size: .9rem; margin-block-start: .4rem;"
-                    >
-                      {{ `Total Area: ${Math.ceil(Math.random() * 1000)}sqm.` }}
-                    </VLabel>
                   </VCol>
                 </VRow>
               </VWindowItem>
