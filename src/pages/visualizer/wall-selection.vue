@@ -1,14 +1,18 @@
 <script setup lang="ts">
+import localforage from 'localforage'
 import VisualizerMain from '@/layouts/components/visualizer/VisualizerMain.vue'
 
-const route = useRoute()
-const router = useRouter()
+const image = ref(null)
 
-const image = ref(JSON.parse(localStorage.getItem('visualizeImage')))
+onMounted(async () => {
+  const storedImage = await localforage.getItem('visualizeImage')
+  if (storedImage)
+    image.value = JSON.parse(storedImage)
+})
 </script>
 
 <template>
-  <section>
+  <section v-if="image">
     <VCard>
       <VCardText>
         <VRow>
