@@ -109,9 +109,10 @@ onMounted(() => {
 
           <p class="text-sm">
             {{ section_content.contact1 }} <br>
-            {{ section_content.contact2 }} <br>
+            {{ section_content.contact2 }} <br><br>
 
-            {{ section_content.address }}
+            {{ section_content.address }} <br>
+            Edmonton: 10711 181 Street NW
           </p>
         </VCol>
         <VCol
@@ -142,7 +143,7 @@ onMounted(() => {
         id="footer-credits"
         class="text-white mb-1 "
       >
-      <div>
+      <div class="content">
         <VRow>
           <VCol class="text-xs">
             © Selkirk Stone 2023
@@ -163,11 +164,10 @@ onMounted(() => {
 #section5{
   background-color: #5F2726;
   color:white;
+}
 
-  .content{
-    margin-inline:auto;
-    max-inline-size: 1440px;
-    padding-block-start: 3rem;
-  }
+.content{
+  margin-inline:auto;
+  max-inline-size: 1255px;
 }
 </style>
