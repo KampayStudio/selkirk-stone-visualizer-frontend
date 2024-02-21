@@ -27,6 +27,7 @@ const logout = async () => {
   }
   catch (error) {
     console.error('Logout failed:', error)
+    router.push('/login')
 
     // Handle any errors that occur during logout
     // Possibly show an error notification to the user
