@@ -22,7 +22,7 @@ const drawImageToCanvas = imageElement => {
   return canvas
 }
 
-const createSeamlessTile = (srcImage, numTiles = 5) => {
+const createSeamlessTile = (srcImage, numTiles = 8) => {
   const finalRows = srcImage.rows * numTiles
   const finalCols = srcImage.cols * numTiles
   const tiledImage = new cv.Mat.zeros(finalRows, finalCols, srcImage.type())
@@ -72,6 +72,8 @@ const warpPerspective = (img, rectangle) => {
   const heightTiles = Math.ceil(boundingRect.height / img.rows)
 
   const tileImage = createSeamlessTile(img, Math.max(widthTiles, heightTiles))
+
+  // const tileImage = createSeamlessTile(img)
 
   // Define the source points (corners of the original wall)
   const srcPoints = cv.matFromArray(4, 1, cv.CV_32FC2, [0, 0, boundingRect.width, 0, 0, boundingRect.height, boundingRect.width, boundingRect.height])
@@ -197,7 +199,7 @@ const replaceImage = (wallImage, overlayImage, points) => {
 
   // Resize the overlay image
   const resizedOverlay = new cv.Mat()
-  const dsize = new cv.Size(resizedWidth * 1.5, resizedHeight * 1.5)
+  const dsize = new cv.Size(resizedWidth * 2, resizedHeight * 2)
 
   cv.resize(overlayImage, resizedOverlay, dsize, 0, 0, cv.INTER_AREA)
 
@@ -290,8 +292,8 @@ function updateCanvas(visualizeImage) {
     return
 
   // Set canvas size to match the visualizeImage
-  canvas.width = visualizeImage.cols
-  canvas.height = visualizeImage.rows
+  canvas.width = visualizeImage.cols * 5
+  canvas.height = visualizeImage.rows * 5
 
   // Draw the visualizeImage onto the canvas
   cv.imshow(canvas, visualizeImage)
