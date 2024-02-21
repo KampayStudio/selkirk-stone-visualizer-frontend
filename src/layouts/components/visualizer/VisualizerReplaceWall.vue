@@ -292,8 +292,8 @@ function updateCanvas(visualizeImage) {
     return
 
   // Set canvas size to match the visualizeImage
-  canvas.width = visualizeImage.cols * 5
-  canvas.height = visualizeImage.rows * 5
+  canvas.width = visualizeImage.cols
+  canvas.height = visualizeImage.rows
 
   // Draw the visualizeImage onto the canvas
   cv.imshow(canvas, visualizeImage)
