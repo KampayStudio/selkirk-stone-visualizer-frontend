@@ -8,11 +8,14 @@ const router = useRouter()
 
 const fileInput = ref(null)
 const selectionGroup = ref('interior')
+const isLoadingOpen = ref(false)
 
 const uploadImage = async selectedFile => {
   const reader = new FileReader()
 
   reader.onload = async e => {
+    isLoadingOpen.value = true
+
     const imageBase64 = e.target.result.split(',')[1]
 
     try {
@@ -51,6 +54,7 @@ const uploadImage = async selectedFile => {
       else if (selectionGroup.value === 'mantle') {
         console.log('not yet available')
       }
+      isLoadingOpen.value = false
     }
     catch (error) {
       console.error(error.message)
@@ -82,11 +86,13 @@ const convertResponseToDesiredFormat = (originalResponse, base64image) => {
 }
 
 const onFileChange = event => {
+  isLoadingOpen.value = true
   if (event.target.files.length > 0) {
     const selectedFile = event.target.files[0]
 
     uploadImage(selectedFile)
   }
+  isLoadingOpen.value = false
 }
 
 const openFileDialog = () => {
@@ -196,6 +202,24 @@ const openFileDialog = () => {
         </ol>
       </VCol>
     </VRow>
+
+    <VDialog v-model="isLoadingOpen">
+      <VCard
+        max-width="500"
+        min-width="300"
+        class="mx-auto w-100"
+      >
+        <VCardText class="d-flex justify-space-center flex-column align-center text-center mt-3">
+          <div class="loader" />
+          <h6 class="text-h6 mt-3">
+            Image Uploading...
+          </h6>
+          <p class="body-text-2">
+            Your uploaded image is being processed with our AI technology. Get ready to visualize your scene! Our AI detects the walls, enabling you to customize your interior or exterior
+          </p>
+        </VCardText>
+      </VCard>
+    </VDialog>
   </section>
 </template>
 
@@ -224,5 +248,19 @@ section{
 .upload-icon {
   color: #9E9E9E;
   font-size: 48px;
+}
+
+.loader{
+  border: 6px solid #f3f3f3;
+  border-radius: 50%;
+  animation: spin 2s linear infinite;
+  block-size:2rem;
+  border-block-start: 6px solid rgb(41,77,32);
+  inline-size:2rem
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% {transform: rotate(360deg) }
 }
 </style>

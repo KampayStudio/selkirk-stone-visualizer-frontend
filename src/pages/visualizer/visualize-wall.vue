@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import localForage from 'localforage'
 import VisualizerReplaceWall from '@/layouts/components/visualizer/VisualizerReplaceWall.vue'
 
 const VisualizerReplaceWallRef = ref(null)
@@ -532,6 +533,7 @@ const stones = ref([
 const currentStone = ref()
 const currentSection = ref('categories')
 const selectedColor = ref()
+const isLoadingOpen = ref(false)
 
 const convertImageToBase64 = imageUrl => {
   return new Promise((resolve, reject) => {
@@ -562,11 +564,25 @@ const selectStone = async (stone: any) => {
 }
 
 const selectColor = async (stone: any) => {
+  isLoadingOpen.value = true
   selectedColor.value = { ...stone }
   selectedColor.value.image = await convertImageToBase64(selectedColor.value.image)
 
   if (VisualizerReplaceWallRef.value)
     VisualizerReplaceWallRef.value.changeWall(selectedColor.value)
+
+  isLoadingOpen.value = false
+}
+
+const downloadimage = async () => {
+  const a = document.createElement('a')
+  const image = await localForage.getItem('visualizeImage')
+
+  a.href = JSON.parse(image).image
+  a.download = 'visualized_image.png'
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
 }
 </script>
 
@@ -578,7 +594,7 @@ const selectColor = async (stone: any) => {
           <VCol
             cols="12"
             md="8"
-            class="d-flex align-center"
+            class="d-flex align-center justify-space-center"
           >
             <VisualizerReplaceWall ref="VisualizerReplaceWallRef" />
           </VCol>
@@ -608,26 +624,28 @@ const selectColor = async (stone: any) => {
                       </p>
                     </VCol>
                   </VRow>
-                  <VRow>
-                    <VCol
-                      v-for="(stone, index) in stones"
-                      :key="index"
-                      style="position: relative; max-inline-size: 12rem;"
-                      class="d-flex justify-center align-center"
-                      @click="selectStone(stone)"
-                    >
-                      <div style="position: absolute; z-index: 2; color: white;">
-                        <b>{{ stone.name }}</b>
-                      </div>
-                      <VImg
-                        :src="stone.image"
-                        width="12rem"
-                        height="5rem"
-                        cover
-                        style="border-radius: 10px;"
-                      />
-                    </VCol>
-                  </VRow>
+                  <div style="max-block-size: 50vh; overflow-y: scroll; ">
+                    <VRow>
+                      <VCol
+                        v-for="(stone, index) in stones"
+                        :key="index"
+                        style="position: relative; cursor: pointer; max-inline-size: 12rem"
+                        class="d-flex justify-center align-center"
+                        @click="selectStone(stone)"
+                      >
+                        <div style="position: absolute; z-index: 2; color: white;">
+                          <b>{{ stone.name }}</b>
+                        </div>
+                        <VImg
+                          :src="stone.image"
+                          width="12rem"
+                          height="5rem"
+                          cover
+                          style="border-radius: 10px;"
+                        />
+                      </VCol>
+                    </VRow>
+                  </div>
                 </div>
               </VWindowItem>
               <VWindowItem value="colors">
@@ -655,7 +673,7 @@ const selectColor = async (stone: any) => {
                     <VCol
                       v-for="(stone, index) in currentStone.colors"
                       :key="index"
-                      style="position: relative; max-inline-size: 12rem;"
+                      style="position: relative; cursor: pointer; max-inline-size: 12rem;"
                       class="d-flex justify-center align-center"
                       @click="selectColor(stone)"
                     >
@@ -687,7 +705,7 @@ const selectColor = async (stone: any) => {
                     </VBtn>
                   </routerlink>
 
-                  <VBtn disabled>
+                  <VBtn @click="downloadimage">
                     Finish
                   </VBtn>
                 </VCol>
@@ -697,6 +715,24 @@ const selectColor = async (stone: any) => {
         </VRow>
       </VCardText>
     </VCard>
+
+    <VDialog v-model="isLoadingOpen">
+      <VCard
+        max-width="500"
+        min-width="300"
+        class="mx-auto w-100"
+      >
+        <VCardText class="d-flex justify-space-center flex-column align-center text-center mt-3">
+          <div class="loader" />
+          <h6 class="text-h6 mt-3">
+            Changing the wall...
+          </h6>
+          <p class="body-text-2">
+            Hang tight! We're in the process of visualizing your chosen wall variant for you.
+          </p>
+        </VCardText>
+      </VCard>
+    </VDialog>
   </section>
 </template>
 
@@ -707,5 +743,19 @@ section{
   @media (max-width: 60rem) {
     margin-inline: 1rem;
   }
+}
+
+.loader{
+  border: 6px solid #f3f3f3;
+  border-radius: 50%;
+  animation: spin 2s linear infinite;
+  block-size:2rem;
+  border-block-start: 6px solid rgb(41,77,32);
+  inline-size:2rem
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% {transform: rotate(360deg) }
 }
 </style>
