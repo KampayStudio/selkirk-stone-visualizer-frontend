@@ -27,6 +27,15 @@ const logout = async () => {
   }
   catch (error) {
     console.error('Logout failed:', error)
+
+    sessionStorage.removeItem('authToken')
+    sessionStorage.removeItem('first_name')
+    sessionStorage.removeItem('last_name')
+    sessionStorage.removeItem('address')
+    sessionStorage.removeItem('contact_number')
+    sessionStorage.removeItem('email')
+    sessionStorage.removeItem('id')
+
     router.push('/login')
 
     // Handle any errors that occur during logout
