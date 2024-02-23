@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import axiosIns from '@/plugins/axios'
 import authV1BottomShape from '@images/svg/bottom-illustration.svg?raw'
 import authV1TopShape from '@images/svg/top-illustration.svg?raw'
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
@@ -6,14 +7,29 @@ import { themeConfig } from '@themeConfig'
 
 const route = useRoute()
 const router = useRouter()
-
-const submit = () => {
-  router.replace(route.query.to ? String(route.query.to) : '/login')
-}
+const loading = ref(false)
 
 const form = ref({
   email: '',
 })
+
+const submit = async () => {
+  loading.value = true
+
+  try {
+    const response = await axiosIns.post('/users/reset-password/', {
+      email: form.value.email,
+    })
+
+    console.log(response)
+    router.replace(route.query.to ? String(route.query.to) : '/login?reset_password=true')
+  }
+  catch (e) {
+    console.log(e)
+  }
+
+  loading.value = false
+}
 </script>
 
 <template>
@@ -71,7 +87,9 @@ const form = ref({
                 <VBtn
                   block
                   type="submit"
+                  variant="outlined"
                   class="my-4"
+                  :loading="loading"
                   @click="submit"
                 >
                   Send Reset Link

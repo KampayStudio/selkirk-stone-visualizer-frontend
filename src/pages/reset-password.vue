@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import axiosIns from '@/plugins/axios'
 import authV1BottomShape from '@images/svg/bottom-illustration.svg?raw'
 import authV1TopShape from '@images/svg/top-illustration.svg?raw'
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
@@ -7,13 +8,41 @@ import { themeConfig } from '@themeConfig'
 const route = useRoute()
 const router = useRouter()
 
-const submit = () => {
-  router.replace(route.query.to ? String(route.query.to) : '/login')
-}
+const loading = ref(false)
 
 const form = ref({
   password: '',
   confirm_password: '',
+})
+
+const submit = async () => {
+  // router.replace(route.query.to ? String(route.query.to) : '/login')
+  loading.value = ref(true)
+  try {
+    if (form.value.password === form.value.confirm_password) {
+      const urlParams = new URLSearchParams(window.location.search)
+
+      const response = await axiosIns.post(`/users/reset-password-confirm/${urlParams.get('uid')}/${urlParams.get('token')}`, {
+        password: form.value.password,
+        confirm_password: form.value.confirm_password,
+      })
+
+      console.log(response)
+      router.replace(route.query.to ? String(route.query.to) : '/login')
+    }
+    else {
+      alert('Please check your password')
+    }
+  }
+  catch (e) {
+    router.replace(route.query.to ? String(route.query.to) : '/login')
+    console.log(e)
+  }
+  loading.value = false
+}
+
+onMounted(() => {
+  console.log()
 })
 </script>
 
@@ -83,6 +112,8 @@ const form = ref({
                   block
                   type="submit"
                   class="my-4"
+                  :loading="loading"
+                  variant="outlined"
                   @click="submit"
                 >
                   Reset Password
