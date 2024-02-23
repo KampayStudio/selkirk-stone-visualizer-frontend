@@ -69,8 +69,14 @@ const warpPerspective = (img, rectangle) => {
   const angle = rectangle.angle
   const widthTiles = Math.ceil(boundingRect.width / img.cols)
   const heightTiles = Math.ceil(boundingRect.height / img.rows)
+  let tiles = Math.max(widthTiles, heightTiles)
 
-  const tileImage = createSeamlessTile(img, Math.max(widthTiles, heightTiles))
+  if (tiles <= 3)
+    tiles = tiles * 3
+  else if (tiles <= 6)
+    tiles = tiles * 2
+
+  const tileImage = createSeamlessTile(img, tiles)
 
   // Define the source points (corners of the original wall)
   const srcPoints = cv.matFromArray(4, 1, cv.CV_32FC2, [0, 0, boundingRect.width, 0, 0, boundingRect.height, boundingRect.width, boundingRect.height])
