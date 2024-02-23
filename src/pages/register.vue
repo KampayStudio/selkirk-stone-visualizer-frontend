@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import Swal from 'sweetalert2'
-import { VForm } from 'vuetify/components/VForm'
 import axios from '@axios'
 import { confirmedValidator, emailValidator, lengthValidator, passwordValidator, requiredValidator } from '@validators'
+import Swal from 'sweetalert2'
+import { VForm } from 'vuetify/components/VForm'
 
 const route = useRoute()
 const router = useRouter()
@@ -382,6 +382,7 @@ onMounted(() => {
                           <span
                             v-bind="props"
                             class="text-primary"
+                            style="cursor: pointer"
                           >
                             TERMS AND CONDITIONS
                           </span>

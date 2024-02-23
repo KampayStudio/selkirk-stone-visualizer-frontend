@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { VForm } from 'vuetify/components/VForm'
+import ResetPasswordDialog from '@/layouts/components/reset_password/ResetPasswordDialog.vue'
 import axios from '@axios'
 import { emailValidator, requiredValidator } from '@validators'
 
 const route = useRoute()
 const router = useRouter()
+const ResetPasswordDialogRef = ref(null)
 
 const isLoading = ref(false)
 
@@ -65,6 +67,10 @@ const get_content = async () => {
 
 onMounted(() => {
   get_content()
+  if (window.location.href.split('?').length > 1) {
+    if (window.location.href.split('?')[1].split('=')[0] === 'reset_password')
+      ResetPasswordDialogRef.value.openDialog()
+  }
 })
 </script>
 
@@ -268,6 +274,8 @@ onMounted(() => {
         :style="`background-image: url('${section_content.banner}'); background-position: center; background-size: cover;`"
       />
     </VRow>
+
+    <ResetPasswordDialog ref="ResetPasswordDialogRef" />
   </div>
 </template>
 

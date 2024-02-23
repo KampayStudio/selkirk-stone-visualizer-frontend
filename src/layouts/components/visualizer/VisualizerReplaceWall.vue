@@ -6,7 +6,6 @@ const image = ref(null)
 const shape = ref(null)
 const preview = ref(null)
 const canvasRef = ref(null)
-const snackBarRef = ref(null)
 
 const drawImageToCanvas = imageElement => {
   const canvas = document.createElement('canvas')
@@ -42,47 +41,68 @@ const createSeamlessTile = (srcImage, numTiles = 5) => {
 
       srcRegion.copyTo(destRegion)
       srcRegion.delete()
+      destRegion.delete()
     }
   }
 
   return tiledImage
 }
 
-const warpPerspective = (img, shapeCorners, boundingRect) => {
+const findRectangleCorners = rectangle => {
+  const points = cv.RotatedRect.points(rectangle)
+
+  const top = 0 - Math.min(...points.map(c => c.y))
+  const left = 0 - Math.min(...points.map(c => c.x))
+
+  if (top !== 0)
+    points.forEach(c => c.y += top)
+
+  if (left !== 0)
+    points.forEach(c => c.x += left)
+
+  return points
+}
+
+const warpPerspective = (img, rectangle) => {
   // Tile the overlay
+  const boundingRect = cv.RotatedRect.boundingRect(rectangle)
+  const angle = rectangle.angle
   const widthTiles = Math.ceil(boundingRect.width / img.cols)
   const heightTiles = Math.ceil(boundingRect.height / img.rows)
 
   const tileImage = createSeamlessTile(img, Math.max(widthTiles, heightTiles))
 
-  console.log(shapeCorners)
-  console.log(boundingRect)
+  // Define the source points (corners of the original wall)
+  const srcPoints = cv.matFromArray(4, 1, cv.CV_32FC2, [0, 0, boundingRect.width, 0, 0, boundingRect.height, boundingRect.width, boundingRect.height])
 
-  // Convert source and destination points to cv format
-  const srcPoints = [[0, 0], [boundingRect.width, 0], [0, boundingRect.height], [boundingRect.width, boundingRect.height]]
-  const dstPoints = shapeCorners.flatMap(c => [c.x, c.y])
-  const srcContour = cv.matFromArray(4, 1, cv.CV_32FC2, srcPoints.flat())
-  const dstContour = cv.matFromArray(4, 1, cv.CV_32FC2, dstPoints.flat())
+  // Define the destination points (corners of the transformed wall)
+  let vertices = findRectangleCorners(rectangle)
+  console.log(angle)
+  console.log(JSON.stringify(vertices))
+  if (angle <= 30)
+    vertices = [vertices[1], vertices[2], vertices[0], vertices[3]]
+  else if (angle <= 90)
+    vertices = [vertices[0], vertices[1], vertices[3], vertices[2]]
+  console.log(JSON.stringify(vertices))
 
-  // Compute the perspective transform matrix
-  const M = cv.getPerspectiveTransform(srcContour, dstContour)
+  const dstPoints = cv.matFromArray(4, 1, cv.CV_32FC2, vertices.map(v => [v.x, v.y]).flat())
 
-  // Warp the pattern image using the transform matrix
-  const warpedPattern = new cv.Mat()
-  const canvas = document.createElement('canvas')
+  // Calculate the perspective transform matrix
+  const perspectiveMatrix = cv.getPerspectiveTransform(srcPoints, dstPoints)
 
-  cv.warpPerspective(tileImage, warpedPattern, M, new cv.Size(tileImage.cols, tileImage.rows), cv.INTER_LINEAR, cv.BORDER_CONSTANT, new cv.Scalar())
-  cv.imshow(canvas, warpedPattern)
+  // Create an output image for the transformed result
+  const transformedImage = new cv.Mat()
 
-  // Clean up
-  M.delete()
-  srcContour.delete()
-  dstContour.delete()
-  warpedPattern.delete()
+  // Apply the perspective transform to the input image
+  cv.warpPerspective(tileImage, transformedImage, perspectiveMatrix, tileImage.size(), cv.INTER_LINEAR, cv.BORDER_CONSTANT, new cv.Scalar())
 
-  console.log(canvas.toDataURL())
+  // Release memory
+  tileImage.delete()
+  srcPoints.delete()
+  dstPoints.delete()
+  perspectiveMatrix.delete()
 
-  return cv.imread(canvas)
+  return transformedImage
 }
 
 const createSegmentationMask = (baseImage, segmentationPath) => {
@@ -105,8 +125,6 @@ const createSegmentationMask = (baseImage, segmentationPath) => {
   ctx.fillStyle = 'white'
   ctx.fill()
 
-  console.log(canvas.toDataURL())
-
   return cv.imread(canvas)
 }
 
@@ -121,38 +139,19 @@ const findShapeRectangle = src => {
 
   const cnt = contours.get(0)
 
-  return cv.minAreaRect(cnt)
+  const result = cv.minAreaRect(cnt)
+
+  contours.delete()
+  hierarchy.delete()
+  cnt.delete()
+
+  return result
 }
 
-const findRectangleCorners = rectangle => {
-  const points = cv.RotatedRect.points(rectangle)
-
-  const top = 0 - Math.min(...points.map(c => c.y))
-  const left = 0 - Math.min(...points.map(c => c.x))
-
-  if (top !== 0)
-    points.forEach(c => c.y += top)
-
-  if (left !== 0)
-    points.forEach(c => c.x += left)
-
-  const minX = Math.min(...points.map(p => p.x)) - 10
+const replaceImage = (wallImage, overlayImage, rectangle, points) => {
+  const minX = Math.min(...points.map(p => p.x))
   const maxX = Math.max(...points.map(p => p.x))
-  const minY = Math.min(...points.map(p => p.y)) - 10
-  const maxY = Math.max(...points.map(p => p.y))
-
-  return [
-    { x: minX, y: minY },
-    { x: maxX, y: minY },
-    { x: minX, y: maxY },
-    { x: maxX, y: maxY },
-  ]
-}
-
-const replaceImage = (wallImage, overlayImage, points) => {
-  const minX = Math.min(...points.map(p => p.x)) - 10
-  const maxX = Math.max(...points.map(p => p.x))
-  const minY = Math.min(...points.map(p => p.y)) - 10
+  const minY = Math.min(...points.map(p => p.y))
   const maxY = Math.max(...points.map(p => p.y))
 
   // Calculate target width, height, and aspect ratio
@@ -178,6 +177,11 @@ const replaceImage = (wallImage, overlayImage, points) => {
     resizedHeight = overlayImage.rows * scale
   }
 
+  if (rectangle.angle > 0) {
+    resizedWidth = resizedWidth * 1.25
+    resizedHeight = resizedHeight * 1.25
+  }
+
   // Create a mask
   const mask = new cv.Mat.zeros(wallImage.rows, wallImage.cols, cv.CV_8UC1)
 
@@ -192,7 +196,7 @@ const replaceImage = (wallImage, overlayImage, points) => {
 
   // Resize the overlay image
   const resizedOverlay = new cv.Mat()
-  const dsize = new cv.Size(resizedWidth * 1.25, resizedHeight * 1.25)
+  const dsize = new cv.Size(resizedWidth, resizedHeight)
 
   cv.resize(overlayImage, resizedOverlay, dsize, 0, 0, cv.INTER_AREA)
 
@@ -203,8 +207,13 @@ const replaceImage = (wallImage, overlayImage, points) => {
   cv.cvtColor(grayWall, grayWall, cv.COLOR_GRAY2RGBA)
 
   // Blend the region on the wall image
-  const startX = minX
-  const startY = minY
+  let startX = minX
+  let startY = minY
+
+  if (rectangle.angle > 0) {
+    startX = startX - ((maxX * 0.15) / 2)
+    startY = startY - ((maxY * 0.15) / 2)
+  }
 
   for (let row = 0; row < resizedOverlay.rows; row++) {
     for (let col = 0; col < resizedOverlay.cols; col++) {
@@ -235,8 +244,8 @@ const replaceImage = (wallImage, overlayImage, points) => {
   contours.delete()
   mask.delete()
   resizedOverlay.delete()
-
-  // tileImage.delete()
+  wallImage.delete()
+  overlayImage.delete()
 }
 
 const changeWall = async (stone: any) => {
@@ -256,14 +265,13 @@ const changeWall = async (stone: any) => {
 
   const wallImage = cv.imread(wallCanvas)
   const overlayImage = cv.imread(stoneCanvas)
+
   const points = shape.value
   const segmentationMask = createSegmentationMask(document.getElementById('baseImage'), points)
   const rectangle = findShapeRectangle(segmentationMask)
-  const shapeCorners = findRectangleCorners(rectangle)
-  const boundingRect = cv.RotatedRect.boundingRect(rectangle)
-  const warpedOverlayImage = warpPerspective(overlayImage, shapeCorners, boundingRect)
+  const warpedOverlayImage = warpPerspective(overlayImage, rectangle)
 
-  replaceImage(wallImage, warpedOverlayImage, points)
+  replaceImage(wallImage, warpedOverlayImage, rectangle, points)
 }
 
 onMounted(async () => {
@@ -303,8 +311,6 @@ function updateCanvas(visualizeImage) {
     localForage.setItem('visualizeImage', JSON.stringify(image.value))
       .catch(error => console.error('Error saving image:', error))
   }
-
-  snackBarRef.value.show('success', 'Wall Replaced')
 }
 
 defineExpose({ changeWall })
@@ -326,8 +332,6 @@ defineExpose({ changeWall })
 
       <canvas ref="trialCanvas" />
     </div>
-
-    <SnackBar ref="snackBarRef" />
   </div>
 </template>
 
