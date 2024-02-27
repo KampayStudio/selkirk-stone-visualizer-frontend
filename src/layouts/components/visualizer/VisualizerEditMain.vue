@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import localForage from 'localforage'
+import SnackBar from '../SnackBar.vue'
 
 const props = defineProps({
   image: null,
   wallClicked: Function,
+  enableDisableDraw: Function,
 })
 
 const route = useRoute()
@@ -12,6 +14,13 @@ const router = useRouter()
 const canvasRefs = ref([])
 const labelRefs = ref([])
 const wallNumber = ref()
+
+const isDraw = ref(false)
+
+const drawingCanvas = ref(null)
+const drawnPoints = ref([])
+
+const SnackBarRef = ref(null)
 
 const scaleShapeCoordinates = (shape, scaleX, scaleY) => {
   return shape.map(point => ({
@@ -73,15 +82,29 @@ const drawShapes = () => {
   })
 }
 
+const highlighted = index => {
+  canvasRefs.value[index].classList.remove('notDraw')
+  canvasRefs.value[index].classList.add('highlighted')
+}
+
+const removeHighlight = index => {
+  canvasRefs.value[index].classList.remove('highlighted')
+  canvasRefs.value[index].classList.add('notDraw')
+}
+
 onMounted(() => {
   const imgElement = document.querySelector('.image-container img')
   if (imgElement.complete) {
-    // If image is already loaded
+    drawingCanvas.value.width = imgElement.clientWidth
+    drawingCanvas.value.height = imgElement.clientHeight
     drawShapes()
   }
   else {
-    // Add event listener if the image is not loaded yet
-    imgElement.addEventListener('load', drawShapes)
+    imgElement.addEventListener('load', () => {
+      drawingCanvas.value.width = imgElement.clientWidth
+      drawingCanvas.value.height = imgElement.clientHeight
+      drawShapes()
+    })
   }
 })
 
@@ -89,7 +112,8 @@ const wallClicked = index => {
   console.log(index)
   wallNumber.value = index
   props.wallClicked(index)
-  drawShapes()
+
+  highlighted(index)
 }
 
 const deleteWall = () => {
@@ -97,8 +121,8 @@ const deleteWall = () => {
 
   const deletedWalls = props.image.wall_shape.shapes.splice(wallNumber.value, 1)
 
-  console.log(deletedWalls)
-
+  removeHighlight(wallNumber.value)
+  drawShapes()
   wallClicked(undefined)
 }
 
@@ -107,7 +131,85 @@ const apply = () => {
   router.replace(route.query.to ? String(route.query.to) : '/visualizer')
 }
 
-defineExpose({ deleteWall, apply })
+const drawLines = () => {
+  const ctx = drawingCanvas.value.getContext('2d')
+
+  ctx.beginPath()
+  drawnPoints.value.forEach((point, index) => {
+    if (index === 0)
+      ctx.moveTo(point.x, point.y)
+    else
+      ctx.lineTo(point.x, point.y)
+  })
+  ctx.strokeStyle = '#38A736' // Line color
+  ctx.stroke()
+}
+
+const addPoint = event => {
+  const { offsetX, offsetY } = event
+
+  drawnPoints.value.push({ x: offsetX, y: offsetY })
+
+  // Optionally, mark the point with a small dot
+  const ctx = drawingCanvas.value.getContext('2d')
+
+  ctx.fillStyle = '#38A736' // Dot color
+  ctx.beginPath()
+  ctx.arc(offsetX, offsetY, 3, 0, Math.PI * 2) // Small dot
+  ctx.fill()
+  drawLines()
+  console.log(drawnPoints.value)
+}
+
+const addPathToMainPathList = () => {
+  const imgElement = document.querySelector('.image-container img')
+  if (!imgElement)
+    return
+
+  // Original dimensions
+  const originalWidth = imgElement.naturalWidth
+  const originalHeight = imgElement.naturalHeight
+
+  // Displayed dimensions
+  const displayedWidth = imgElement.clientWidth
+  const displayedHeight = imgElement.clientHeight
+
+  // Calculate reverse scaling factors
+  const reverseScaleX = originalWidth / displayedWidth
+  const reverseScaleY = originalHeight / displayedHeight
+
+  // Apply reverse scaling to drawnPoints
+  const scaledPoints = drawnPoints.value.map(point => ({
+    x: point.x * reverseScaleX,
+    y: point.y * reverseScaleY,
+  }))
+
+  // Push scaled points to shapes
+  props.image.wall_shape.shapes.push(scaledPoints)
+  console.log('Scaled points added to shapes:', scaledPoints)
+
+  // Optionally, reset drawnPoints or handle it as needed
+  drawnPoints.value = []
+
+  if (drawingCanvas.value) {
+    const ctx = drawingCanvas.value.getContext('2d')
+
+    ctx.clearRect(0, 0, drawingCanvas.value.width, drawingCanvas.value.height)
+  }
+
+  SnackBarRef.value.show('success', 'Path Added')
+}
+
+const enableDisableDraw = () => {
+  isDraw.value = !isDraw.value
+
+  // addPathToMainPathList()
+  drawShapes()
+
+  console.log('Canvas Cleared')
+}
+
+defineExpose({ deleteWall, apply, enableDisableDraw, addPathToMainPathList })
 </script>
 
 <template>
@@ -119,20 +221,30 @@ defineExpose({ deleteWall, apply })
       >
       <canvas
         v-for="(shape, index) in image.wall_shape.shapes"
+        v-show="!isDraw"
         :key="index"
         ref="canvasRefs"
-        class="shape-canvas"
+        class="shape-canvas notDraw"
         @click="wallClicked(index)"
       />
       <div
         v-for="(shape, index) in image.wall_shape.shapes"
+        v-show="!isDraw"
         :key="index"
         ref="labelRefs"
         class="box-index"
       >
         {{ index + 1 }}
       </div>
+      <canvas
+        v-show="isDraw"
+        ref="drawingCanvas"
+        class="drawing-canvas"
+        @click="addPoint"
+      />
     </div>
+
+    <SnackBar ref="SnackBarRef" />
   </div>
 </template>
 
@@ -148,7 +260,7 @@ defineExpose({ deleteWall, apply })
   }
 }
 
-canvas {
+.notDraw {
   position: absolute;
   z-index: 1;
   inset-block-start: 0;
@@ -158,7 +270,16 @@ canvas {
 
   &:hover {
     opacity: 0.7;
+
   }
+}
+
+.highlighted{
+  position: absolute;
+  z-index: 1;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  opacity: 0.7;
 }
 
 .box-index{
@@ -172,5 +293,12 @@ canvas {
   block-size: 2rem;
   color: white;
   inline-size: 2rem;
+}
+
+.drawing-canvas {
+  position: absolute;
+  z-index: 2;
+  inset-block-start: 0;
+  inset-inline-start: 0;
 }
 </style>

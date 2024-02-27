@@ -5,9 +5,15 @@ import VisualizerEditMain from '@/layouts/components/visualizer/VisualizerEditMa
 const image = ref()
 const VisualizerEditMainRef = ref(undefined)
 const wallNumber = ref(undefined)
+const isDraw = ref(false)
 
 const assignWall = index => {
   wallNumber.value = index
+}
+
+const showHideDraw = () => {
+  isDraw.value = !isDraw.value
+  VisualizerEditMainRef.value.enableDisableDraw()
 }
 
 onMounted(async () => {
@@ -35,20 +41,31 @@ onMounted(async () => {
       <VCardText>
         <!-- Top Buttons -->
         <div class="d-flex gap-x-3">
-          <VBtn variant="outlined">
-            Draw
-          </VBtn>
           <VBtn
             v-if="VisualizerEditMainRef"
+            variant="outlined"
+            @click="showHideDraw"
+          >
+            {{ isDraw ? "Disable" : "Enable" }} Draw Mode
+          </VBtn>
+          <VBtn
+            v-if="VisualizerEditMainRef && !isDraw"
             variant="outlined"
             :disabled="wallNumber === undefined"
             @click="VisualizerEditMainRef.deleteWall"
           >
             Delete
           </VBtn>
+          <VBtn
+            v-if="isDraw"
+            variant="outlined"
+          >
+            Undo Recent Line
+          </VBtn>
         </div>
 
         <!-- Image display -->
+
         <div
           v-if="image"
           class="my-5"
@@ -64,8 +81,11 @@ onMounted(async () => {
           v-if="image"
           class="d-flex justify-space-between"
         >
-          <div class="d-flex gap-x-3">
-            <h6 class="text-h6">
+          <div class="d-flex gap-x-3 align-center">
+            <h6
+              v-if="!isDraw"
+              class="text-h6 "
+            >
               Walls Detected: {{ image.wall_shape.shapes.length }}
             </h6>
             <VDivider
@@ -73,19 +93,31 @@ onMounted(async () => {
               vertical
             />
             <h6
-              v-if="wallNumber !== undefined"
+              v-if="wallNumber !== undefined && !isDraw"
               class="text-h6"
             >
               Selected Wall: {{ wallNumber + 1 }}
+            </h6>
+            <h6
+              v-if="isDraw"
+              class="text-h6"
+            >
+              Select points on the image
             </h6>
           </div>
 
           <div>
             <VBtn
-              v-if="VisualizerEditMainRef"
+              v-if="VisualizerEditMainRef && !isDraw"
               @click="VisualizerEditMainRef.apply"
             >
               Done
+            </VBtn>
+            <VBtn
+              v-if="isDraw"
+              @click="VisualizerEditMainRef.addPathToMainPathList"
+            >
+              Apply Path
             </VBtn>
           </div>
         </div>
