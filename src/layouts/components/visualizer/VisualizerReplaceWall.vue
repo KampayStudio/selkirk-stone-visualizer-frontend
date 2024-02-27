@@ -394,7 +394,7 @@ const drawShapes = () => {
       >
       <canvas
         ref="canvasRefs"
-        class="shape-canvas"
+        class="highlight"
       />
       <canvas
         ref="canvasRef"
@@ -415,7 +415,7 @@ const drawShapes = () => {
   }
 }
 
-.shape-canvas {
+.highlight {
   position: absolute;
   z-index: 1;
   inset-block-start: 0;

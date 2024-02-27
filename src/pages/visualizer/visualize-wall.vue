@@ -603,9 +603,12 @@ const downloadimage = async () => {
             cols="12"
             md="4"
           >
-            <VWindow v-model="currentSection">
+            <VWindow
+              v-model="currentSection"
+              style="inline-size: 100%;"
+            >
               <VWindowItem value="categories">
-                <div>
+                <div style="inline-size: 100%;">
                   <VRow>
                     <VCol>
                       <div
@@ -624,14 +627,12 @@ const downloadimage = async () => {
                       </p>
                     </VCol>
                   </VRow>
-                  <div
-                    style="max-block-size: 50vh; overflow-x: hidden; overflow-y: scroll;"
-                    class="d-flex align-center justify-center"
-                  >
-                    <VRow>
-                      <VCol
-                        v-for="(stone, index) in stones"
-                        :key="index"
+                  <VRow>
+                    <VCol
+                      v-for="(stone, index) in stones"
+                      :key="index"
+                    >
+                      <div
                         style="position: relative; cursor: pointer;"
                         class="d-flex justify-center align-center"
                         @click="selectStone(stone)"
@@ -646,9 +647,9 @@ const downloadimage = async () => {
                           cover
                           style="border-radius: 10px; min-inline-size:12rem"
                         />
-                      </VCol>
-                    </VRow>
-                  </div>
+                      </div>
+                    </VCol>
+                  </VRow>
                 </div>
               </VWindowItem>
               <VWindowItem value="colors">
@@ -695,7 +696,7 @@ const downloadimage = async () => {
                 </div>
               </VWindowItem>
               <VRow>
-                <VCol class="d-flex gap-x-2 mt-5">
+                <VCol class="d-flex gap-x-2 mt-5 justify-end">
                   <RouterLink to="/visualizer">
                     <VBtn variant="outlined">
                       Back
