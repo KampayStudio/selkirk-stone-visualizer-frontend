@@ -64,7 +64,7 @@ onMounted(async () => {
             <div class="d-flex gap-x-3">
               <VBtn
                 variant="outlined"
-                disabled
+                @click="router.replace(route.query.to ? String(route.query.to) : '/visualizer/edit-wall')"
               >
                 Edit Wall
               </VBtn>
