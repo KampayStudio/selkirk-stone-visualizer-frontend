@@ -594,7 +594,7 @@ const downloadimage = async () => {
           <VCol
             cols="12"
             md="8"
-            class="d-flex align-center justify-space-center"
+            class="d-flex align-center justify-center"
           >
             <VisualizerReplaceWall ref="VisualizerReplaceWallRef" />
           </VCol>
@@ -624,12 +624,15 @@ const downloadimage = async () => {
                       </p>
                     </VCol>
                   </VRow>
-                  <div style="max-block-size: 50vh; overflow-y: scroll; ">
+                  <div
+                    style="max-block-size: 50vh; overflow-x: hidden; overflow-y: scroll;"
+                    class="d-flex align-center justify-center"
+                  >
                     <VRow>
                       <VCol
                         v-for="(stone, index) in stones"
                         :key="index"
-                        style="position: relative; cursor: pointer; max-inline-size: 12rem"
+                        style="position: relative; cursor: pointer;"
                         class="d-flex justify-center align-center"
                         @click="selectStone(stone)"
                       >
@@ -673,7 +676,7 @@ const downloadimage = async () => {
                     <VCol
                       v-for="(stone, index) in currentStone.colors"
                       :key="index"
-                      style="position: relative; cursor: pointer; max-inline-size: 12rem;"
+                      style="position: relative; cursor: pointer;"
                       class="d-flex justify-center align-center"
                       @click="selectColor(stone)"
                     >

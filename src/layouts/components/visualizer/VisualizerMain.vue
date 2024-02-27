@@ -7,6 +7,7 @@ const canvasRefs = ref([])
 const labelRefs = ref([])
 const route = useRoute()
 const router = useRouter()
+const isLoadingOpen = ref(false)
 
 const scaleShapeCoordinates = (shape, scaleX, scaleY) => {
   return shape.map(point => ({
@@ -81,6 +82,7 @@ onMounted(() => {
 })
 
 const wallClicked = shape => {
+  isLoadingOpen.value = !isLoadingOpen.value
   localForage.setItem('selectedWall', JSON.stringify(shape))
   router.replace(route.query.to ? String(route.query.to) : '/visualizer/visualize-wall')
 }
@@ -109,6 +111,24 @@ const wallClicked = shape => {
         {{ index + 1 }}
       </div>
     </div>
+
+    <VDialog v-model="isLoadingOpen">
+      <VCard
+        max-width="500"
+        min-width="300"
+        class="mx-auto w-100"
+      >
+        <VCardText class="d-flex justify-space-center flex-column align-center text-center mt-3">
+          <div class="loader" />
+          <h6 class="text-h6 mt-3">
+            Processing
+          </h6>
+          <p class="body-text-2">
+            Please wait...
+          </p>
+        </VCardText>
+      </VCard>
+    </VDialog>
   </div>
 </template>
 
@@ -148,5 +168,19 @@ canvas {
   block-size: 2rem;
   color: white;
   inline-size: 2rem;
+}
+
+.loader{
+  border: 6px solid #f3f3f3;
+  border-radius: 50%;
+  animation: spin 2s linear infinite;
+  block-size:2rem;
+  border-block-start: 6px solid rgb(41,77,32);
+  inline-size:2rem
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% {transform: rotate(360deg) }
 }
 </style>
