@@ -6,6 +6,7 @@ const image = ref(null)
 const shape = ref(null)
 const preview = ref(null)
 const canvasRef = ref(null)
+const canvasRefs = ref(null)
 
 const drawImageToCanvas = imageElement => {
   const canvas = document.createElement('canvas')
@@ -278,6 +279,8 @@ const changeWall = async (stone: any) => {
   const warpedOverlayImage = warpPerspective(overlayImage, rectangle)
 
   replaceImage(wallImage, warpedOverlayImage, rectangle, points)
+
+  canvasRefs.value.classList.add('d-none')
 }
 
 onMounted(async () => {
@@ -290,6 +293,8 @@ onMounted(async () => {
     const storedShape = await localForage.getItem('selectedWall')
 
     shape.value = storedShape ? JSON.parse(storedShape) : null
+
+    drawShapes()
   }
   catch (error) {
     console.error('Error fetching data:', error)
@@ -320,6 +325,62 @@ function updateCanvas(visualizeImage) {
 }
 
 defineExpose({ changeWall })
+
+const scaleShapeCoordinates = (shape, scaleX, scaleY) => {
+  return shape.map(point => ({
+    x: point.x * scaleX,
+    y: point.y * scaleY,
+  }))
+}
+
+const drawShapeOnCanvas = (canvas, shape) => {
+  const context = canvas.getContext('2d')
+
+  let minX = Infinity; let minY = Infinity; let maxX = -Infinity; let maxY = -Infinity
+  shape.forEach(point => {
+    minX = Math.min(minX, point.x)
+    minY = Math.min(minY, point.y)
+    maxX = Math.max(maxX, point.x)
+    maxY = Math.max(maxY, point.y)
+  })
+
+  const width = maxX - minX
+  const height = maxY - minY
+
+  canvas.width = width
+  canvas.height = height
+
+  canvas.style.left = `${minX}px`
+  canvas.style.top = `${minY}px`
+
+  context.clearRect(0, 0, width, height)
+
+  context.fillStyle = 'rgba(26, 78, 25, 1)'
+
+  context.beginPath()
+  shape.forEach((point, index) => {
+    const x = point.x - minX
+    const y = point.y - minY
+    if (index === 0)
+      context.moveTo(x, y)
+    else context.lineTo(x, y)
+  })
+  context.closePath()
+  context.fill()
+}
+
+const drawShapes = () => {
+  const imgElement = document.querySelector('.image-container img')
+  if (!imgElement)
+    return
+
+  const scaleX = imgElement.clientWidth / imgElement.naturalWidth
+  const scaleY = imgElement.clientHeight / imgElement.naturalHeight
+
+  const scaledShape = scaleShapeCoordinates(shape.value, scaleX, scaleY)
+  if (canvasRefs.value)
+    drawShapeOnCanvas(canvasRefs.value, scaledShape)
+}
 </script>
 
 <template>
@@ -332,11 +393,13 @@ defineExpose({ changeWall })
         class="img-background"
       >
       <canvas
+        ref="canvasRefs"
+        class="shape-canvas"
+      />
+      <canvas
         ref="canvasRef"
         style="display: none;"
       />
-
-      <canvas ref="trialCanvas" />
     </div>
   </div>
 </template>
@@ -350,5 +413,13 @@ defineExpose({ changeWall })
     block-size: auto;
     inline-size: 100%;
   }
+}
+
+.shape-canvas {
+  position: absolute;
+  z-index: 1;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  opacity: 0.7;
 }
 </style>

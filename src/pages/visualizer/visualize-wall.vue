@@ -641,10 +641,10 @@ const downloadimage = async () => {
                         </div>
                         <VImg
                           :src="stone.image"
-                          width="12rem"
+
                           height="5rem"
                           cover
-                          style="border-radius: 10px;"
+                          style="border-radius: 10px; min-inline-size:12rem"
                         />
                       </VCol>
                     </VRow>
@@ -685,10 +685,10 @@ const downloadimage = async () => {
                       </div>
                       <VImg
                         :src="stone.image"
-                        width="12rem"
+
                         height="5rem"
                         cover
-                        style="border-radius: 10px;"
+                        style="border-radius: 10px; min-inline-size:12rem"
                       />
                     </VCol>
                   </VRow>
