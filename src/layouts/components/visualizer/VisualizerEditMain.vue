@@ -1,8 +1,13 @@
 <script setup lang="ts">
+import localForage from 'localforage'
+
 const props = defineProps({
   image: null,
   wallClicked: Function,
 })
+
+const route = useRoute()
+const router = useRouter()
 
 const canvasRefs = ref([])
 const labelRefs = ref([])
@@ -97,7 +102,12 @@ const deleteWall = () => {
   wallClicked(undefined)
 }
 
-defineExpose({ deleteWall })
+const apply = () => {
+  localForage.setItem('visualizeImage', JSON.stringify(props.image))
+  router.replace(route.query.to ? String(route.query.to) : '/visualizer')
+}
+
+defineExpose({ deleteWall, apply })
 </script>
 
 <template>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import VisualizerEditMain from '@/layouts/components/visualizer/VisualizerEditMain.vue'
 import localForage from 'localforage'
+import VisualizerEditMain from '@/layouts/components/visualizer/VisualizerEditMain.vue'
 
 const image = ref()
 const VisualizerEditMainRef = ref(undefined)
@@ -81,7 +81,10 @@ onMounted(async () => {
           </div>
 
           <div>
-            <VBtn>
+            <VBtn
+              v-if="VisualizerEditMainRef"
+              @click="VisualizerEditMainRef.apply"
+            >
               Done
             </VBtn>
           </div>
