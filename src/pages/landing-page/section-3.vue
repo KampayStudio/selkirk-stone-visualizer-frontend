@@ -79,7 +79,7 @@ onMounted(() => {
       class="content"
     >
       <div class="content-text">
-        <h1 class="text-5xl text-primary">
+        <h1 class="text-5xl text-primary mb-5">
           {{ section_content.heading_1 }}
         </h1>
         <p>

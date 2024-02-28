@@ -68,7 +68,10 @@ onMounted(() => {
         >
           {{ section_content.heading_1 }}
         </h3>
-        <h4 style="color: #7E7E7E;">
+        <h4
+          style="color: #7E7E7E; max-inline-size: 800px;"
+          class="mx-auto mb-3"
+        >
           {{ section_content.body }}
         </h4>
         <VRow class="d-flex mx-auto">
