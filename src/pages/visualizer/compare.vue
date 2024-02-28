@@ -33,7 +33,7 @@ const downloadimage = async () => {
             md="6"
           >
             <div class="text-h6">
-              Original
+              ORIGINAL IMAGE
             </div>
 
             <VImg :src="originalImage" />
@@ -44,7 +44,7 @@ const downloadimage = async () => {
             md="6"
           >
             <div class="text-h6">
-              WITH SELKIRK STONE VISUALIZER
+              VISUALIZED IMAGE
             </div>
 
             <VImg :src="visualizedImage" />

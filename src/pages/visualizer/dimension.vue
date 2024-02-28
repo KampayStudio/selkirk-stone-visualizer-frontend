@@ -168,14 +168,12 @@ const finish = () => {
                 <VBtn @click="finish">
                   Finish
                 </VBtn>
-                <RouterLink to="">
-                  <div
-                    class="text-body-2 text-decoration-underline text-end"
-                    @click="finish"
-                  >
-                    skip this
-                  </div>
-                </RouterLink>
+                <div
+                  class="text-body-2 text-decoration-underline text-end"
+                  @click="finish"
+                >
+                  Skip this part
+                </div>
               </div>
             </div>
           </VCol>
