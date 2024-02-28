@@ -198,7 +198,7 @@ const addPathToMainPathList = () => {
     ctx.clearRect(0, 0, drawingCanvas.value.width, drawingCanvas.value.height)
   }
 
-  SnackBarRef.value.show('success', 'Path Added')
+  SnackBarRef.value.show('success', 'Custom wall successfuly added')
 }
 
 const enableDisableDraw = () => {
