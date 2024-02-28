@@ -21179,6 +21179,24 @@ const goToVisualizer = async sampleImage => {
     toVisualize.image = await convertImageToBase64(sampleImage.image)
 
     localForage.setItem('visualizeImage', JSON.stringify(toVisualize))
+    console.log(toVisualize.wall_shape.shapes.length)
+
+    const visualizerData = ref({
+      dimensions: [],
+      raw_image: undefined,
+      current_wall_number: 0,
+    })
+
+    for (let i = 0; i < toVisualize.wall_shape.shapes.length; i++) {
+      visualizerData.value.dimensions.push({
+        area: 0,
+        height: 0,
+        width: 0,
+      })
+    }
+    visualizerData.value.raw_image = toVisualize.image
+    visualizerData.value.current_wall_number = 0
+    localForage.setItem('visualizerData', JSON.stringify(visualizerData.value))
 
     router.replace(route.query.to ? String(route.query.to) : '/visualizer')
   }

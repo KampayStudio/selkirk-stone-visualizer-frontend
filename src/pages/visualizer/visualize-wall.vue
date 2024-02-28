@@ -699,19 +699,21 @@ const downloadimage = async () => {
                 <VCol class="d-flex gap-x-2 mt-5 justify-end">
                   <RouterLink to="/visualizer">
                     <VBtn variant="outlined">
-                      Back
+                      Select Another wall
                     </VBtn>
                   </RouterLink>
 
-                  <RouterLink to="/visualizer">
+                  <RouterLink to="/visualizer/dimension">
                     <VBtn>
                       Next
                     </VBtn>
                   </routerlink>
 
-                  <VBtn @click="downloadimage">
+                  <!--
+                    <VBtn @click="downloadimage">
                     Finish
-                  </VBtn>
+                    </VBtn>
+                  -->
                 </VCol>
               </VRow>
             </VWindow>

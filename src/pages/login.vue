@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { VForm } from 'vuetify/components/VForm'
 import ResetPasswordDialog from '@/layouts/components/reset_password/ResetPasswordDialog.vue'
+import ResetPasswordSuccess from '@/layouts/components/reset_password/ResetPasswordSuccess.vue'
 import axios from '@axios'
 import { emailValidator, requiredValidator } from '@validators'
 
 const route = useRoute()
 const router = useRouter()
 const ResetPasswordDialogRef = ref(null)
+const ResetPasswordSuccessRef = ref(null)
 
 const isLoading = ref(false)
 
@@ -70,12 +72,17 @@ onMounted(() => {
   if (window.location.href.split('?').length > 1) {
     if (window.location.href.split('?')[1].split('=')[0] === 'reset_password')
       ResetPasswordDialogRef.value.openDialog()
+    if (window.location.href.split('?')[1].split('=')[0] === 'reset-success')
+      ResetPasswordSuccessRef.value.openDialog()
   }
+
+  console.log(ResetPasswordSuccessRef)
 })
 </script>
 
 <template>
   <div>
+    <ResetPasswordSuccess ref="ResetPasswordSuccessRef" />
     <VRow v-if="!section_content.body">
       <VCol
         cols="12"

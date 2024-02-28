@@ -8,6 +8,7 @@ import { themeConfig } from '@themeConfig'
 const route = useRoute()
 const router = useRouter()
 const loading = ref(false)
+const error = ref('')
 
 const form = ref({
   email: '',
@@ -25,7 +26,8 @@ const submit = async () => {
     router.replace(route.query.to ? String(route.query.to) : '/login?reset_password=true')
   }
   catch (e) {
-    console.log(e)
+    error.value = e.response.data.message
+    console.log(e.response.data)
   }
 
   loading.value = false
@@ -82,7 +84,13 @@ const submit = async () => {
                   label="Email"
                   type="email"
                 />
-
+                <p
+                  v-if="error"
+                  style="color: #DF3333"
+                  class="mt-2"
+                >
+                  {{ error }}
+                </p>
                 <!-- reset password -->
                 <VBtn
                   block

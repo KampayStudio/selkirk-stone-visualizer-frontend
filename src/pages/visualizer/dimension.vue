@@ -5,11 +5,13 @@ import VisualizerPreview from '@/layouts/components/visualizer/VisualizerPreview
 const route = useRoute()
 const router = useRouter()
 const image = ref()
+const visualizerData = ref()
 
 onMounted(async () => {
   try {
     const storedImage = await localForage.getItem('visualizeImage')
 
+    visualizerData.value = JSON.parse(await localForage.getItem('visualizerData'))
     if (storedImage) {
       try {
         image.value = JSON.parse(storedImage)
@@ -20,13 +22,27 @@ onMounted(async () => {
     }
   }
   catch (e) {
-    console.error('Error fetching image from localForage:', e)
+    console.log(e)
   }
 })
+
+const submit = async () => {
+  await localForage.setItem('visualizerData', JSON.stringify(visualizerData.value))
+}
+
+const selectAnotherWall = () => {
+  submit()
+  router.replace(route.query.to ? String(route.query.to) : '/visualizer/wall-selection')
+}
+
+const finish = () => {
+  submit()
+  router.replace(route.query.to ? String(route.query.to) : '/visualizer/compare')
+}
 </script>
 
 <template>
-  <section v-if="image">
+  <section v-if="image && visualizerData">
     <VCard>
       <VCardText>
         <VRow>
@@ -41,36 +57,126 @@ onMounted(async () => {
             md="4"
             class="d-flex flex-column justify-center gap-y-3"
           >
-            <div class="d-flex flex-row gap-x-5">
-              <div class="text-sm d-flex align-center gap-x-1">
-                <VIcon
-                  icon="mdi-square"
-                  color="#38A736"
-                /> Detected Wall
-              </div>
-              <div class="text-sm d-flex align-center gap-x-1">
-                <VIcon
-                  icon="mdi-square"
-                  color="#D8BF3A"
-                /> Added Wall
-              </div>
+            <div class="mt-auto">
+              <h6
+                class="text-h6"
+                style="color: #5F2726;"
+              >
+                Wall {{ visualizerData.current_wall_number }} selected
+              </h6>
+              <h5
+                class="text-h5"
+                style="color: #1A4E19;"
+              >
+                Input Dimension
+              </h5>
+              <p class="text-body-2">
+                Input the wall dimensions for an estimated stone usage calculation.
+              </p>
+
+              <VDivider />
+              <VForm class="mt-3">
+                <VRow>
+                  <VCol
+
+                    cols="2"
+                    class="d-flex align-center"
+                  >
+                    Area
+                  </VCol>
+                  <VCol>
+                    <VTextField
+                      v-model="visualizerData.dimensions[visualizerData.current_wall_number].area"
+                      label="Value"
+                    />
+                  </VCol>
+                  <VCol
+                    cols="2"
+                    class="d-flex align-center"
+                  >
+                    ft²
+                  </VCol>
+                </VRow>
+                <VRow>
+                  <VCol>
+                    <div class="d-flex align-center gap-x-3">
+                      <div class="text-body-2">
+                        or
+                      </div>
+
+                      <VDivider />
+                    </div>
+                  </VCol>
+                </VRow>
+                <VRow>
+                  <VCol
+                    cols="2"
+                    class="d-flex align-center"
+                  >
+                    Height
+                  </VCol>
+                  <VCol>
+                    <VTextField
+                      v-model="visualizerData.dimensions[visualizerData.current_wall_number].height"
+                      label="Value"
+                    />
+                  </VCol>
+                  <VCol
+                    cols="2"
+                    class="d-flex align-center"
+                  >
+                    ft²
+                  </VCol>
+                </VRow>
+                <VRow>
+                  <VCol
+                    cols="2"
+                    class="d-flex align-center"
+                  >
+                    Width
+                  </VCol>
+                  <VCol>
+                    <VTextField
+                      v-model="visualizerData.dimensions[visualizerData.current_wall_number].width"
+                      label="Value"
+                    />
+                  </VCol>
+                  <VCol
+                    cols="2"
+                    class="d-flex align-center"
+                  >
+                    ft²
+                  </VCol>
+                </VRow>
+              </VForm>
             </div>
-            <h6 class="text-h4">
-              {{ image.wall_shape.shapes.length }} Detected Walls
-            </h6>
-            <p class="text-body-2">
-              Are you satisfied with the wall detection? <br> Proceeding will not allow further changes.
-            </p>
-            <div class="d-flex gap-x-3">
+
+            <div class="d-flex mt-auto ms-auto gap-x-3">
+              <RouterLink to="/visualizer/visualize-wall">
+                <VBtn variant="outlined">
+                  Back
+                </VBtn>
+              </RouterLink>
               <VBtn
                 variant="outlined"
-                @click="router.replace(route.query.to ? String(route.query.to) : '/visualizer/edit-wall')"
+                @click="selectAnotherWall"
               >
-                Edit Wall
+                Select Another Wall
               </VBtn>
-              <VBtn @click="router.replace(route.query.to ? String(route.query.to) : '/visualizer/wall-selection')">
-                Proceed
-              </VBtn>
+
+              <div class="d-flex flex-column gap-y-1 justify-end">
+                <VBtn @click="finish">
+                  Finish
+                </VBtn>
+                <RouterLink to="">
+                  <div
+                    class="text-body-2 text-decoration-underline text-end"
+                    @click="finish"
+                  >
+                    skip this
+                  </div>
+                </RouterLink>
+              </div>
             </div>
           </VCol>
         </VRow>

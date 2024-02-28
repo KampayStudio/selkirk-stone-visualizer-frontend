@@ -81,9 +81,15 @@ onMounted(() => {
   }
 })
 
-const wallClicked = shape => {
+const wallClicked = async (shape, index) => {
   isLoadingOpen.value = !isLoadingOpen.value
   localForage.setItem('selectedWall', JSON.stringify(shape))
+
+  const visualizerData = ref(JSON.parse(await localForage.getItem('visualizerData')))
+
+  visualizerData.value.current_wall_number = index
+  localForage.setItem('visualizerData', JSON.stringify(visualizerData.value))
+  isLoadingOpen.value = !isLoadingOpen.value
   router.replace(route.query.to ? String(route.query.to) : '/visualizer/visualize-wall')
 }
 </script>
@@ -100,7 +106,7 @@ const wallClicked = shape => {
         :key="index"
         ref="canvasRefs"
         class="shape-canvas"
-        @click="wallClicked(shape)"
+        @click="wallClicked(shape, index)"
       />
       <div
         v-for="(shape, index) in image.wall_shape.shapes"

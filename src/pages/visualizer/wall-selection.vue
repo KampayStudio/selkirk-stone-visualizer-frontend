@@ -6,8 +6,10 @@ const image = ref(null)
 
 onMounted(async () => {
   const storedImage = await localforage.getItem('visualizeImage')
-  if (storedImage)
+  if (storedImage) {
     image.value = JSON.parse(storedImage)
+    console.log(image.value)
+  }
 })
 </script>
 

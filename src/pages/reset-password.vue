@@ -18,24 +18,26 @@ const form = ref({
 const submit = async () => {
   // router.replace(route.query.to ? String(route.query.to) : '/login')
   loading.value = ref(true)
+
+  const urlParams = new URLSearchParams(window.location.search)
+
+  console.log(urlParams.get('uid'), urlParams.get('token'))
   try {
     if (form.value.password === form.value.confirm_password) {
-      const urlParams = new URLSearchParams(window.location.search)
-
       const response = await axiosIns.post(`/users/reset-password-confirm/${urlParams.get('uid')}/${urlParams.get('token')}`, {
         password: form.value.password,
         confirm_password: form.value.confirm_password,
       })
 
       console.log(response)
-      router.replace(route.query.to ? String(route.query.to) : '/login')
+      router.replace(route.query.to ? String(route.query.to) : '/login?reset-success=true')
     }
     else {
-      alert('Please check your password')
+      alert('Please re-check your password')
     }
   }
   catch (e) {
-    router.replace(route.query.to ? String(route.query.to) : '/login')
+    // router.replace(route.query.to ? String(route.query.to) : '/login')
     console.log(e)
   }
   loading.value = false
