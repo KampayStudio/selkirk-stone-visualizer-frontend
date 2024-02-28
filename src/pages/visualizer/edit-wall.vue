@@ -39,86 +39,89 @@ onMounted(async () => {
   <div class="max-section-width mt-5">
     <VCard>
       <VCardText>
-        <!-- Top Buttons -->
-        <div class="d-flex gap-x-3">
-          <VBtn
-            v-if="VisualizerEditMainRef"
-            variant="outlined"
-            @click="showHideDraw"
+        <div>
+          <div
+            v-if="image"
+            class="d-flex justify-space-between mb-2"
           >
-            {{ isDraw ? "Disable" : "Enable" }} Draw Mode
-          </VBtn>
-          <VBtn
-            v-if="VisualizerEditMainRef && !isDraw"
-            variant="outlined"
-            :disabled="wallNumber === undefined"
-            @click="VisualizerEditMainRef.deleteWall"
-          >
-            Delete
-          </VBtn>
-          <VBtn
-            v-if="isDraw"
-            variant="outlined"
-          >
-            Undo Recent Line
-          </VBtn>
-        </div>
+            <div class="d-flex gap-x-3 align-center">
+              <div v-if="!isDraw">
+                <h6 class="text-h6 ">
+                  Walls Detected: {{ image.wall_shape.shapes.length }}
+                </h6>
+                <div>
+                  If you're not satisfied with the detected walls, you can easily edit them. Simply select a wall to delete it or draw your custom wall instead.
+                </div>
+              </div>
 
-        <!-- Image display -->
-
-        <div
-          v-if="image"
-          class="my-5"
-        >
-          <VisualizerEditMain
-            ref="VisualizerEditMainRef"
-            :image="image"
-            :wall-clicked="assignWall"
-          />
-        </div>
-
-        <div
-          v-if="image"
-          class="d-flex justify-space-between"
-        >
-          <div class="d-flex gap-x-3 align-center">
-            <h6
-              v-if="!isDraw"
-              class="text-h6 "
-            >
-              Walls Detected: {{ image.wall_shape.shapes.length }}
-            </h6>
-            <VDivider
-              v-if="wallNumber !== undefined"
-              vertical
-            />
-            <h6
-              v-if="wallNumber !== undefined && !isDraw"
-              class="text-h6"
-            >
-              Selected Wall: {{ wallNumber + 1 }}
-            </h6>
-            <h6
-              v-if="isDraw"
-              class="text-h6"
-            >
-              Select points on the image
-            </h6>
+              <VDivider
+                v-if="wallNumber !== undefined"
+                vertical
+              />
+              <h6
+                v-if="wallNumber !== undefined && !isDraw"
+                class="text-h6"
+              >
+                Selected Wall: {{ wallNumber + 1 }}
+              </h6>
+              <h6
+                v-if="isDraw"
+                class="text-h6"
+              >
+                Create your custom wall by simply clicking on the points that mark the corners of your walls.
+              </h6>
+            </div>
           </div>
+          <!-- Top Buttons -->
+          <div class="d-flex gap-x-3">
+            <VBtn
+              v-if="VisualizerEditMainRef"
+              variant="outlined"
+              @click="showHideDraw"
+            >
+              {{ isDraw ? "Back to Edit" : "Draw Custom Wall" }}
+            </VBtn>
+            <VBtn
+              v-if="VisualizerEditMainRef && !isDraw"
+              variant="outlined"
+              :disabled="wallNumber === undefined"
+              @click="VisualizerEditMainRef.deleteWall"
+            >
+              Delete
+            </VBtn>
+            <VBtn
+              v-if="isDraw"
+              variant="outlined"
+              @click="VisualizerEditMainRef.undo"
+            >
+              Undo Recent Line
+            </VBtn>
 
-          <div>
             <VBtn
               v-if="VisualizerEditMainRef && !isDraw"
               @click="VisualizerEditMainRef.apply"
             >
-              Done
+              Save Changes
             </VBtn>
             <VBtn
               v-if="isDraw"
               @click="VisualizerEditMainRef.addPathToMainPathList"
             >
-              Apply Path
+              Add as wall
             </VBtn>
+          </div>
+
+          <!-- Image display -->
+
+          <div
+            v-if="image"
+            class="my-5"
+          >
+            <VisualizerEditMain
+              ref="VisualizerEditMainRef"
+              :image="image"
+              :wall-clicked="assignWall"
+            />
           </div>
         </div>
       </VCardText>

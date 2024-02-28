@@ -134,6 +134,7 @@ const apply = () => {
 const drawLines = () => {
   const ctx = drawingCanvas.value.getContext('2d')
 
+  ctx.lineWidth = 3
   ctx.beginPath()
   drawnPoints.value.forEach((point, index) => {
     if (index === 0)
@@ -155,7 +156,7 @@ const addPoint = event => {
 
   ctx.fillStyle = '#38A736' // Dot color
   ctx.beginPath()
-  ctx.arc(offsetX, offsetY, 3, 0, Math.PI * 2) // Small dot
+  ctx.arc(offsetX, offsetY, 5, 0, Math.PI * 2) // Small dot
   ctx.fill()
   drawLines()
   console.log(drawnPoints.value)
@@ -209,7 +210,18 @@ const enableDisableDraw = () => {
   console.log('Canvas Cleared')
 }
 
-defineExpose({ deleteWall, apply, enableDisableDraw, addPathToMainPathList })
+const undo = () => {
+  drawnPoints.value.pop()
+
+  if (drawingCanvas.value) {
+    const ctx = drawingCanvas.value.getContext('2d')
+
+    ctx.clearRect(0, 0, drawingCanvas.value.width, drawingCanvas.value.height)
+  }
+  drawLines()
+}
+
+defineExpose({ deleteWall, apply, enableDisableDraw, addPathToMainPathList, undo })
 </script>
 
 <template>
