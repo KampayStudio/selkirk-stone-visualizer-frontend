@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import axios from '@axios'
 
+const route = useRoute()
+const router = useRouter()
+
 const section_content = ref({
   banner_1: '',
   banner_2: '',
@@ -80,12 +83,11 @@ onMounted(() => {
             md="4"
           >
             <div class="index-image-mask">
-              <RouterLink :to="{ name: 'sample-scenes' }">
-                <img
-                  :src="section_content.banner_1"
-                  style=" max-block-size: 20rem;min-block-size: 20rem;"
-                >
-              </RouterLink>
+              <img
+                :src="section_content.banner_1"
+                style=" max-block-size: 20rem;min-block-size: 20rem;"
+                @click="router.replace(route.query.to ? String(route.query.to) : '/sample-scenes?section=exterior')"
+              >
             </div>
             <p>{{ section_content.photo_caption_1 }}</p>
           </VCol>
@@ -94,12 +96,11 @@ onMounted(() => {
             md="4"
           >
             <div class="index-image-mask">
-              <RouterLink :to="{ name: 'sample-scenes' }">
-                <img
-                  :src="section_content.banner_2"
-                  style=" max-block-size: 20rem;min-block-size: 20rem;"
-                >
-              </RouterLink>
+              <img
+                :src="section_content.banner_2"
+                style=" max-block-size: 20rem;min-block-size: 20rem;"
+                @click="router.replace(route.query.to ? String(route.query.to) : '/sample-scenes?section=interior')"
+              >
             </div>
 
             <p>{{ section_content.photo_caption_2 }}</p>
@@ -109,12 +110,11 @@ onMounted(() => {
             md="4"
           >
             <div class="index-image-mask">
-              <RouterLink :to="{ name: 'sample-scenes' }">
-                <img
-                  :src="section_content.banner_3"
-                  style=" max-block-size: 20rem;min-block-size: 20rem;"
-                >
-              </RouterLink>
+              <img
+                :src="section_content.banner_3"
+                style=" max-block-size: 20rem;min-block-size: 20rem;"
+                @click="router.replace(route.query.to ? String(route.query.to) : '/sample-scenes?section=mantle')"
+              >
             </div>
             <p>{{ section_content.photo_caption_3 }}</p>
           </VCol>

@@ -21204,6 +21204,13 @@ const goToVisualizer = async sampleImage => {
     console.error('Error in goToVisualizer:', error)
   }
 }
+
+onMounted(() => {
+  const urlParams = new URLSearchParams(window.location.search)
+
+  if (urlParams.has('section'))
+    selectedSection.value = urlParams.get('section')
+})
 </script>
 
 <template>
