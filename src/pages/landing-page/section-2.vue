@@ -89,7 +89,9 @@ onMounted(() => {
                 @click="router.replace(route.query.to ? String(route.query.to) : '/sample-scenes?section=exterior')"
               >
             </div>
-            <p>{{ section_content.photo_caption_1 }}</p>
+            <p class="mt-3">
+              {{ section_content.photo_caption_1 }}
+            </p>
           </VCol>
           <VCol
             cols="12"
@@ -103,7 +105,9 @@ onMounted(() => {
               >
             </div>
 
-            <p>{{ section_content.photo_caption_2 }}</p>
+            <p class="mt-3">
+              {{ section_content.photo_caption_2 }}
+            </p>
           </VCol>
           <VCol
             cols="12"
@@ -116,7 +120,9 @@ onMounted(() => {
                 @click="router.replace(route.query.to ? String(route.query.to) : '/sample-scenes?section=mantle')"
               >
             </div>
-            <p>{{ section_content.photo_caption_3 }}</p>
+            <p class="mt-3">
+              {{ section_content.photo_caption_3 }}
+            </p>
           </VCol>
         </VRow>
       </div>
