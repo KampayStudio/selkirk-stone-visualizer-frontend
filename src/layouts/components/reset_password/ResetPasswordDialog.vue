@@ -23,10 +23,10 @@ defineExpose({ openDialog })
             <span class="text-5xl"><VIcon icon="bx-info-circle" /></span>
           </VBtn>
           <h5 class="text-h5">
-            Almost there!
+            Awesome!
           </h5>
           <h6 class="text-lg font-weight-medium mt-3">
-            Your password reset link has been sent to your email. <br> Please check your inbox to proceed.
+            We've just sent a password reset link to your email.
           </h6>
         </VCardText>
 

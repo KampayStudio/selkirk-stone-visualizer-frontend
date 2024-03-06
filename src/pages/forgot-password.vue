@@ -66,10 +66,10 @@ const submit = async () => {
 
         <VCardText>
           <h6 class="text-h6 mb-1">
-            Forgot Password? 🔒
+            Forgot Password?
           </h6>
           <p class="mb-0">
-            Enter your email and we'll send you instructions to reset your password
+            Don't worry! Enter your email address, and we'll send you a link to reset it securely. 🔒"
           </p>
         </VCardText>
 
