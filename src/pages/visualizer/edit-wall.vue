@@ -84,7 +84,7 @@ onMounted(async () => {
               variant="outlined"
               @click="showHideDraw"
             >
-              {{ isDraw ? "Back to Edit" : "Draw Custom Wall" }}
+              {{ isDraw ? "Back to Edit Wall" : "Draw Custom Wall" }}
             </VBtn>
             <VBtn
               v-if="VisualizerEditMainRef && !isDraw"
@@ -95,7 +95,7 @@ onMounted(async () => {
               Delete
             </VBtn>
             <VBtn
-
+              v-if="VisualizerEditMainRef && !isDraw"
               variant="outlined"
               @click="isDeleteAllDialogShow = !isDeleteAllDialogShow"
             >
@@ -119,7 +119,7 @@ onMounted(async () => {
               v-if="isDraw"
               @click="VisualizerEditMainRef.addPathToMainPathList"
             >
-              Add as wall
+              Make Custom Wall
             </VBtn>
           </div>
 

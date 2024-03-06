@@ -281,13 +281,7 @@ defineExpose({ deleteWall, apply, enableDisableDraw, addPathToMainPathList, undo
   z-index: 1;
   inset-block-start: 0;
   inset-inline-start: 0;
-  opacity: 0.1;
-  transition: opacity 0.3s ease;
-
-  &:hover {
-    opacity: 0.7;
-
-  }
+  opacity: .7;
 }
 
 .highlighted{
