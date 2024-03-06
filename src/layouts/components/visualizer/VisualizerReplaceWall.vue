@@ -24,6 +24,7 @@ const drawImageToCanvas = imageElement => {
 const createSeamlessTile = (srcImage, numTiles = 5) => {
   const finalRows = srcImage.rows * numTiles
   const finalCols = srcImage.cols * numTiles
+
   const tiledImage = new cv.Mat.zeros(finalRows, finalCols, srcImage.type())
 
   // Fill the tiled image with mirrored copies
@@ -37,7 +38,8 @@ const createSeamlessTile = (srcImage, numTiles = 5) => {
         cv.flip(srcRegion, srcRegion, 1)
       }
 
-      const destRegion = tiledImage.rowRange(i * srcImage.rows, (i + 1) * srcImage.rows)
+      const destRegion = tiledImage
+        .rowRange(i * srcImage.rows, (i + 1) * srcImage.rows)
         .colRange(j * srcImage.cols, (j + 1) * srcImage.cols)
 
       srcRegion.copyTo(destRegion)
@@ -64,52 +66,58 @@ const findRectangleCorners = rectangle => {
   return points
 }
 
-const warpPerspective = (img, rectangle) => {
+const warpPerspective = (img, angle, translation, tileSize) => {
   // Tile the overlay
-  const boundingRect = cv.RotatedRect.boundingRect(rectangle)
-  const angle = rectangle.angle
-  const widthTiles = Math.ceil(boundingRect.width / img.cols)
-  const heightTiles = Math.ceil(boundingRect.height / img.rows)
-  let tiles = Math.max(widthTiles, heightTiles)
 
-  if (tiles <= 3)
-    tiles = tiles * 3
-  else if (tiles <= 6)
-    tiles = tiles * 2
+  const tileImage = createSeamlessTile(img, tileSize)
+  let rotatedImage = tileImage
+  if (angle) {
+    rotatedImage = new cv.Mat()
 
-  const tileImage = createSeamlessTile(img, tiles)
+    const center = new cv.Point(tileImage.cols / 2, tileImage.rows / 2)
+    const rotationMatrix = cv.getRotationMatrix2D(center, angle * 1.8, 1)
 
-  // Define the source points (corners of the original wall)
-  const srcPoints = cv.matFromArray(4, 1, cv.CV_32FC2, [0, 0, boundingRect.width, 0, 0, boundingRect.height, boundingRect.width, boundingRect.height])
+    cv.warpAffine(tileImage, rotatedImage, rotationMatrix, tileImage.size(), cv.INTER_LINEAR, cv.BORDER_CONSTANT, new cv.Scalar())
 
-  // Define the destination points (corners of the transformed wall)
-  let vertices = findRectangleCorners(rectangle)
-  console.log(angle)
-  console.log(JSON.stringify(vertices))
-  if (angle <= 30)
-    vertices = [vertices[1], vertices[2], vertices[0], vertices[3]]
-  else if (angle <= 90)
-    vertices = [vertices[0], vertices[1], vertices[3], vertices[2]]
-  console.log(JSON.stringify(vertices))
+    rotationMatrix.delete()
+  }
 
-  const dstPoints = cv.matFromArray(4, 1, cv.CV_32FC2, vertices.map(v => [v.x, v.y]).flat())
+  let translatedImage = rotatedImage
+  if (translation) {
+    translatedImage = new cv.Mat()
 
-  // Calculate the perspective transform matrix
-  const perspectiveMatrix = cv.getPerspectiveTransform(srcPoints, dstPoints)
+    const translationValue = Math.abs((translation / 100) * rotatedImage.rows)
+    let srcPoints
+    let dstPoints
+    if (translation > 0) {
+      srcPoints = cv.matFromArray(4, 1, cv.CV_32FC2, [0, 0, tileImage.cols, 0, 0, tileImage.rows, tileImage.cols, tileImage.rows])
+      dstPoints = cv.matFromArray(4, 1, cv.CV_32FC2, [0, 0, tileImage.cols, translationValue, 0, tileImage.cols - translationValue, tileImage.cols, tileImage.rows + translationValue])
+    }
+    else {
+      srcPoints = cv.matFromArray(4, 1, cv.CV_32FC2, [0, 0, tileImage.cols, 0, 0, tileImage.rows, tileImage.cols, tileImage.rows])
+      dstPoints = cv.matFromArray(4, 1, cv.CV_32FC2, [0, translationValue, tileImage.cols, 0, 0, tileImage.rows + translationValue, tileImage.cols, tileImage.cols - translationValue])
+    }
+    const perspectiveMatrix = cv.getPerspectiveTransform(srcPoints, dstPoints)
 
-  // Create an output image for the transformed result
-  const transformedImage = new cv.Mat()
+    cv.warpPerspective(rotatedImage, translatedImage, perspectiveMatrix, rotatedImage.size(), cv.INTER_LINEAR, cv.BORDER_CONSTANT, new cv.Scalar())
+    srcPoints.delete()
+    dstPoints.delete()
+    perspectiveMatrix.delete()
+  }
 
-  // Apply the perspective transform to the input image
-  cv.warpPerspective(tileImage, transformedImage, perspectiveMatrix, tileImage.size(), cv.INTER_LINEAR, cv.BORDER_CONSTANT, new cv.Scalar())
+  const blurredImage = new cv.Mat()
+
+  cv.blur(translatedImage, blurredImage, new cv.Size(5, 5), new cv.Point(-1, -1), cv.BORDER_DEFAULT)
 
   // Release memory
-  tileImage.delete()
-  srcPoints.delete()
-  dstPoints.delete()
-  perspectiveMatrix.delete()
+  if (angle)
+    tileImage.delete()
+  if (translation) {
+    rotatedImage.delete()
+    translatedImage.delete
+  }
 
-  return transformedImage
+  return blurredImage
 }
 
 const createSegmentationMask = (baseImage, segmentationPath) => {
@@ -119,6 +127,9 @@ const createSegmentationMask = (baseImage, segmentationPath) => {
   canvas.height = baseImage.naturalHeight
 
   const ctx = canvas.getContext('2d')
+
+  ctx.fillStyle = 'black'
+  ctx.fillRect(0, 0, canvas.width, canvas.height)
 
   ctx.beginPath()
   segmentationPath.forEach((point, index) => {
@@ -155,7 +166,7 @@ const findShapeRectangle = src => {
   return result
 }
 
-const replaceImage = (wallImage, overlayImage, rectangle, points) => {
+const replaceImage = (wallImage, overlayImage, points, angle, translation) => {
   const minX = Math.min(...points.map(p => p.x))
   const maxX = Math.max(...points.map(p => p.x))
   const minY = Math.min(...points.map(p => p.y))
@@ -184,9 +195,9 @@ const replaceImage = (wallImage, overlayImage, rectangle, points) => {
     resizedHeight = overlayImage.rows * scale
   }
 
-  if (rectangle.angle > 0) {
-    resizedWidth = resizedWidth * 1.25
-    resizedHeight = resizedHeight * 1.25
+  if (angle || translation) {
+    resizedWidth = resizedWidth * 1.5
+    resizedHeight = resizedHeight * 1.5
   }
 
   // Create a mask
@@ -217,9 +228,9 @@ const replaceImage = (wallImage, overlayImage, rectangle, points) => {
   let startX = minX
   let startY = minY
 
-  if (rectangle.angle > 0) {
-    startX = startX - ((maxX * 0.15) / 2)
-    startY = startY - ((maxY * 0.15) / 2)
+  if (angle || translation) {
+    startX = startX - maxX / 4
+    startY = startY - maxY / 4
   }
 
   for (let row = 0; row < resizedOverlay.rows; row++) {
@@ -255,7 +266,7 @@ const replaceImage = (wallImage, overlayImage, rectangle, points) => {
   overlayImage.delete()
 }
 
-const changeWall = async (stone: any) => {
+const changeWall = async (stone, rotation, translation, tileSize) => {
   const wallImageElement = new Image()
   const overlayImageElement = new Image()
 
@@ -276,9 +287,26 @@ const changeWall = async (stone: any) => {
   const points = shape.value
   const segmentationMask = createSegmentationMask(document.getElementById('baseImage'), points)
   const rectangle = findShapeRectangle(segmentationMask)
-  const warpedOverlayImage = warpPerspective(overlayImage, rectangle)
 
-  replaceImage(wallImage, warpedOverlayImage, rectangle, points)
+  if (rotation !== null)
+    rectangle.angle = rotation * 0.9
+
+  const boundingRect = cv.RotatedRect.boundingRect(rectangle)
+  let tiles = tileSize
+  if (!tiles) {
+    const widthTiles = Math.ceil(boundingRect.width / overlayImage.cols)
+    const heightTiles = Math.ceil(boundingRect.height / overlayImage.rows)
+
+    tiles = Math.max(widthTiles, heightTiles)
+
+    if (tiles <= 3)
+      tiles = tiles * 3
+    else if (tiles <= 6)
+      tiles = tiles * 2
+  }
+  const warpedOverlayImage = warpPerspective(overlayImage, rectangle.angle, translation, tiles)
+
+  replaceImage(wallImage, warpedOverlayImage, points, rectangle.angle, translation)
 
   canvasRefs.value.classList.add('d-none')
 }

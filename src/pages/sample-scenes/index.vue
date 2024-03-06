@@ -21192,6 +21192,8 @@ const goToVisualizer = async sampleImage => {
         area: 0,
         height: 0,
         width: 0,
+        stone_type: '',
+        stone_color: '',
       })
     }
     visualizerData.value.raw_image = toVisualize.image

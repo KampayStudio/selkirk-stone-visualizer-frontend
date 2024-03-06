@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { VForm } from 'vuetify/components/VForm'
+import SnackBar from '@/layouts/components/SnackBar.vue'
 import ResetPasswordDialog from '@/layouts/components/reset_password/ResetPasswordDialog.vue'
 import ResetPasswordSuccess from '@/layouts/components/reset_password/ResetPasswordSuccess.vue'
 import axios from '@axios'
@@ -9,7 +10,7 @@ const route = useRoute()
 const router = useRouter()
 const ResetPasswordDialogRef = ref(null)
 const ResetPasswordSuccessRef = ref(null)
-
+const SnackBarRef = ref(null)
 const isLoading = ref(false)
 
 const form = ref({
@@ -43,6 +44,7 @@ const login = async () => {
   catch (error) {
     console.error('Login error:', error)
     isLoading.value = false
+    SnackBarRef.value.show('error', 'Please check your credentials')
   }
 }
 
@@ -283,6 +285,7 @@ onMounted(() => {
     </VRow>
 
     <ResetPasswordDialog ref="ResetPasswordDialogRef" />
+    <SnackBar ref="SnackBarRef" />
   </div>
 </template>
 

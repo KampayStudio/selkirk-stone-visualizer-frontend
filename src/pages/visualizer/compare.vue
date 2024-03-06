@@ -1,14 +1,27 @@
 <script setup lang="ts">
 import localforage from 'localforage'
+import LoginPrompt from '@/layouts/components/LoginPrompt.vue'
+import AddToCollectionDialog from '@/layouts/components/visualizer/AddToCollectionDialog.vue'
 
 const originalImage = ref()
 const visualizedImage = ref()
+const visualizerData = ref()
+const wallCoordinates = ref()
+const AddToCollectionDialogRef = ref()
+const LoginPromptRef = ref(null)
+
+const route = useRoute()
+const router = useRouter()
+
+const isUserLoggedIn = sessionStorage.getItem('id') !== null
 
 onMounted(async () => {
-  originalImage.value = JSON.parse(await localforage.getItem('visualizerData')).raw_image
+  visualizerData.value = JSON.parse(await localforage.getItem('visualizerData'))
+
+  originalImage.value = visualizerData.value.raw_image
   visualizedImage.value = JSON.parse(await localforage.getItem('visualizeImage')).image
 
-  console.log(visualizedImage)
+  wallCoordinates.value = JSON.parse(await localforage.getItem('visualizeImage')).wall_shape
 })
 
 const downloadimage = async () => {
@@ -20,6 +33,20 @@ const downloadimage = async () => {
   document.body.appendChild(a)
   a.click()
   document.body.removeChild(a)
+}
+
+const addToCollection = () => {
+  if (isUserLoggedIn)
+    AddToCollectionDialogRef.value.triggerShow()
+  else
+    LoginPromptRef.value.triggerDialog()
+}
+
+const viewCollection = () => {
+  if (isUserLoggedIn)
+    router.replace(route.query.to ? String(route.query.to) : '/collection')
+  else
+    LoginPromptRef.value.triggerDialog()
 }
 </script>
 
@@ -57,7 +84,7 @@ const downloadimage = async () => {
               <VBtn
                 variant="outlined"
                 density="compact"
-                disabled
+                @click="addToCollection"
               >
                 Add to collection
               </VBtn>
@@ -84,8 +111,7 @@ const downloadimage = async () => {
                   Try Another Photo
                 </VBtn>
               </RouterLink>
-
-              <VBtn disabled>
+              <VBtn @click="viewCollection">
                 View Collection
               </VBtn>
             </div>
@@ -93,6 +119,9 @@ const downloadimage = async () => {
         </VRow>
       </VCardText>
     </VCard>
+    <AddToCollectionDialog ref="AddToCollectionDialogRef" />
+
+    <LoginPrompt ref="LoginPromptRef" />
   </div>
 </template>
 
