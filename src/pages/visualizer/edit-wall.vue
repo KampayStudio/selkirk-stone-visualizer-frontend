@@ -7,6 +7,8 @@ const VisualizerEditMainRef = ref(undefined)
 const wallNumber = ref(undefined)
 const isDraw = ref(false)
 
+const isDeleteAllDialogShow = ref(false)
+
 const assignWall = index => {
   wallNumber.value = index
 }
@@ -46,30 +48,33 @@ onMounted(async () => {
           >
             <div class="d-flex gap-x-3 align-center">
               <div v-if="!isDraw">
-                <h6 class="text-h6 ">
-                  Walls Detected: {{ image.wall_shape.shapes.length }}
-                </h6>
+                <div class="d-flex mb-2">
+                  <h6 class="text-h6 ">
+                    Walls Detected: {{ image.wall_shape.shapes.length }}
+                  </h6>
+                  <VDivider
+                    v-if="wallNumber !== undefined"
+                    class="mx-3"
+                    vertical
+                  />
+                  <h6
+                    v-if="wallNumber !== undefined && !isDraw"
+                    class="text-h6"
+                  >
+                    Selected Wall: {{ wallNumber + 1 }}
+                  </h6>
+                  <h6
+                    v-if="isDraw"
+                    class="text-h6"
+                  >
+                    Create your custom wall by simply clicking on the points that mark the corners of your walls.
+                  </h6>
+                </div>
+
                 <div>
                   If you're not satisfied with the detected walls, you can easily edit them. Simply select a wall to delete it or draw your custom wall instead.
                 </div>
               </div>
-
-              <VDivider
-                v-if="wallNumber !== undefined"
-                vertical
-              />
-              <h6
-                v-if="wallNumber !== undefined && !isDraw"
-                class="text-h6"
-              >
-                Selected Wall: {{ wallNumber + 1 }}
-              </h6>
-              <h6
-                v-if="isDraw"
-                class="text-h6"
-              >
-                Create your custom wall by simply clicking on the points that mark the corners of your walls.
-              </h6>
             </div>
           </div>
           <!-- Top Buttons -->
@@ -88,6 +93,13 @@ onMounted(async () => {
               @click="VisualizerEditMainRef.deleteWall"
             >
               Delete
+            </VBtn>
+            <VBtn
+
+              variant="outlined"
+              @click="isDeleteAllDialogShow = !isDeleteAllDialogShow"
+            >
+              Delete All
             </VBtn>
             <VBtn
               v-if="isDraw"
@@ -126,6 +138,54 @@ onMounted(async () => {
         </div>
       </VCardText>
     </VCard>
+
+    <VDialog
+      v-model="isDeleteAllDialogShow"
+      max-width="500"
+    >
+      <VCard class="text-center px-10 py-6">
+        <VCardText>
+          <VBtn
+            icon
+            variant="outlined"
+            color="warning"
+            class="my-4"
+            style=" block-size: 88px;inline-size: 88px; pointer-events: none;"
+          >
+            <span class="text-5xl">!</span>
+          </VBtn>
+
+          <h6 class="text-lg font-weight-medium">
+            Are you sure you want to continue?
+          </h6>
+
+          <p class="text-body-2">
+            This action will delete all detected walls.
+          </p>
+        </VCardText>
+
+        <VCardActions class="align-center justify-center gap-2">
+          <VBtn
+            v-if="VisualizerEditMainRef"
+            variant="elevated"
+            @click="() => {
+              VisualizerEditMainRef.deleteAllWalls()
+              isDeleteAllDialogShow = false
+            }"
+          >
+            Delete all
+          </VBtn>
+
+          <VBtn
+            color="secondary"
+            variant="outlined"
+            @click="isDeleteAllDialogShow = !isDeleteAllDialogShow"
+          >
+            Cancel
+          </VBtn>
+        </VCardActions>
+      </VCard>
+    </VDialog>
   </div>
 </template>
 

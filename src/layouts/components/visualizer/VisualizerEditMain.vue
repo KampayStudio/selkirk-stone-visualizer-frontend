@@ -126,6 +126,10 @@ const deleteWall = () => {
   wallClicked(undefined)
 }
 
+const deleteAllWalls = () => {
+  props.image.wall_shape.shapes = []
+}
+
 const apply = () => {
   localForage.setItem('visualizeImage', JSON.stringify(props.image))
   router.replace(route.query.to ? String(route.query.to) : '/visualizer')
@@ -221,7 +225,7 @@ const undo = () => {
   drawLines()
 }
 
-defineExpose({ deleteWall, apply, enableDisableDraw, addPathToMainPathList, undo })
+defineExpose({ deleteWall, apply, enableDisableDraw, addPathToMainPathList, undo, deleteAllWalls })
 </script>
 
 <template>
