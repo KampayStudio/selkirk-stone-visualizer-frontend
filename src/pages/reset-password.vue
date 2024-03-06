@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import SnackBar from '@/layouts/components/SnackBar.vue'
 import axiosIns from '@/plugins/axios'
 import authV1BottomShape from '@images/svg/bottom-illustration.svg?raw'
 import authV1TopShape from '@images/svg/top-illustration.svg?raw'
@@ -7,6 +8,7 @@ import { themeConfig } from '@themeConfig'
 
 const route = useRoute()
 const router = useRouter()
+const SnackBarRef = ref(null)
 
 const loading = ref(false)
 
@@ -25,18 +27,21 @@ const submit = async () => {
   try {
     if (form.value.password === form.value.confirm_password) {
       const response = await axiosIns.post(`/users/reset-password-confirm/${urlParams.get('uid')}/${urlParams.get('token')}/`, {
-        password: form.value.password,
+        new_password: form.value.password,
         confirm_password: form.value.confirm_password,
       })
 
       console.log(response)
+
       router.replace(route.query.to ? String(route.query.to) : '/login?reset-success=true')
     }
     else {
-      alert('Please re-check your password')
+      SnackBarRef.value.show('error', 'Please re-check your password')
     }
   }
   catch (e) {
+    SnackBarRef.value.show('error', e.response.data.message)
+
     // router.replace(route.query.to ? String(route.query.to) : '/login')
     console.log(e)
   }
@@ -138,6 +143,8 @@ onMounted(() => {
         </VCardText>
       </VCard>
     </div>
+
+    <SnackBar ref="SnackBarRef" />
   </div>
 </template>
 
