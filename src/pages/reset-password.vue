@@ -24,7 +24,7 @@ const submit = async () => {
   console.log(urlParams.get('uid'), urlParams.get('token'))
   try {
     if (form.value.password === form.value.confirm_password) {
-      const response = await axiosIns.post(`/users/reset-password-confirm/${urlParams.get('uid')}/${urlParams.get('token')}`, {
+      const response = await axiosIns.post(`/users/reset-password-confirm/${urlParams.get('uid')}/${urlParams.get('token')}/`, {
         password: form.value.password,
         confirm_password: form.value.confirm_password,
       })
