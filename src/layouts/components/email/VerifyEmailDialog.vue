@@ -51,7 +51,7 @@ defineExpose({ openDialog })
           </VBtn>
 
           <h6 class="text-lg font-weight-medium">
-            Click to Verify
+            Complete your verification
           </h6>
         </VCardText>
 
@@ -63,7 +63,7 @@ defineExpose({ openDialog })
               verify()
             }"
           >
-            Verify
+            Activate Account
           </VBtn>
         </VCardActions>
       </VCard>
