@@ -170,6 +170,7 @@ const finish = () => {
                 </VBtn>
                 <div
                   class="text-body-2 text-decoration-underline text-end"
+                  style="cursor: pointer"
                   @click="finish"
                 >
                   Skip this part

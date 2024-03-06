@@ -27,24 +27,20 @@ defineExpose({ triggerDialog })
           </VBtn>
 
           <h6 class="text-lg font-weight-medium">
-            Don't miss out!
+            You must login to use this feature
           </h6>
-
-          <p class="text-body-1">
-            Sign in to explore this feature or create an account to access this feature.
-          </p>
         </VCardText>
 
         <VCardActions class="align-center justify-center gap-2">
+          <VBtn
+            variant="outlined"
+            @click="triggerDialog"
+          >
+            Cancel
+          </VBtn>
           <RouterLink to="/login">
-            <VBtn variant="outlined">
-              Sign in
-            </VBtn>
-          </RouterLink>
-
-          <RouterLink to="/register">
             <VBtn variant="elevated">
-              Create account
+              Login
             </VBtn>
           </RouterLink>
         </VCardActions>
