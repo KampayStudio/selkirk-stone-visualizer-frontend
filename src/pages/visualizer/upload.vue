@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import localforage from 'localforage'
+import localForage from 'localforage'
 import { ref } from 'vue'
 import axios from '@axios'
 
@@ -10,58 +10,95 @@ const fileInput = ref(null)
 const selectionGroup = ref('interior')
 const isLoadingOpen = ref(false)
 
+// Assuming convertImageToBase64 and other helper functions are already defined
+
+const apiConfig = {
+  interior: {
+    url: 'https://detect.roboflow.com/kp-ss-indoor-wall-segmentation/1',
+  },
+  exterior: {
+    url: 'https://detect.roboflow.com/kp-ss-outdoor-wall-segmentation/1',
+  },
+
+  // Placeholder for future implementations
+  mantle: { url: null },
+}
+
 const uploadImage = async selectedFile => {
   const reader = new FileReader()
 
   reader.onload = async e => {
+    const selectionConfig = apiConfig[selectionGroup.value]
+
+    if (!selectionConfig || !selectionConfig.url) {
+      console.log(`${selectionGroup.value} is not yet available`)
+
+      return
+    }
+
     isLoadingOpen.value = true
 
     const imageBase64 = e.target.result.split(',')[1]
 
     try {
-      if (selectionGroup.value === 'interior') {
-        const response = await axios({
-          method: 'POST',
-          url: 'https://detect.roboflow.com/kp-ss-indoor-wall-segmentation/1',
-          params: {
-            api_key: 'XVVN1vofu0gxVx4Ez6IC',
-          },
-          data: imageBase64,
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        })
+      const response = await axios({
+        method: 'POST',
+        url: selectionConfig.url,
+        params: { api_key: 'XVVN1vofu0gxVx4Ez6IC' },
+        data: imageBase64,
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      })
 
-        localforage.setItem('visualizeImage', JSON.stringify(convertResponseToDesiredFormat(response.data, e.target.result)))
-        router.replace(route.query.to ? String(route.query.to) : '/visualizer')
-      }
-      else if (selectionGroup.value === 'exterior') {
-        const response = await axios({
-          method: 'POST',
-          url: 'https://detect.roboflow.com/kp-ss-outdoor-wall-segmentation/1',
-          params: {
-            api_key: 'XVVN1vofu0gxVx4Ez6IC',
-          },
-          data: imageBase64,
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        })
+      // Assuming convertResponseToDesiredFormat modifies the response format suitably for goToVisualizer
+      const formattedResponse = convertResponseToDesiredFormat(response.data, e.target.result)
 
-        localforage.setItem('visualizeImage', JSON.stringify(convertResponseToDesiredFormat(response.data, e.target.result)))
-        router.replace(route.query.to ? String(route.query.to) : '/visualizer')
-      }
-      else if (selectionGroup.value === 'mantle') {
-        console.log('not yet available')
-      }
-      isLoadingOpen.value = false
+      await goToVisualizer(formattedResponse)
     }
     catch (error) {
       console.error(error.message)
     }
+    finally {
+      isLoadingOpen.value = false
+    }
   }
 
   reader.readAsDataURL(selectedFile)
+}
+
+const goToVisualizer = async sampleImage => {
+  try {
+    // Assuming sampleImage.image already contains the base64 string
+    const toVisualize = { ...sampleImage }
+
+    localForage.setItem('visualizeImage', JSON.stringify(toVisualize))
+    console.log(toVisualize.wall_shape.shapes.length)
+
+    const visualizerData = {
+      dimensions: [],
+      raw_image: undefined,
+      current_wall_number: 0,
+    }
+
+    for (let i = 0; i < toVisualize.wall_shape.shapes.length; i++) {
+      visualizerData.dimensions.push({
+        area: 0,
+        height: 0,
+        width: 0,
+        stone_type: '',
+        stone_color: '',
+      })
+    }
+
+    visualizerData.raw_image = toVisualize.image
+    visualizerData.current_wall_number = 0
+
+    localForage.setItem('visualizerData', JSON.stringify(visualizerData))
+
+    router.replace(route.query.to ? String(route.query.to) : '/visualizer')
+  }
+  catch (error) {
+    console.error('Error in goToVisualizer:', error)
+  }
 }
 
 const convertResponseToDesiredFormat = (originalResponse, base64image) => {
