@@ -2,6 +2,8 @@
 import localForage from 'localforage'
 import VisualizerReplaceWall from '@/layouts/components/visualizer/VisualizerReplaceWall-alt.vue'
 
+const router = useRouter()
+
 const VisualizerReplaceWallRef = ref(null)
 
 const stones = ref([
@@ -533,28 +535,23 @@ const stones = ref([
 const currentStone = ref()
 const currentSection = ref('categories')
 const selectedColor = ref()
-const rotation = ref(null)
-const translation = ref(null)
-const tileSize = ref(0)
+const rotation = ref(0)
+const translation = ref(0)
+const tileSize = ref(3)
 const isLoadingOpen = ref(false)
 
-const changeWall = async () => {
-  isLoadingOpen.value = true
-  await nextTick()
+const changeWall = () => {
+  if (!selectedColor.value || !VisualizerReplaceWallRef.value)
+    return
 
-  if (VisualizerReplaceWallRef.value) {
-    VisualizerReplaceWallRef.value.changeWall(selectedColor.value, rotation.value, translation.value, tileSize.value)
-    currentSection.value = 'configuration'
-  }
-
-  isLoadingOpen.value = false
+  VisualizerReplaceWallRef.value.changeWall()
 }
 
-watchDebounced(rotation, () => changeWall(), { debounce: 1000, maxWait: 2000 })
-watchDebounced(translation, () => changeWall(), { debounce: 1000, maxWait: 2000 })
-watchDebounced(tileSize, () => changeWall(), { debounce: 1000, maxWait: 2000 })
+watch(rotation, () => changeWall())
+watchDebounced(translation, () => changeWall(), { debounce: 100, maxWait: 200 })
+watchDebounced(tileSize, () => changeWall(), { debounce: 500, maxWait: 1000 })
 
-const convertImageToBase64 = imageUrl => {
+const convertImageToBase64 = async imageUrl => {
   return new Promise((resolve, reject) => {
     try {
       fetch(imageUrl)
@@ -583,10 +580,27 @@ const selectStone = async (stone: any) => {
 }
 
 const selectColor = async (stone: any) => {
+  isLoadingOpen.value = true
+  currentSection.value = 'configuration'
+
   selectedColor.value = { ...stone }
   selectedColor.value.image = await convertImageToBase64(selectedColor.value.image)
 
   changeWall()
+
+  isLoadingOpen.value = false
+}
+
+const saveWall = async routeTo => {
+  currentSection.value = 'configuration'
+  isLoadingOpen.value = true
+
+  if (VisualizerReplaceWallRef.value)
+    await VisualizerReplaceWallRef.value.saveWall()
+
+  isLoadingOpen.value = false
+
+  router.replace(routeTo)
 }
 
 const downloadimage = async () => {
@@ -598,6 +612,20 @@ const downloadimage = async () => {
   document.body.appendChild(a)
   a.click()
   document.body.removeChild(a)
+}
+
+let defaultTileSize = 3
+
+const setDefaultTileSize = value => {
+  defaultTileSize = value
+
+  tileSize.value = defaultTileSize
+}
+
+const reset = () => {
+  rotation.value = 0
+  translation.value = 0
+  tileSize.value = defaultTileSize
 }
 </script>
 
@@ -611,7 +639,14 @@ const downloadimage = async () => {
             md="8"
             class="d-flex align-center justify-center"
           >
-            <VisualizerReplaceWall ref="VisualizerReplaceWallRef" />
+            <VisualizerReplaceWall
+              ref="VisualizerReplaceWallRef"
+              :selected-color="selectedColor"
+              :rotation="rotation"
+              :translation="translation"
+              :tile-size="tileSize"
+              :set-default-tile-size="setDefaultTileSize"
+            />
           </VCol>
           <VCol
             class="d-flex align-center"
@@ -726,13 +761,20 @@ const downloadimage = async () => {
                         </h6>
                       </div>
 
-                      <h1 class="text-h4">
+                      <h1 class="d-flex align-center justify-space-between text-h4">
                         Configure wall
+
+                        <VBtn
+                          variant="outlined"
+                          @click="reset"
+                        >
+                          Reset
+                        </VBtn>
                       </h1>
                     </VCol>
                   </VRow>
-                  <VRow class="flex-column ma-0 mt-4">
-                    <div class="text-caption">
+                  <VRow class="flex-column ma-0 mt-4 ml-n2">
+                    <div class="text-caption ml-2">
                       Rotation
                     </div>
 
@@ -742,10 +784,21 @@ const downloadimage = async () => {
                       thumb-label
                       :max="100"
                       :min="-100"
-                      :step="1"
-                    />
+                      :step="0.1"
+                    >
+                      <template #append>
+                        <VTextField
+                          v-model="rotation"
+                          density="compact"
+                          style="inline-size: 90px"
+                          type="number"
+                          variant="outlined"
+                          hide-details
+                        />
+                      </template>
+                    </VSlider>
 
-                    <div class="text-caption">
+                    <div class="text-caption ml-2 mt-2">
                       Translation
                     </div>
 
@@ -755,10 +808,21 @@ const downloadimage = async () => {
                       thumb-label
                       :max="100"
                       :min="-100"
-                      :step="1"
-                    />
+                      :step="0.1"
+                    >
+                      <template #append>
+                        <VTextField
+                          v-model="translation"
+                          density="compact"
+                          style="inline-size: 90px"
+                          type="number"
+                          variant="outlined"
+                          hide-details
+                        />
+                      </template>
+                    </VSlider>
 
-                    <div class="text-caption">
+                    <div class="text-caption ml-2 mt-2">
                       Tile Size
                     </div>
 
@@ -766,26 +830,36 @@ const downloadimage = async () => {
                       v-model="tileSize"
                       prepend-icon="mdi-wall"
                       thumb-label
-                      :max="100"
-                      :min="0"
+                      :max="50"
+                      :min="1"
                       :step="1"
-                    />
+                    >
+                      <template #append>
+                        <VTextField
+                          v-model="tileSize"
+                          density="compact"
+                          style="inline-size: 90px"
+                          type="number"
+                          variant="outlined"
+                          hide-details
+                        />
+                      </template>
+                    </VSlider>
                   </VRow>
                 </div>
               </VWindowItem>
               <VRow>
                 <VCol class="d-flex gap-x-2 mt-5 justify-end">
-                  <RouterLink to="/visualizer">
-                    <VBtn variant="outlined">
-                      Select Another wall
-                    </VBtn>
-                  </RouterLink>
+                  <VBtn
+                    variant="outlined"
+                    @click="saveWall('/visualizer')"
+                  >
+                    Select Another wall
+                  </VBtn>
 
-                  <RouterLink to="/visualizer/dimension">
-                    <VBtn>
-                      Next
-                    </VBtn>
-                  </routerlink>
+                  <VBtn @click="saveWall('/visualizer/dimension')">
+                    Next
+                  </VBtn>
 
                   <!--
                     <VBtn @click="downloadimage">
