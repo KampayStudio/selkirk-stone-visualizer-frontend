@@ -1,8 +1,5 @@
 <script setup lang="ts">
-import localForage from 'localforage'
-import VisualizerReplaceWall from '@/layouts/components/visualizer/VisualizerReplaceWall-alt.vue'
-
-const router = useRouter()
+import VisualizerReplaceWall from '@/layouts/components/visualizer/VisualizerReplaceWall.vue'
 
 const VisualizerReplaceWallRef = ref(null)
 
@@ -535,23 +532,9 @@ const stones = ref([
 const currentStone = ref()
 const currentSection = ref('categories')
 const selectedColor = ref()
-const rotation = ref(0)
-const translation = ref(0)
-const tileSize = ref(3)
 const isLoadingOpen = ref(false)
 
-const changeWall = () => {
-  if (!selectedColor.value || !VisualizerReplaceWallRef.value)
-    return
-
-  VisualizerReplaceWallRef.value.changeWall()
-}
-
-watch(rotation, () => changeWall())
-watchDebounced(translation, () => changeWall(), { debounce: 100, maxWait: 200 })
-watchDebounced(tileSize, () => changeWall(), { debounce: 500, maxWait: 1000 })
-
-const convertImageToBase64 = async imageUrl => {
+const convertImageToBase64 = imageUrl => {
   return new Promise((resolve, reject) => {
     try {
       fetch(imageUrl)
@@ -581,52 +564,25 @@ const selectStone = async (stone: any) => {
 
 const selectColor = async (stone: any) => {
   isLoadingOpen.value = true
-  currentSection.value = 'configuration'
-
   selectedColor.value = { ...stone }
   selectedColor.value.image = await convertImageToBase64(selectedColor.value.image)
 
-  changeWall()
-
-  isLoadingOpen.value = false
-}
-
-const saveWall = async routeTo => {
-  currentSection.value = 'configuration'
-  isLoadingOpen.value = true
-
   if (VisualizerReplaceWallRef.value)
-    await VisualizerReplaceWallRef.value.saveWall()
+    VisualizerReplaceWallRef.value.changeWall(selectedColor.value)
 
   isLoadingOpen.value = false
-
-  router.replace(routeTo)
 }
 
-const downloadimage = async () => {
-  const a = document.createElement('a')
-  const image = await localForage.getItem('visualizeImage')
+// const downloadimage = async () => {
+//   const a = document.createElement('a')
+//   const image = await localForage.getItem('visualizeImage')
 
-  a.href = JSON.parse(image).image
-  a.download = 'visualized_image.png'
-  document.body.appendChild(a)
-  a.click()
-  document.body.removeChild(a)
-}
-
-let defaultTileSize = 3
-
-const setDefaultTileSize = value => {
-  defaultTileSize = value
-
-  tileSize.value = defaultTileSize
-}
-
-const reset = () => {
-  rotation.value = 0
-  translation.value = 0
-  tileSize.value = defaultTileSize
-}
+//   a.href = JSON.parse(image).image
+//   a.download = 'visualized_image.png'
+//   document.body.appendChild(a)
+//   a.click()
+//   document.body.removeChild(a)
+// }
 </script>
 
 <template>
@@ -639,14 +595,7 @@ const reset = () => {
             md="8"
             class="d-flex align-center justify-center"
           >
-            <VisualizerReplaceWall
-              ref="VisualizerReplaceWallRef"
-              :selected-color="selectedColor"
-              :rotation="rotation"
-              :translation="translation"
-              :tile-size="tileSize"
-              :set-default-tile-size="setDefaultTileSize"
-            />
+            <VisualizerReplaceWall ref="VisualizerReplaceWallRef" />
           </VCol>
           <VCol
             class="d-flex align-center"
@@ -745,121 +694,19 @@ const reset = () => {
                   </VRow>
                 </div>
               </VWindowItem>
-              <VWindowItem
-                v-if="true"
-                value="configuration"
-              >
-                <div>
-                  <VRow>
-                    <VCol>
-                      <div
-                        class="d-flex align-center text-gray text-body-2"
-                        style="margin-block-end: 35px;"
-                      >
-                        <h6 class="text-body-2">
-                          <span @click="currentSection = 'categories'">Categories </span><VIcon icon="mdi-chevron-right" /> <span @click="currentSection = 'colors'">Colors </span><VIcon icon="mdi-chevron-right" /><b>Configuration</b>
-                        </h6>
-                      </div>
-
-                      <h1 class="d-flex align-center justify-space-between text-h4">
-                        Configure wall
-
-                        <VBtn
-                          variant="outlined"
-                          @click="reset"
-                        >
-                          Reset
-                        </VBtn>
-                      </h1>
-                    </VCol>
-                  </VRow>
-                  <VRow class="flex-column ma-0 mt-4 ml-n2">
-                    <div class="text-caption ml-2">
-                      Rotation
-                    </div>
-
-                    <VSlider
-                      v-model="rotation"
-                      prepend-icon="mdi-rotate-3d-variant"
-                      thumb-label
-                      :max="100"
-                      :min="-100"
-                      :step="0.1"
-                    >
-                      <template #append>
-                        <VTextField
-                          v-model="rotation"
-                          density="compact"
-                          style="inline-size: 90px"
-                          type="number"
-                          variant="outlined"
-                          hide-details
-                        />
-                      </template>
-                    </VSlider>
-
-                    <div class="text-caption ml-2 mt-2">
-                      Translation
-                    </div>
-
-                    <VSlider
-                      v-model="translation"
-                      prepend-icon="mdi-rotate-360"
-                      thumb-label
-                      :max="100"
-                      :min="-100"
-                      :step="0.1"
-                    >
-                      <template #append>
-                        <VTextField
-                          v-model="translation"
-                          density="compact"
-                          style="inline-size: 90px"
-                          type="number"
-                          variant="outlined"
-                          hide-details
-                        />
-                      </template>
-                    </VSlider>
-
-                    <div class="text-caption ml-2 mt-2">
-                      Tile Size
-                    </div>
-
-                    <VSlider
-                      v-model="tileSize"
-                      prepend-icon="mdi-wall"
-                      thumb-label
-                      :max="50"
-                      :min="1"
-                      :step="1"
-                    >
-                      <template #append>
-                        <VTextField
-                          v-model="tileSize"
-                          density="compact"
-                          style="inline-size: 90px"
-                          type="number"
-                          variant="outlined"
-                          hide-details
-                        />
-                      </template>
-                    </VSlider>
-                  </VRow>
-                </div>
-              </VWindowItem>
               <VRow>
                 <VCol class="d-flex gap-x-2 mt-5 justify-end">
-                  <VBtn
-                    variant="outlined"
-                    @click="saveWall('/visualizer')"
-                  >
-                    Select Another wall
-                  </VBtn>
+                  <RouterLink to="/visualizer">
+                    <VBtn variant="outlined">
+                      Select Another wall
+                    </VBtn>
+                  </RouterLink>
 
-                  <VBtn @click="saveWall('/visualizer/dimension')">
-                    Next
-                  </VBtn>
+                  <RouterLink to="/visualizer/dimension">
+                    <VBtn>
+                      Next
+                    </VBtn>
+                  </routerlink>
 
                   <!--
                     <VBtn @click="downloadimage">

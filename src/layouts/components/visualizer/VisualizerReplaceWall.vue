@@ -1,35 +1,118 @@
 <script setup lang="ts">
 import * as cv from '@techstark/opencv-js'
 import localForage from 'localforage'
+import fx from '@/plugins/glfx.js'
 
-const image = ref(null)
+const props = defineProps<{
+  selectedColor?: object
+  rotation?: number
+  translation?: number
+  tileSize?: number
+  setDefaultTileSize?: Function
+}>()
+
+const { selectedColor, rotation, translation, tileSize, setDefaultTileSize } = toRefs(props)
+const imageRef = ref(null)
+const wallImageRef = ref(null)
+const canvasContainerRef = ref(null)
 const shape = ref(null)
-const preview = ref(null)
-const canvasRef = ref(null)
+const scaledShape = ref(null)
+const positionedShape = ref(null)
+const fxCanvas = ref({ canvas: null, texture: null, selectedColor: null, translation: 0, rotation: 0, tileSize: 2 })
 const canvasRefs = ref(null)
 
-const drawImageToCanvas = imageElement => {
-  const canvas = document.createElement('canvas')
+const getShapeSize = shape => {
+  const minX = Math.min(...shape.map(p => p.x))
+  const maxX = Math.max(...shape.map(p => p.x))
+  const minY = Math.min(...shape.map(p => p.y))
+  const maxY = Math.max(...shape.map(p => p.y))
+  const width = maxX - minX
+  const height = maxY - minY
+  const allowanceWidth = width * 0.25
+  const allowanceHeight = height * 0.25
 
-  canvas.width = imageElement.naturalWidth
-  canvas.height = imageElement.naturalHeight
-
-  const ctx = canvas.getContext('2d')
-
-  ctx.drawImage(imageElement, 0, 0, canvas.width, canvas.height)
-
-  return canvas
+  return { minX, minY, maxX, maxY, width, height, allowanceWidth, allowanceHeight }
 }
 
-const createSeamlessTile = (srcImage, numTiles = 5) => {
-  const finalRows = srcImage.rows * numTiles
-  const finalCols = srcImage.cols * numTiles
+const saveWall = async () => {
+  const canvas = document.createElement('canvas')
+  const ctx = canvas.getContext('2d')
 
+  canvas.width = imageRef.value.naturalWidth
+  canvas.height = imageRef.value.naturalHeight
+  ctx.drawImage(imageRef.value, 0, 0)
+
+  const shapeSize = getShapeSize(shape.value)
+
+  wallImageRef.value.width = shapeSize.width + shapeSize.allowanceWidth * 2
+  wallImageRef.value.height = shapeSize.height + shapeSize.allowanceHeight * 2
+
+  ctx.beginPath()
+  shape.value.forEach((point, index) => {
+    if (index === 0)
+      ctx.moveTo(point.x, point.y)
+    else
+      ctx.lineTo(point.x, point.y)
+  })
+  ctx.closePath()
+  ctx.clip()
+
+  if (rotation.value) {
+    const rotatedCanvas = document.createElement('canvas')
+
+    rotatedCanvas.width = wallImageRef.value.width
+    rotatedCanvas.height = wallImageRef.value.height
+
+    const rotatedCtx = rotatedCanvas.getContext('2d')
+    const degrees = rotation.value * 1.8
+
+    rotatedCtx.translate(rotatedCanvas.width / 2, rotatedCanvas.height / 2)
+    rotatedCtx.rotate(degrees * Math.PI / 180)
+    rotatedCtx.drawImage(wallImageRef.value, -rotatedCanvas.width / 2, -rotatedCanvas.height / 2)
+    rotatedCtx.restore()
+
+    const rotatedCanvasImageElement = new Image()
+
+    rotatedCanvasImageElement.src = rotatedCanvas.toDataURL()
+
+    canvasContainerRef.value.appendChild(rotatedCanvasImageElement)
+
+    await new Promise(resolve => rotatedCanvasImageElement.onload = resolve)
+
+    ctx.drawImage(rotatedCanvasImageElement, shapeSize.minX - shapeSize.allowanceWidth, shapeSize.minY - shapeSize.allowanceHeight)
+  }
+  else {
+    ctx.drawImage(wallImageRef.value, shapeSize.minX - shapeSize.allowanceWidth, shapeSize.minY - shapeSize.allowanceHeight)
+  }
+
+  imageRef.value.src = canvas.toDataURL('image/png')
+
+  const storedImage = await localForage.getItem('visualizeImage')
+  const imageData = storedImage ? JSON.parse(storedImage) : {}
+
+  imageData.image = imageRef.value.src
+  localForage.setItem('visualizeImage', JSON.stringify(imageData))
+    .catch(error => console.error('Error saving image:', error))
+}
+
+const createTexture = async () => {
+  if (fxCanvas.value.selectedColor === selectedColor.value && fxCanvas.value.tileSize === tileSize.value)
+    return false
+
+  const selectedColorImageElement = new Image()
+
+  selectedColorImageElement.src = selectedColor.value.image
+
+  await new Promise(resolve => selectedColorImageElement.onload = resolve)
+
+  const srcImage = cv.imread(selectedColorImageElement)
+  const finalRows = srcImage.rows * tileSize.value
+  const finalCols = srcImage.cols * tileSize.value
   const tiledImage = new cv.Mat.zeros(finalRows, finalCols, srcImage.type())
 
   // Fill the tiled image with mirrored copies
-  for (let i = 0; i < numTiles; i++) {
-    for (let j = 0; j < numTiles; j++) {
+  for (let i = 0; i < tileSize.value; i++) {
+    for (let j = 0; j < tileSize.value; j++) {
       const srcRegion = srcImage.clone()
       if (i % 2 === 1) { // Mirror vertically
         cv.flip(srcRegion, srcRegion, 0)
@@ -44,328 +127,80 @@ const createSeamlessTile = (srcImage, numTiles = 5) => {
 
       srcRegion.copyTo(destRegion)
       srcRegion.delete()
-      destRegion.delete()
     }
   }
 
-  return tiledImage
-}
-
-const findRectangleCorners = rectangle => {
-  const points = cv.RotatedRect.points(rectangle)
-
-  const top = 0 - Math.min(...points.map(c => c.y))
-  const left = 0 - Math.min(...points.map(c => c.x))
-
-  if (top !== 0)
-    points.forEach(c => c.y += top)
-
-  if (left !== 0)
-    points.forEach(c => c.x += left)
-
-  return points
-}
-
-const warpPerspective = (img, angle, translation, tileSize) => {
-  // Tile the overlay
-
-  const tileImage = createSeamlessTile(img, tileSize)
-  let rotatedImage = tileImage
-  if (angle) {
-    rotatedImage = new cv.Mat()
-
-    const center = new cv.Point(tileImage.cols / 2, tileImage.rows / 2)
-    const rotationMatrix = cv.getRotationMatrix2D(center, angle * 1.8, 1)
-
-    cv.warpAffine(tileImage, rotatedImage, rotationMatrix, tileImage.size(), cv.INTER_LINEAR, cv.BORDER_CONSTANT, new cv.Scalar())
-
-    rotationMatrix.delete()
-  }
-
-  let translatedImage = rotatedImage
-  if (translation) {
-    translatedImage = new cv.Mat()
-
-    const translationValue = Math.abs((translation / 100) * rotatedImage.rows)
-    let srcPoints
-    let dstPoints
-    if (translation > 0) {
-      srcPoints = cv.matFromArray(4, 1, cv.CV_32FC2, [0, 0, tileImage.cols, 0, 0, tileImage.rows, tileImage.cols, tileImage.rows])
-      dstPoints = cv.matFromArray(4, 1, cv.CV_32FC2, [0, 0, tileImage.cols, translationValue, 0, tileImage.cols - translationValue, tileImage.cols, tileImage.rows + translationValue])
-    }
-    else {
-      srcPoints = cv.matFromArray(4, 1, cv.CV_32FC2, [0, 0, tileImage.cols, 0, 0, tileImage.rows, tileImage.cols, tileImage.rows])
-      dstPoints = cv.matFromArray(4, 1, cv.CV_32FC2, [0, translationValue, tileImage.cols, 0, 0, tileImage.rows + translationValue, tileImage.cols, tileImage.cols - translationValue])
-    }
-    const perspectiveMatrix = cv.getPerspectiveTransform(srcPoints, dstPoints)
-
-    cv.warpPerspective(rotatedImage, translatedImage, perspectiveMatrix, rotatedImage.size(), cv.INTER_LINEAR, cv.BORDER_CONSTANT, new cv.Scalar())
-    srcPoints.delete()
-    dstPoints.delete()
-    perspectiveMatrix.delete()
-  }
-
-  const blurredImage = new cv.Mat()
-
-  cv.blur(translatedImage, blurredImage, new cv.Size(5, 5), new cv.Point(-1, -1), cv.BORDER_DEFAULT)
-
-  // Release memory
-  if (angle)
-    tileImage.delete()
-  if (translation) {
-    rotatedImage.delete()
-    translatedImage.delete
-  }
-
-  return blurredImage
-}
-
-const createSegmentationMask = (baseImage, segmentationPath) => {
   const canvas = document.createElement('canvas')
 
-  canvas.width = baseImage.naturalWidth
-  canvas.height = baseImage.naturalHeight
+  cv.imshow(canvas, tiledImage)
 
-  const ctx = canvas.getContext('2d')
+  srcImage.delete()
+  tiledImage.delete()
 
-  ctx.fillStyle = 'black'
-  ctx.fillRect(0, 0, canvas.width, canvas.height)
+  const imageElement = new Image()
 
-  ctx.beginPath()
-  segmentationPath.forEach((point, index) => {
-    if (index === 0)
-      ctx.moveTo(point.x, point.y)
-    else
-      ctx.lineTo(point.x, point.y)
-  })
-  ctx.closePath()
+  imageElement.src = canvas.toDataURL()
 
-  ctx.fillStyle = 'white'
-  ctx.fill()
+  await new Promise(resolve => imageElement.onload = resolve)
 
-  return cv.imread(canvas)
+  const shapeSize = getShapeSize(scaledShape.value)
+
+  imageElement.width = shapeSize.width + (shapeSize.allowanceWidth * 2)
+  imageElement.height = shapeSize.height + (shapeSize.allowanceHeight * 2)
+
+  fxCanvas.value.texture = fxCanvas.value.canvas.texture(imageElement)
+  fxCanvas.value.selectedColor = selectedColor.value
+  fxCanvas.value.tileSize = tileSize.value
+
+  fxCanvas.value.canvas.height = imageElement.height
+  fxCanvas.value.canvas.width = imageElement.width
+  fxCanvas.value.canvas.draw(fxCanvas.value.texture).update()
+  wallImageRef.value.style.height = `${imageElement.height}px`
+  wallImageRef.value.style.width = `${imageElement.width}px`
+  wallImageRef.value.src = fxCanvas.value.canvas.toDataURL()
+
+  return true
 }
 
-const findShapeRectangle = src => {
-  cv.cvtColor(src, src, cv.COLOR_RGBA2GRAY, 0)
-  cv.threshold(src, src, 177, 200, cv.THRESH_BINARY)
+const changeWall = async () => {
+  const textureCreated = await createTexture()
 
-  const contours = new cv.MatVector()
-  const hierarchy = new cv.Mat()
+  const canvas = fxCanvas.value.canvas
+  if (textureCreated || fxCanvas.value.translation !== translation.value) {
+    const { height, width } = canvas
+    const translationValue = Math.abs((translation.value / 100) * height * 4)
+    if (translationValue) {
+      const srcPoints = [0, 0, width, 0, 0, height, width, height]
 
-  cv.findContours(src, contours, hierarchy, cv.RETR_CCOMP, cv.CHAIN_APPROX_SIMPLE)
+      const dstPoints = translation.value > 0
+        ? [0, 0, width, -translationValue, 0, height, width, height + translationValue]
+        : [0, -translationValue, width, 0, 0, height + translationValue, width, height]
 
-  const cnt = contours.get(0)
-
-  const result = cv.minAreaRect(cnt)
-
-  contours.delete()
-  hierarchy.delete()
-  cnt.delete()
-
-  return result
-}
-
-const replaceImage = (wallImage, overlayImage, points, angle, translation) => {
-  const minX = Math.min(...points.map(p => p.x))
-  const maxX = Math.max(...points.map(p => p.x))
-  const minY = Math.min(...points.map(p => p.y))
-  const maxY = Math.max(...points.map(p => p.y))
-
-  // Calculate target width, height, and aspect ratio
-  const targetWidth = maxX - minX
-  const targetHeight = maxY - minY
-  const targetAspectRatio = targetWidth / targetHeight
-
-  // Overlay image aspect ratio
-  const overlayAspectRatio = overlayImage.cols / overlayImage.rows
-
-  // Determine scaling factor and resized dimensions
-  let scale, resizedWidth, resizedHeight
-  if (overlayAspectRatio > targetAspectRatio) {
-    // Overlay is wider than target area
-    scale = targetHeight / overlayImage.rows
-    resizedWidth = overlayImage.cols * scale
-    resizedHeight = targetHeight
-  }
-  else {
-    // Overlay is taller than target area
-    scale = targetWidth / overlayImage.cols
-    resizedWidth = targetWidth
-    resizedHeight = overlayImage.rows * scale
-  }
-
-  if (angle || translation) {
-    resizedWidth = resizedWidth * 1.5
-    resizedHeight = resizedHeight * 1.5
-  }
-
-  // Create a mask
-  const mask = new cv.Mat.zeros(wallImage.rows, wallImage.cols, cv.CV_8UC1)
-
-  // Convert points to cv format
-  const contour = cv.matFromArray(points.length, 1, cv.CV_32SC2, points.flatMap(p => [p.x, p.y]))
-  const contours = new cv.MatVector()
-
-  contours.push_back(contour)
-
-  // Fill the mask with white in the area of the shape
-  cv.fillPoly(mask, contours, new cv.Scalar(255, 255, 255, 255))
-
-  // Resize the overlay image
-  const resizedOverlay = new cv.Mat()
-  const dsize = new cv.Size(resizedWidth, resizedHeight)
-
-  cv.resize(overlayImage, resizedOverlay, dsize, 0, 0, cv.INTER_AREA)
-
-  // Create a grayscale version of the wall image
-  const grayWall = new cv.Mat()
-
-  cv.cvtColor(wallImage, grayWall, cv.COLOR_RGBA2GRAY)
-  cv.cvtColor(grayWall, grayWall, cv.COLOR_GRAY2RGBA)
-
-  // Blend the region on the wall image
-  let startX = minX
-  let startY = minY
-
-  if (angle || translation) {
-    startX = startX - maxX / 4
-    startY = startY - maxY / 4
-  }
-
-  for (let row = 0; row < resizedOverlay.rows; row++) {
-    for (let col = 0; col < resizedOverlay.cols; col++) {
-      // Check if the pixel is within the masked area
-      if (mask.ucharPtr(startY + row, startX + col)[0] === 255) {
-        const overlayPixel = resizedOverlay.ucharPtr(row, col)
-        const grayPixel = grayWall.ucharPtr(startY + row, startX + col)
-        const wallPixel = wallImage.ucharPtr(startY + row, startX + col)
-
-        // Blend the grayscale texture with the overlay color
-        for (let channel = 0; channel < wallImage.channels(); channel++) {
-          if (channel < 3) { // For RGB channels
-            wallPixel[channel] = overlayPixel[channel] * overlayPixel[3] / 255 + grayPixel[channel] * (1 - overlayPixel[3] / 255)
-          }
-          else { // For alpha channel
-            wallPixel[channel] = overlayPixel[channel]
-          }
-        }
-      }
+      canvas.draw(fxCanvas.value.texture).perspective(srcPoints, dstPoints).update()
+      wallImageRef.value.src = canvas.toDataURL()
     }
+    else {
+      canvas.draw(fxCanvas.value.texture).update()
+      wallImageRef.value.src = canvas.toDataURL()
+    }
+
+    fxCanvas.value.translation = translation.value
   }
 
-  updateCanvas(wallImage)
+  if (textureCreated || fxCanvas.value.rotation !== rotation.value) {
+    wallImageRef.value.style.transform = `rotate(${rotation.value * 1.8}deg)`
 
-  // Clean up
-  grayWall.delete()
-  contour.delete()
-  contours.delete()
-  mask.delete()
-  resizedOverlay.delete()
-  wallImage.delete()
-  overlayImage.delete()
-}
-
-const changeWall = async (stone, rotation, translation, tileSize) => {
-  const wallImageElement = new Image()
-  const overlayImageElement = new Image()
-
-  wallImageElement.src = image.value.image
-  overlayImageElement.src = stone.image
-
-  await Promise.all([
-    new Promise(resolve => wallImageElement.onload = resolve),
-    new Promise(resolve => overlayImageElement.onload = resolve),
-  ])
-
-  const wallCanvas = drawImageToCanvas(wallImageElement)
-  const stoneCanvas = drawImageToCanvas(overlayImageElement)
-
-  const wallImage = cv.imread(wallCanvas)
-  const overlayImage = cv.imread(stoneCanvas)
-
-  const points = shape.value
-  const segmentationMask = createSegmentationMask(document.getElementById('baseImage'), points)
-  const rectangle = findShapeRectangle(segmentationMask)
-
-  if (rotation !== null)
-    rectangle.angle = rotation * 0.9
-
-  const boundingRect = cv.RotatedRect.boundingRect(rectangle)
-  let tiles = tileSize
-  if (!tiles) {
-    const widthTiles = Math.ceil(boundingRect.width / overlayImage.cols)
-    const heightTiles = Math.ceil(boundingRect.height / overlayImage.rows)
-
-    tiles = Math.max(widthTiles, heightTiles)
-
-    if (tiles <= 3)
-      tiles = tiles * 3
-    else if (tiles <= 6)
-      tiles = tiles * 2
+    fxCanvas.value.rotation = rotation.value
   }
-  const warpedOverlayImage = warpPerspective(overlayImage, rectangle.angle, translation, tiles)
-
-  replaceImage(wallImage, warpedOverlayImage, points, rectangle.angle, translation)
 
   canvasRefs.value.classList.add('d-none')
 }
 
-onMounted(async () => {
-  try {
-    const storedImage = await localForage.getItem('visualizeImage')
-
-    image.value = storedImage ? JSON.parse(storedImage) : null
-    preview.value = image.value ? image.value.image : null
-
-    const storedShape = await localForage.getItem('selectedWall')
-
-    shape.value = storedShape ? JSON.parse(storedShape) : null
-
-    drawShapes()
-  }
-  catch (error) {
-    console.error('Error fetching data:', error)
-  }
-})
-
-function updateCanvas(visualizeImage) {
-  const canvas = canvasRef.value
-  if (!canvas || !visualizeImage)
-    return
-
-  // Set canvas size to match the visualizeImage
-  canvas.width = visualizeImage.cols
-  canvas.height = visualizeImage.rows
-
-  // Draw the visualizeImage onto the canvas
-  cv.imshow(canvas, visualizeImage)
-
-  // Convert canvas content to base64 image string
-  preview.value = canvas.toDataURL('image/png')
-
-  image.value.image = preview.value
-
-  if (visualizeImage) {
-    localForage.setItem('visualizeImage', JSON.stringify(image.value))
-      .catch(error => console.error('Error saving image:', error))
-  }
-}
-
-defineExpose({ changeWall })
-
-const scaleShapeCoordinates = (shape, scaleX, scaleY) => {
-  return shape.map(point => ({
-    x: point.x * scaleX,
-    y: point.y * scaleY,
-  }))
-}
-
-const drawShapeOnCanvas = (canvas, shape) => {
-  const context = canvas.getContext('2d')
+const drawShapeOnCanvas = () => {
+  const context = canvasRefs.value.getContext('2d')
 
   let minX = Infinity; let minY = Infinity; let maxX = -Infinity; let maxY = -Infinity
-  shape.forEach(point => {
+  scaledShape.value.forEach(point => {
     minX = Math.min(minX, point.x)
     minY = Math.min(minY, point.y)
     maxX = Math.max(maxX, point.x)
@@ -375,18 +210,18 @@ const drawShapeOnCanvas = (canvas, shape) => {
   const width = maxX - minX
   const height = maxY - minY
 
-  canvas.width = width
-  canvas.height = height
+  canvasRefs.value.width = width
+  canvasRefs.value.height = height
 
-  canvas.style.left = `${minX}px`
-  canvas.style.top = `${minY}px`
+  canvasRefs.value.style.left = `${minX}px`
+  canvasRefs.value.style.top = `${minY}px`
 
   context.clearRect(0, 0, width, height)
 
   context.fillStyle = 'rgba(26, 78, 25, 1)'
 
   context.beginPath()
-  shape.forEach((point, index) => {
+  scaledShape.value.forEach((point, index) => {
     const x = point.x - minX
     const y = point.y - minY
     if (index === 0)
@@ -397,37 +232,87 @@ const drawShapeOnCanvas = (canvas, shape) => {
   context.fill()
 }
 
-const drawShapes = () => {
-  const imgElement = document.querySelector('.image-container img')
-  if (!imgElement)
-    return
+onMounted(async () => {
+  try {
+    const storedImage = await localForage.getItem('visualizeImage')
+    if (storedImage) {
+      const imageData = JSON.parse(storedImage)
 
-  const scaleX = imgElement.clientWidth / imgElement.naturalWidth
-  const scaleY = imgElement.clientHeight / imgElement.naturalHeight
+      imageRef.value.src = imageData.image
+    }
 
-  const scaledShape = scaleShapeCoordinates(shape.value, scaleX, scaleY)
-  if (canvasRefs.value)
-    drawShapeOnCanvas(canvasRefs.value, scaledShape)
-}
+    const storedShape = await localForage.getItem('selectedWall')
+
+    shape.value = storedShape ? JSON.parse(storedShape) : null
+    scaledShape.value = storedShape ? JSON.parse(storedShape) : null
+
+    if (shape.value && scaledShape.value) {
+      const scaleX = imageRef.value.clientWidth / imageRef.value.naturalWidth
+      const scaleY = imageRef.value.clientHeight / imageRef.value.naturalHeight
+
+      scaledShape.value.forEach(c => c.x *= scaleX)
+      scaledShape.value.forEach(c => c.y *= scaleY)
+      positionedShape.value = JSON.parse(JSON.stringify(scaledShape.value))
+
+      const shapeSize = getShapeSize(positionedShape.value)
+      const top = 0 - shapeSize.minY
+      const left = 0 - shapeSize.minX
+      if (top !== 0)
+        positionedShape.value.forEach(c => c.y += top)
+
+      if (left !== 0)
+        positionedShape.value.forEach(c => c.x += left)
+
+      canvasContainerRef.value.style.position = 'absolute'
+      canvasContainerRef.value.style.left = `${shapeSize.minX}px`
+      canvasContainerRef.value.style.top = `${shapeSize.minY}px`
+      wallImageRef.value.style.marginLeft = `${-shapeSize.allowanceWidth}px`
+      wallImageRef.value.style.marginTop = `${-shapeSize.allowanceHeight}px`
+
+      setDefaultTileSize.value(Math.round(Math.max((imageRef.value.naturalWidth / shapeSize.width), (imageRef.value.naturalHeight / shapeSize.height)) + 3, 0))
+    }
+
+    fxCanvas.value.canvas = fx.canvas()
+
+    drawShapeOnCanvas()
+  }
+  catch (error) {
+    console.error('Error fetching data:', error)
+  }
+})
+
+defineExpose({ changeWall, saveWall })
 </script>
 
 <template>
   <div class="d-flex justify-center">
     <div class="image-container">
       <img
-        v-if="image"
         id="baseImage"
-        :src="preview"
+        ref="imageRef"
         class="img-background"
       >
       <canvas
         ref="canvasRefs"
         class="highlight"
       />
-      <canvas
-        ref="canvasRef"
-        style="display: none;"
-      />
+      <div
+        ref="canvasContainerRef"
+        style="clip-path: url('#clipPath');"
+      >
+        <img ref="wallImageRef">
+        <svg
+          v-if="positionedShape"
+          height="0"
+          width="0"
+        >
+          <defs>
+            <clipPath id="clipPath">
+              <polygon :points="positionedShape.map(s => `${s.x},${s.y}`).join(' ')" />
+            </clipPath>
+          </defs>
+        </svg>
+      </div>
     </div>
   </div>
 </template>
