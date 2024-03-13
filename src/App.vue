@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useTheme } from 'vuetify'
+import axiosIns from './plugins/axios'
 import ScrollToTop from '@core/components/ScrollToTop.vue'
 import { useThemeConfig } from '@core/composable/useThemeConfig'
 import { hexToRgb } from '@layouts/utils'
@@ -12,6 +13,12 @@ const { global } = useTheme()
 syncInitialLoaderTheme()
 syncConfigThemeWithVuetifyTheme()
 handleSkinChanges()
+
+onMounted(async () => {
+  const response = await axiosIns.get('https://selkirkappapi.azurewebsites.net/api/analytics/get-client-info/')
+
+  console.log(response)
+})
 </script>
 
 <template>
