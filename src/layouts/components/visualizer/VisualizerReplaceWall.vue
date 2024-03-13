@@ -44,8 +44,21 @@ const saveWall = async () => {
   ctx.drawImage(imageRef.value, 0, 0, imageRef.value.naturalWidth, imageRef.value.naturalHeight)
 
   const shapeSize = getShapeSize(shape.value)
-  const imageWidth = shapeSize.width + (shapeSize.allowanceWidth * 2)
-  const imageHeight = shapeSize.height + (shapeSize.allowanceHeight * 2)
+  const width = shapeSize.width + (shapeSize.allowanceWidth * 2)
+  const height = shapeSize.height + (shapeSize.allowanceHeight * 2)
+  const targetAspectRatio = width / height
+  const overlayAspectRatio = wallImageRef.value.naturalWidth / wallImageRef.value.naturalHeight
+  let scale, imageWidth, imageHeight
+  if (overlayAspectRatio > targetAspectRatio) {
+    scale = height / wallImageRef.value.naturalHeight
+    imageWidth = wallImageRef.value.naturalWidth * scale
+    imageHeight = height
+  }
+  else {
+    scale = width / wallImageRef.value.naturalWidth
+    imageWidth = width
+    imageHeight = wallImageRef.value.naturalHeight * scale
+  }
 
   ctx.beginPath()
   shape.value.forEach((point, index) => {
@@ -143,9 +156,24 @@ const createTexture = async () => {
   await new Promise(resolve => imageElement.onload = resolve)
 
   const shapeSize = getShapeSize(scaledShape.value)
+  const width = shapeSize.width + (shapeSize.allowanceWidth * 2)
+  const height = shapeSize.height + (shapeSize.allowanceHeight * 2)
+  const targetAspectRatio = width / height
+  const overlayAspectRatio = finalCols / finalRows
+  let scale, imageWidth, imageHeight
+  if (overlayAspectRatio > targetAspectRatio) {
+    scale = height / finalRows
+    imageWidth = finalCols * scale
+    imageHeight = height
+  }
+  else {
+    scale = width / finalCols
+    imageWidth = width
+    imageHeight = finalRows * scale
+  }
 
-  imageElement.width = shapeSize.width + (shapeSize.allowanceWidth * 2)
-  imageElement.height = shapeSize.height + (shapeSize.allowanceHeight * 2)
+  imageElement.width = imageWidth
+  imageElement.height = imageHeight
 
   fxCanvas.value.texture = fxCanvas.value.canvas.texture(imageElement)
   fxCanvas.value.selectedColor = selectedColor.value
@@ -286,7 +314,7 @@ onMounted(async () => {
       wallImageRef.value.style.marginLeft = `${-shapeSize.allowanceWidth}px`
       wallImageRef.value.style.marginTop = `${-shapeSize.allowanceHeight}px`
 
-      setDefaultTileSize.value(Math.round(Math.max((imageRef.value.naturalWidth / shapeSize.width), (imageRef.value.naturalHeight / shapeSize.height)) + 3, 0))
+      setDefaultTileSize.value(Math.round(Math.min(25, (imageRef.value.naturalWidth / shapeSize.width), (imageRef.value.naturalHeight / shapeSize.height)) + 3, 0))
     }
 
     fxCanvas.value.canvas = fx.canvas()
