@@ -1,25 +1,22 @@
 <script setup>
-import 'vue3-carousel/dist/carousel.css'
 import { Carousel, Navigation, Pagination, Slide } from 'vue3-carousel'
 import axios from '@axios'
+import 'vue3-carousel/dist/carousel.css'
 
 const section_content = ref({
-  banner_photo_1: '',
-  banner_photo_2: '',
-  banner_photo_3: '',
-  banner_photo_4: '',
-  banner_photo_5: '',
-  banner_photo_6: '',
   heading_1: '',
   heading_2: '',
   body: '',
 })
+
+const banners = ref([])
 
 const get_content = async () => {
   try {
     const response = await axios.get('/contents/section3/')
 
     section_content.value = response.data[0]
+    banners.value = response.data[0].banner_photos
   }
   catch (error) {
     console.log(error)
@@ -93,37 +90,16 @@ onMounted(() => {
       </div>
       <div>
         <Carousel
+          v-if="banners"
           :items-to-show="1"
           class="carousel"
         >
-          <Slide key="1">
+          <Slide
+            v-for="(banner, index) in banners"
+            :key="index"
+          >
             <div class="carousel-image-container">
-              <img :src="section_content.banner_photo_1">
-            </div>
-          </Slide>
-          <Slide key="2">
-            <div class="carousel-image-container">
-              <img :src="section_content.banner_photo_2">
-            </div>
-          </Slide>
-          <Slide key="3">
-            <div class="carousel-image-container">
-              <img :src="section_content.banner_photo_3">
-            </div>
-          </Slide>
-          <Slide key="4">
-            <div class="carousel-image-container">
-              <img :src="section_content.banner_photo_4">
-            </div>
-          </Slide>
-          <Slide key="5">
-            <div class="carousel-image-container">
-              <img :src="section_content.banner_photo_5">
-            </div>
-          </Slide>
-          <Slide key="6">
-            <div class="carousel-image-container">
-              <img :src="section_content.banner_photo_6">
+              <img :src="banner.photo">
             </div>
           </Slide>
 
