@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import axios from '@axios'
-import { confirmedValidator, emailValidator, lengthValidator, passwordValidator, requiredValidator } from '@validators'
 import Swal from 'sweetalert2'
 import { VForm } from 'vuetify/components/VForm'
+import axios from '@axios'
+import { confirmedValidator, emailValidator, lengthValidator, passwordValidator, requiredValidator } from '@validators'
 
 const route = useRoute()
 const router = useRouter()
@@ -257,7 +257,7 @@ onMounted(() => {
               {{ section_content.heading_1 }}
             </h6>
             <p class="mb-0">
-              <span>{{ section_content.heading_1 }}</span>
+              <span>{{ section_content.heading_2 }}</span>
               <RouterLink
                 class="text-primary ms-2"
                 :to="{ name: 'login' }"
