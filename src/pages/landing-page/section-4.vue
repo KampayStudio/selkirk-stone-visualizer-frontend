@@ -67,7 +67,7 @@ onMounted(() => {
       <VRow class="content">
         <VCol
           id="col-1"
-          md="6"
+          md="4"
           cols="12"
           class="d-none d-md-flex"
           style="justify-content: flex-end;"
@@ -76,7 +76,7 @@ onMounted(() => {
         </VCol>
         <VCol
           id="col-2"
-          md="6"
+          md="8"
           cols="12"
           style="max-inline-size:30rem;"
           class="d-flex"

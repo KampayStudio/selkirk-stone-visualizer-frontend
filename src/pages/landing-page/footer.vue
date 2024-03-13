@@ -112,7 +112,6 @@ onMounted(() => {
             {{ section_content.contact2 }} <br><br>
 
             {{ section_content.address }} <br>
-            Edmonton: 10711 181 Street NW
           </p>
         </VCol>
         <VCol
