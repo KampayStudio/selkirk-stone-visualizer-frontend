@@ -102,7 +102,10 @@ onMounted(() => {
           cols="12"
           md="6"
         >
-          <img :src="section_content.logo">
+          <img
+            :src="section_content.logo"
+            style="max-inline-size: 9rem;"
+          >
           <p class="text-sm">
             {{ section_content.website }}
           </p>
@@ -138,23 +141,25 @@ onMounted(() => {
           </div>
         </VCol>
       </VRow>
-      <hr
+      <!--
+        <hr
         id="footer-credits"
         class="text-white mb-1 "
-      >
-      <div class="content">
+        >
+        <div class="content">
         <VRow>
-          <VCol class="text-xs">
-            © Selkirk Stone 2023
-          </VCol>
-          <VCol
-            class="d-flex text-xs"
-            style="justify-content: flex-end;"
-          >
-            Website Design and Development © Kampay Studio 2023
-          </VCol>
+        <VCol class="text-xs">
+        © Selkirk Stone 2023
+        </VCol>
+        <VCol
+        class="d-flex text-xs"
+        style="justify-content: flex-end;"
+        >
+        Website Design and Development © Kampay Studio 2023
+        </VCol>
         </VRow>
-      </div>
+        </div>
+      -->
     </section>
   </div>
 </template>

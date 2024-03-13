@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import VisualizerReplaceWall from '@/layouts/components/visualizer/VisualizerReplaceWall.vue'
 import localForage from 'localforage'
+import VisualizerReplaceWall from '@/layouts/components/visualizer/VisualizerReplaceWall.vue'
+import axiosIns from '@/plugins/axios'
 
 const router = useRouter()
 
@@ -535,6 +536,7 @@ const stones = ref([
 const currentStone = ref()
 const currentSection = ref('categories')
 const selectedColor = ref()
+const selectedCategory = ref()
 const rotation = ref(0)
 const translationX = ref(0)
 const translationY = ref(0)
@@ -579,6 +581,7 @@ const convertImageToBase64 = async imageUrl => {
 const selectStone = async (stone: any) => {
   currentStone.value = stone
   currentSection.value = 'colors'
+  selectedCategory.value = stone.name
 }
 
 const selectColor = async (stone: any) => {
@@ -591,6 +594,14 @@ const selectColor = async (stone: any) => {
   changeWall()
 
   isLoadingOpen.value = false
+
+  const response = await axiosIns.post('https://selkirkappapi.azurewebsites.net/api/analytics/product_analytics/', {
+    stone_id: 0,
+    stone_category: selectedCategory.value,
+    stone_color: selectedColor.value.name,
+  })
+
+  console.log(response)
 }
 
 const saveWall = async routeTo => {
