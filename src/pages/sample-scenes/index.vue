@@ -19664,6 +19664,41 @@ const goToVisualizer = async sampleImage => {
   }
 }
 
+const goToMantleVisualizer = async sampleImage => {
+  try {
+    const toVisualize = ref({ ...sampleImage })
+
+    toVisualize.value.image = await convertImageToBase64(sampleImage.image)
+    toVisualize.value.wall_shape.shapes = []
+    localForage.setItem('visualizeImage', JSON.stringify(toVisualize.value))
+    localForage.setItem('visualizedMantels', JSON.stringify(toVisualize.value))
+
+    const visualizerData = ref({
+      dimensions: [],
+      raw_image: undefined,
+      current_wall_number: 0,
+    })
+
+    for (let i = 0; i < toVisualize.value.wall_shape.shapes.length; i++) {
+      visualizerData.value.dimensions.push({
+        area: 0,
+        height: 0,
+        width: 0,
+        stone_type: '',
+        stone_color: '',
+      })
+    }
+    visualizerData.value.raw_image = toVisualize.value.image
+    visualizerData.value.current_wall_number = 0
+    localForage.setItem('visualizerData', JSON.stringify(visualizerData.value))
+
+    router.replace(route.query.to ? String(route.query.to) : '/visualizer/mantel')
+  }
+  catch (error) {
+    console.error('Visualizer:', error)
+  }
+}
+
 onMounted(() => {
   const urlParams = new URLSearchParams(window.location.search)
 
@@ -19884,7 +19919,7 @@ onMounted(() => {
                     <div class="image-mask image-container">
                       <img
                         :src="i.image"
-                        @click="goToVisualizer(i)"
+                        @click="goToMantleVisualizer(i)"
                       >
                       <VCheckbox class="checkbox" />
                     </div>

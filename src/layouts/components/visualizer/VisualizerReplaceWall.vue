@@ -1,24 +1,25 @@
 <script setup lang="ts">
+import fx from '@/plugins/glfx.js'
 import * as cv from '@techstark/opencv-js'
 import localForage from 'localforage'
-import fx from '@/plugins/glfx.js'
 
 const props = defineProps<{
   selectedColor?: object
   rotation?: number
-  translation?: number
+  translationX?: number
+  translationY?: number
   tileSize?: number
   setDefaultTileSize?: Function
 }>()
 
-const { selectedColor, rotation, translation, tileSize, setDefaultTileSize } = toRefs(props)
+const { selectedColor, rotation, translationX, translationY, tileSize, setDefaultTileSize } = toRefs(props)
 const imageRef = ref(null)
 const wallImageRef = ref(null)
 const canvasContainerRef = ref(null)
 const shape = ref(null)
 const scaledShape = ref(null)
 const positionedShape = ref(null)
-const fxCanvas = ref({ canvas: null, texture: null, selectedColor: null, translation: 0, rotation: 0, tileSize: 2 })
+const fxCanvas = ref({ canvas: null, texture: null, selectedColor: null, translationX: 0, rotation: 0, tileSize: 2 })
 const canvasRefs = ref(null)
 
 const getShapeSize = shape => {
@@ -28,8 +29,8 @@ const getShapeSize = shape => {
   const maxY = Math.max(...shape.map(p => p.y))
   const width = maxX - minX
   const height = maxY - minY
-  const allowanceWidth = width * 0.25
-  const allowanceHeight = height * 0.25
+  const allowanceWidth = width * 0.35
+  const allowanceHeight = height * 0.35
 
   return { minX, minY, maxX, maxY, width, height, allowanceWidth, allowanceHeight }
 }
@@ -40,12 +41,11 @@ const saveWall = async () => {
 
   canvas.width = imageRef.value.naturalWidth
   canvas.height = imageRef.value.naturalHeight
-  ctx.drawImage(imageRef.value, 0, 0)
+  ctx.drawImage(imageRef.value, 0, 0, imageRef.value.naturalWidth, imageRef.value.naturalHeight)
 
   const shapeSize = getShapeSize(shape.value)
-
-  wallImageRef.value.width = shapeSize.width + shapeSize.allowanceWidth * 2
-  wallImageRef.value.height = shapeSize.height + shapeSize.allowanceHeight * 2
+  const imageWidth = shapeSize.width + (shapeSize.allowanceWidth * 2)
+  const imageHeight = shapeSize.height + (shapeSize.allowanceHeight * 2)
 
   ctx.beginPath()
   shape.value.forEach((point, index) => {
@@ -60,14 +60,13 @@ const saveWall = async () => {
   if (rotation.value) {
     const rotatedCanvas = document.createElement('canvas')
 
-    rotatedCanvas.width = wallImageRef.value.width
-    rotatedCanvas.height = wallImageRef.value.height
+    rotatedCanvas.width = imageWidth
+    rotatedCanvas.height = imageHeight
 
     const rotatedCtx = rotatedCanvas.getContext('2d')
-    const degrees = rotation.value * 1.8
 
     rotatedCtx.translate(rotatedCanvas.width / 2, rotatedCanvas.height / 2)
-    rotatedCtx.rotate(degrees * Math.PI / 180)
+    rotatedCtx.rotate(rotation.value * Math.PI / 180)
     rotatedCtx.drawImage(wallImageRef.value, -rotatedCanvas.width / 2, -rotatedCanvas.height / 2)
     rotatedCtx.restore()
 
@@ -79,10 +78,10 @@ const saveWall = async () => {
 
     await new Promise(resolve => rotatedCanvasImageElement.onload = resolve)
 
-    ctx.drawImage(rotatedCanvasImageElement, shapeSize.minX - shapeSize.allowanceWidth, shapeSize.minY - shapeSize.allowanceHeight)
+    ctx.drawImage(rotatedCanvasImageElement, shapeSize.minX - shapeSize.allowanceWidth, shapeSize.minY - shapeSize.allowanceHeight, imageWidth, imageHeight)
   }
   else {
-    ctx.drawImage(wallImageRef.value, shapeSize.minX - shapeSize.allowanceWidth, shapeSize.minY - shapeSize.allowanceHeight)
+    ctx.drawImage(wallImageRef.value, shapeSize.minX - shapeSize.allowanceWidth, shapeSize.minY - shapeSize.allowanceHeight, imageWidth, imageHeight)
   }
 
   imageRef.value.src = canvas.toDataURL('image/png')
@@ -166,15 +165,32 @@ const changeWall = async () => {
   const textureCreated = await createTexture()
 
   const canvas = fxCanvas.value.canvas
-  if (textureCreated || fxCanvas.value.translation !== translation.value) {
+  if (textureCreated || fxCanvas.value.translationX !== translationX.value || fxCanvas.value.translationY !== translationY.value) {
     const { height, width } = canvas
-    const translationValue = Math.abs((translation.value / 100) * height * 4)
-    if (translationValue) {
+    const translationXValue = translationY.value ? Math.abs((translationX.value / 100) * height) : Math.abs((translationX.value / 100) * height * 4)
+    const translationYValue = translationX.value ? Math.abs((translationY.value / 100) * width) : Math.abs((translationY.value / 100) * width * 4)
+
+    if (translationXValue || translationYValue) {
       const srcPoints = [0, 0, width, 0, 0, height, width, height]
 
-      const dstPoints = translation.value > 0
-        ? [0, 0, width, -translationValue, 0, height, width, height + translationValue]
-        : [0, -translationValue, width, 0, 0, height + translationValue, width, height]
+      const dstPoints = [...srcPoints]
+      if (translationX.value > 0) {
+        dstPoints[3] = -translationXValue
+        dstPoints[7] += translationXValue
+      }
+      else {
+        dstPoints[1] = -translationXValue
+        dstPoints[5] += translationXValue
+      }
+
+      if (translationY.value > 0) {
+        dstPoints[0] = -translationYValue
+        dstPoints[2] += translationYValue
+      }
+      else {
+        dstPoints[4] = -translationYValue
+        dstPoints[6] += translationYValue
+      }
 
       canvas.draw(fxCanvas.value.texture).perspective(srcPoints, dstPoints).update()
       wallImageRef.value.src = canvas.toDataURL()
@@ -184,11 +200,12 @@ const changeWall = async () => {
       wallImageRef.value.src = canvas.toDataURL()
     }
 
-    fxCanvas.value.translation = translation.value
+    fxCanvas.value.translationX = translationX.value
+    fxCanvas.value.translationY = translationY.value
   }
 
   if (textureCreated || fxCanvas.value.rotation !== rotation.value) {
-    wallImageRef.value.style.transform = `rotate(${rotation.value * 1.8}deg)`
+    wallImageRef.value.style.transform = `rotate(${rotation.value}deg)`
 
     fxCanvas.value.rotation = rotation.value
   }

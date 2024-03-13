@@ -536,7 +536,8 @@ const currentStone = ref()
 const currentSection = ref('categories')
 const selectedColor = ref()
 const rotation = ref(0)
-const translation = ref(0)
+const translationX = ref(0)
+const translationY = ref(0)
 const tileSize = ref(3)
 const isLoadingOpen = ref(false)
 
@@ -548,7 +549,8 @@ const changeWall = () => {
 }
 
 watch(rotation, () => changeWall())
-watchDebounced(translation, () => changeWall(), { debounce: 100, maxWait: 200 })
+watchDebounced(translationX, () => changeWall(), { debounce: 100, maxWait: 200 })
+watchDebounced(translationY, () => changeWall(), { debounce: 100, maxWait: 200 })
 watchDebounced(tileSize, () => changeWall(), { debounce: 500, maxWait: 1000 })
 
 const convertImageToBase64 = async imageUrl => {
@@ -624,7 +626,8 @@ const setDefaultTileSize = value => {
 
 const reset = () => {
   rotation.value = 0
-  translation.value = 0
+  translationX.value = 0
+  translationY.value = 0
   tileSize.value = defaultTileSize
 }
 </script>
@@ -643,7 +646,8 @@ const reset = () => {
               ref="VisualizerReplaceWallRef"
               :selected-color="selectedColor"
               :rotation="rotation"
-              :translation="translation"
+              :translation-x="translationX"
+              :translation-y="translationY"
               :tile-size="tileSize"
               :set-default-tile-size="setDefaultTileSize"
             />
@@ -782,8 +786,8 @@ const reset = () => {
                       v-model="rotation"
                       prepend-icon="mdi-rotate-3d-variant"
                       thumb-label
-                      :max="100"
-                      :min="-100"
+                      :max="180"
+                      :min="-180"
                       :step="0.1"
                     >
                       <template #append>
@@ -799,12 +803,12 @@ const reset = () => {
                     </VSlider>
 
                     <div class="text-caption ml-2 mt-2">
-                      Translation
+                      Warp Perspective X
                     </div>
 
                     <VSlider
-                      v-model="translation"
-                      prepend-icon="mdi-rotate-360"
+                      v-model="translationX"
+                      prepend-icon="mdi-axis-z-rotate-clockwise"
                       thumb-label
                       :max="100"
                       :min="-100"
@@ -812,7 +816,31 @@ const reset = () => {
                     >
                       <template #append>
                         <VTextField
-                          v-model="translation"
+                          v-model="translationX"
+                          density="compact"
+                          style="inline-size: 90px"
+                          type="number"
+                          variant="outlined"
+                          hide-details
+                        />
+                      </template>
+                    </VSlider>
+
+                    <div class="text-caption ml-2 mt-2">
+                      Warp Perspective Y
+                    </div>
+
+                    <VSlider
+                      v-model="translationY"
+                      prepend-icon="mdi-horizontal-rotate-clockwise"
+                      thumb-label
+                      :max="100"
+                      :min="-100"
+                      :step="0.1"
+                    >
+                      <template #append>
+                        <VTextField
+                          v-model="translationY"
                           density="compact"
                           style="inline-size: 90px"
                           type="number"
@@ -830,7 +858,7 @@ const reset = () => {
                       v-model="tileSize"
                       prepend-icon="mdi-wall"
                       thumb-label
-                      :max="50"
+                      :max="25"
                       :min="1"
                       :step="1"
                     >
