@@ -97,6 +97,7 @@ const convertImageToBase64 = async imageUrl => {
                   <div
                     style="position: relative; cursor: pointer;"
                     class="d-flex justify-center align-center"
+                    @click="VisualizerReplaceWallRef.loadMantelColor(mantel.image)"
                   >
                     <div style="position: absolute; z-index: 2; color: white;">
                       <b>{{ mantel.name }}</b>

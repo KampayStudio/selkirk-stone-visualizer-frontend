@@ -5,28 +5,13 @@ import localForage from 'localforage'
 const image = ref(null)
 const shape = ref(null)
 const preview = ref(null)
+const previewBNW = ref(null)
+const previewHolder = ref(null)
 const canvasRef = ref(null)
 const canvasRefs = ref(null)
 
-onMounted(async () => {
-  try {
-    const storedImage = await localForage.getItem('visualizeImage')
-
-    image.value = storedImage ? JSON.parse(storedImage) : null
-    preview.value = image.value ? image.value.image : null
-
-    const storedShape = await localForage.getItem('selectedWall')
-
-    shape.value = storedShape ? JSON.parse(storedShape) : null
-
-    drawShapes()
-
-    console.log(getDominantAndAverageColor('https://images.squarespace-cdn.com/content/v1/5df2e96175170a0bfdc2f31c/1624496189388-O28QGAX38BXU0WVOT91Y/Rustic%2BBrown%2BCropped%2BSwatch.jpg?format=750w'))
-  }
-  catch (error) {
-    console.error('Error fetching data:', error)
-  }
-})
+const imageUrl = ref('https://images.squarespace-cdn.com/content/v1/5df2e96175170a0bfdc2f31c/1624496189388-O28QGAX38BXU0WVOT91Y/Rustic%2BBrown%2BCropped%2BSwatch.jpg?format=700w') // Your image URL
+const dominantColor = ref('')
 
 const scaleShapeCoordinates = (shape, scaleX, scaleY) => {
   return shape.map(point => ({
@@ -84,100 +69,240 @@ const drawShapes = () => {
     drawShapeOnCanvas(canvasRefs.value, scaledShape)
 }
 
-const getDominantAndAverageColor = async imageUrl => {
-  // Create an Image element
+onMounted(async () => {
+  try {
+    const storedImage = await localForage.getItem('visualizeImage')
+    if (storedImage) {
+      image.value = JSON.parse(storedImage)
+      preview.value = image.value.image // Set original image URL
+
+      // Load and convert image to black and white
+      const imgElement = new Image()
+
+      imgElement.onload = async () => {
+        const canvas = document.createElement('canvas')
+        const ctx = canvas.getContext('2d')
+
+        canvas.width = imgElement.width
+        canvas.height = imgElement.height
+        ctx.drawImage(imgElement, 0, 0)
+
+        await convertToBlackAndWhite(canvas) // Apply B&W conversion
+
+        previewBNW.value = canvas.toDataURL() // Set B&W image URL
+        previewHolder.value = canvas.toDataURL()
+      }
+      imgElement.src = image.value.image
+    }
+    else {
+      image.value = null
+      preview.value = null
+      previewBNW.value = null
+    }
+
+    const storedShape = await localForage.getItem('selectedWall')
+
+    shape.value = storedShape ? JSON.parse(storedShape) : null
+
+    // drawShapes()
+  }
+  catch (error) {
+    console.error('Error fetching data:', error)
+  }
+})
+
+const loadMantelAndFindDominantColor = async () => {
   const img = new Image()
 
-  img.crossOrigin = 'Anonymous' // Address potential CORS issues
+  img.crossOrigin = 'Anonymous' // Needed for CORS images
+  img.src = imageUrl.value
+  await img.decode() // Ensure the image is loaded
 
-  // Wait for the image to load
-  await new Promise((resolve, reject) => {
-    img.onload = resolve
-    img.onerror = reject
-    img.src = imageUrl
-  })
-
-  // Draw the loaded image onto a canvas
   const canvas = document.createElement('canvas')
   const ctx = canvas.getContext('2d')
 
   canvas.width = img.width
   canvas.height = img.height
-  ctx.drawImage(img, 0, 0, img.width, img.height)
+  ctx.drawImage(img, 0, 0)
 
-  // Use OpenCV.js to read the image data from the canvas
-  const src = cv.imread(canvas)
+  const { data } = ctx.getImageData(0, 0, img.width, img.height)
+  const color = findDominantColor(data)
 
-  // Calculate the average color of the source image
-  const meanColor = cv.mean(src)
+  dominantColor.value = `rgb(${color.r}, ${color.g}, ${color.b})`
 
-  // Ensure src is in RGB color space
-  let srcRGB = new cv.Mat()
-  if (src.channels() === 4)
-    cv.cvtColor(src, srcRGB, cv.COLOR_RGBA2RGB)
-  else if (src.channels() === 1)
-    cv.cvtColor(src, srcRGB, cv.COLOR_GRAY2RGB)
-  else
-    srcRGB = src.clone() // Ensure srcRGB is a separate Mat object
+  console.log(color)
+}
 
-  // Proceed with the unchanged part of the function...
-  const samples = srcRGB.reshape(3, srcRGB.cols * srcRGB.rows)
+const findDominantColor = (data: any) => {
+  const colorCounts = {}
+  const dominantColor = { color: '', count: 0 }
 
-  const srcFlat = new cv.Mat(srcRGB.rows * srcRGB.cols, 1, cv.CV_32FC3)
-  for (let i = 0; i < srcRGB.rows; i++) {
-    for (let j = 0; j < srcRGB.cols; j++) {
-      // Get the pixel value
-      const pixelValue = srcRGB.ucharPtr(i, j) // For uchar images
-      // Alternatively, for float images use: srcRGB.floatPtr(i, j);
-      // Construct a Vec3f for the pixel
-      const vec = new cv.Vec3f(pixelValue[0], pixelValue[1], pixelValue[2])
+  for (let i = 0; i < data.length; i += 4) {
+    const rgb = `${data[i]},${data[i + 1]},${data[i + 2]}`
 
-      // Assign the Vec3f to the flat matrix
-      srcFlat.floatPtr(i * srcRGB.cols + j)[0] = vec
+    colorCounts[rgb] = (colorCounts[rgb] || 0) + 1
+    if (colorCounts[rgb] > dominantColor.count) {
+      dominantColor.color = rgb
+      dominantColor.count = colorCounts[rgb]
     }
   }
-  const samples32f = new cv.Mat()
 
-  samples.convertTo(samples32f, cv.CV_32F)
+  const [r, g, b] = dominantColor.color.split(',')
 
-  // K-means parameters
-  const clusterCount = 1 // We only want the dominant color
-  const labels = new cv.Mat()
-  const attempts = 5
-  const criteria = new cv.TermCriteria(cv.TermCriteria_EPS + cv.TermCriteria_MAX_ITER, 100, 0.2)
-  const centers = new cv.Mat()
-
-  // Apply k-means
-  cv.kmeans(samples32f, clusterCount, labels, criteria, attempts, cv.KMEANS_PP_CENTERS, centers)
-
-  const dominantColor = centers.data32F.slice(0, 3) // The dominant color is the first center
-
-  // Clean up
-  src.delete()
-  srcRGB.delete()
-  samples.delete()
-  samples32f.delete()
-  labels.delete()
-  centers.delete()
-
-  return {
-    averageColor: {
-      r: meanColor[0],
-      g: meanColor[1],
-      b: meanColor[2],
-    },
-    dominantColor: {
-      r: dominantColor[0],
-      g: dominantColor[1],
-      b: dominantColor[2],
-    },
-  }
+  return { r, g, b }
 }
+
+const loadMantelColor = async (mantelLink: any) => {
+  imageUrl.value = mantelLink
+  await loadMantelAndFindDominantColor()
+  await applyColorToBNWImage()
+  await maskPreviewBNWImageBasedOnShape()
+  await mergePreviewAndBNWToPreview()
+}
+
+const convertToBlackAndWhite = async canvas => {
+  if (!cv || !cv.imread) {
+    console.error('OpenCV.js is not loaded')
+
+    return
+  }
+
+  // Convert the canvas image to a grayscale OpenCV image
+  const src = cv.imread(canvas)
+  const dst = new cv.Mat()
+
+  cv.cvtColor(src, dst, cv.COLOR_RGBA2GRAY, 0)
+
+  // Overwrite the original image with the grayscale image
+  cv.imshow(canvas, dst)
+
+  // Clean up OpenCV memory
+  src.delete()
+  dst.delete()
+}
+
+const applyColorToBNWImage = async () => {
+  if (!previewBNW.value || !dominantColor.value) {
+    console.error('Missing B&W preview or dominant color')
+
+    return
+  }
+
+  // Create a new Image element from the B&W preview
+  const imgElement = new Image()
+
+  previewBNW.value = previewHolder.value
+  imgElement.src = previewBNW.value
+  await imgElement.decode()
+
+  const canvas = document.createElement('canvas')
+  const ctx = canvas.getContext('2d')
+
+  canvas.width = imgElement.width
+  canvas.height = imgElement.height
+
+  ctx.drawImage(imgElement, 0, 0)
+
+  ctx.globalCompositeOperation = 'multiply'
+
+  ctx.fillStyle = dominantColor.value
+  ctx.fillRect(0, 0, canvas.width, canvas.height)
+
+  ctx.globalCompositeOperation = 'source-over'
+
+  previewBNW.value = canvas.toDataURL()
+}
+
+const maskPreviewBNWImageBasedOnShape = async () => {
+  if (!previewBNW.value || !shape.value || shape.value.length === 0) {
+    console.error('Missing B&W preview or shape data')
+
+    return
+  }
+
+  // Load the B&W preview image
+  const imgElement = new Image()
+
+  imgElement.src = previewBNW.value
+  await imgElement.decode() // Ensure the image is fully loaded
+
+  // Prepare the canvas for drawing
+  const canvas = document.createElement('canvas')
+  const ctx = canvas.getContext('2d')
+
+  canvas.width = imgElement.width
+  canvas.height = imgElement.height
+
+  // Define the clipping path based on the scaled shape
+  const scaleX = canvas.width / imgElement.naturalWidth
+  const scaleY = canvas.height / imgElement.naturalHeight
+  const scaledShape = scaleShapeCoordinates(shape.value, scaleX, scaleY)
+
+  ctx.beginPath()
+  scaledShape.forEach((point, index) => {
+    ctx[index === 0 ? 'moveTo' : 'lineTo'](point.x, point.y)
+  })
+  ctx.closePath()
+  ctx.clip()
+
+  // Draw the image within the clipping path
+  ctx.drawImage(imgElement, 0, 0)
+
+  // Update the B&W preview with the masked image
+  previewBNW.value = canvas.toDataURL()
+}
+
+const mergePreviewAndBNWToPreview = async () => {
+  if (!preview.value || !previewBNW.value) {
+    console.error('Missing preview or processed B&W preview data')
+
+    return
+  }
+
+  // Load the original image (preview)
+  const baseImage = new Image()
+
+  baseImage.src = preview.value
+  await baseImage.decode() // Ensure the image is fully loaded
+
+  // Load the processed B&W image (previewBNW)
+  const processedImage = new Image()
+
+  processedImage.src = previewBNW.value
+  await processedImage.decode() // Ensure the image is fully loaded
+
+  // Create a canvas to layer both images
+  const canvas = document.createElement('canvas')
+  const ctx = canvas.getContext('2d')
+
+  canvas.width = baseImage.width // Assuming both images have the same dimensions
+  canvas.height = baseImage.height
+
+  // Draw the base image first
+  ctx.drawImage(baseImage, 0, 0)
+
+  // Then draw the processed B&W image on top
+  ctx.drawImage(processedImage, 0, 0)
+
+  // Update the preview with the merged image
+  preview.value = canvas.toDataURL()
+}
+
+defineExpose({ loadMantelColor })
 </script>
 
 <template>
   <div class="d-flex justify-center">
     <div class="image-container">
+      <!-- bnw image -->
+      <img
+        v-if="image"
+        id="baseImageBNW"
+        :src="previewBNW"
+        class="img-background"
+        hidden
+      >
+      <!-- colored image -->
       <img
         v-if="image"
         id="baseImage"
@@ -193,6 +318,12 @@ const getDominantAndAverageColor = async imageUrl => {
         style="display: none;"
       />
     </div>
+
+    <!--
+      <div :style="`height: 100px; width: 100px;background-color:${dominantColor}`">
+      color
+      </div>
+    -->
   </div>
 </template>
 
