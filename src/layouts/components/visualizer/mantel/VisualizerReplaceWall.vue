@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import * as cv from '@techstark/opencv-js'
 import localForage from 'localforage'
+import Loading from '@/layouts/components/Loading.vue'
 
 const image = ref(null)
 const shape = ref(null)
@@ -9,6 +10,7 @@ const previewBNW = ref(null)
 const previewHolder = ref(null)
 const canvasRef = ref(null)
 const canvasRefs = ref(null)
+const LoadingRef = ref(null)
 
 const imageUrl = ref('https://images.squarespace-cdn.com/content/v1/5df2e96175170a0bfdc2f31c/1624496189388-O28QGAX38BXU0WVOT91Y/Rustic%2BBrown%2BCropped%2BSwatch.jpg?format=700w') // Your image URL
 const dominantColor = ref('')
@@ -70,6 +72,7 @@ const drawShapes = () => {
 }
 
 onMounted(async () => {
+  LoadingRef.value.triggerDialog(true)
   try {
     const storedImage = await localForage.getItem('visualizeImage')
     if (storedImage) {
@@ -109,6 +112,7 @@ onMounted(async () => {
   catch (error) {
     console.error('Error fetching data:', error)
   }
+  LoadingRef.value.triggerDialog(false)
 })
 
 const loadMantelAndFindDominantColor = async () => {
@@ -153,11 +157,15 @@ const findDominantColor = (data: any) => {
 }
 
 const loadMantelColor = async (mantelLink: any) => {
+  LoadingRef.value.triggerDialog(true)
+
   imageUrl.value = mantelLink
   await loadMantelAndFindDominantColor()
   await applyColorToBNWImage()
   await maskPreviewBNWImageBasedOnShape()
   await mergePreviewAndBNWToPreview()
+  console.log('Loading success')
+  LoadingRef.value.triggerDialog(false)
 }
 
 const convertToBlackAndWhite = async canvas => {
@@ -318,7 +326,7 @@ defineExpose({ loadMantelColor })
         style="display: none;"
       />
     </div>
-
+    <Loading ref="LoadingRef" />
     <!--
       <div :style="`height: 100px; width: 100px;background-color:${dominantColor}`">
       color

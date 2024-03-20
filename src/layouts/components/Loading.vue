@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const isShow = ref(true)
+const isShow = ref(false)
 
 const triggerDialog = (show: boolean) => {
   isShow.value = show

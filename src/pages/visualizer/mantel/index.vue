@@ -20,6 +20,8 @@ onMounted(async () => {
         console.error('Error parsing image data:', e)
       }
     }
+
+    console.log(mantels.value)
   }
   catch (e) {
     console.error('Error fetching image from localForage:', e)
