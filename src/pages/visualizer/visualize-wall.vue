@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import localForage from 'localforage'
 import VisualizerReplaceWall from '@/layouts/components/visualizer/VisualizerReplaceWall.vue'
 import axiosIns from '@/plugins/axios'
 
@@ -614,17 +613,6 @@ const saveWall = async routeTo => {
   isLoadingOpen.value = false
 
   router.replace(routeTo)
-}
-
-const downloadimage = async () => {
-  const a = document.createElement('a')
-  const image = await localForage.getItem('visualizeImage')
-
-  a.href = JSON.parse(image).image
-  a.download = 'visualized_image.png'
-  document.body.appendChild(a)
-  a.click()
-  document.body.removeChild(a)
 }
 
 let defaultTileSize = 3

@@ -59,6 +59,11 @@ const convertImageToBase64 = async imageUrl => {
     }
   })
 }
+
+const saveMantel = async routeTo => {
+  await VisualizerReplaceWallRef.value.saveMantel()
+  router.replace(routeTo)
+}
 </script>
 
 <template>
@@ -119,7 +124,7 @@ const convertImageToBase64 = async imageUrl => {
                   Select Another Mantel
                 </VBtn>
 
-                <VBtn>
+                <VBtn @click="saveMantel('/visualizer/dimension')">
                   Next
                 </VBtn>
               </VCol>

@@ -296,7 +296,14 @@ const mergePreviewAndBNWToPreview = async () => {
   preview.value = canvas.toDataURL()
 }
 
-defineExpose({ loadMantelColor })
+const saveMantel = async () => {
+  image.value.image = preview.value
+
+  await localForage.setItem('visualizeImage', JSON.stringify(image.value))
+    .catch(error => console.error('Error saving image:', error))
+}
+
+defineExpose({ loadMantelColor, saveMantel })
 </script>
 
 <template>
