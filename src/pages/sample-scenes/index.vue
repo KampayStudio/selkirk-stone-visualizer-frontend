@@ -19273,11 +19273,11 @@ onMounted(() => {
                     lg="2"
                     style="align-items: center; cursor: pointer"
                   >
-                    <div class="image-mask image-container">
-                      <img
-                        :src="i.image"
-                        @click="goToVisualizer(i)"
-                      >
+                    <div
+                      class="image-mask image-container mx-auto"
+                      @click="goToVisualizer(i)"
+                    >
+                      <img :src="i.image">
                       <VCheckbox class="checkbox" />
                     </div>
                   </VCol>
@@ -19332,11 +19332,11 @@ onMounted(() => {
                     lg="2"
                     style="cursor: pointer"
                   >
-                    <div class="image-mask image-container">
-                      <img
-                        :src="i.image"
-                        @click="goToVisualizer(i)"
-                      >
+                    <div
+                      class="image-mask image-container mx-auto"
+                      @click="goToVisualizer(i)"
+                    >
+                      <img :src="i.image">
                       <VCheckbox class="checkbox" />
                     </div>
                   </VCol>
@@ -19391,11 +19391,11 @@ onMounted(() => {
                     lg="2"
                     style="cursor: pointer"
                   >
-                    <div class="image-mask image-container">
-                      <img
-                        :src="i.image"
-                        @click="goToMantleVisualizer(i)"
-                      >
+                    <div
+                      class="image-mask image-container mx-auto"
+                      @click="goToVisualizer(i)"
+                    >
+                      <img :src="i.image">
                       <VCheckbox class="checkbox" />
                     </div>
                   </VCol>
