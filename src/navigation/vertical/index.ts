@@ -17,7 +17,6 @@ const authenticatedNavItems: VerticalNavItems = [
     title: 'Collection',
     to: { name: 'collection' },
     icon: { icon: 'bx-file-blank' },
-    disable: true,
   },
 ]
 
@@ -26,6 +25,11 @@ const unauthenticatedNavItems: VerticalNavItems = [
     title: 'Home',
     to: { name: 'index' },
     icon: { icon: 'bx-home-alt' },
+  },
+  {
+    title: 'Sample Scenes',
+    to: { name: 'sample-scenes' },
+    icon: { icon: 'bx-file-blank' },
   },
 ]
 

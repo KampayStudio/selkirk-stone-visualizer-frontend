@@ -2,6 +2,7 @@
 import localforage from 'localforage'
 import LoginPrompt from '@/layouts/components/LoginPrompt.vue'
 import AddToCollectionDialog from '@/layouts/components/visualizer/AddToCollectionDialog.vue'
+import axiosIns from '@/plugins/axios'
 
 const originalImage = ref()
 const visualizedImage = ref()
@@ -22,6 +23,7 @@ onMounted(async () => {
   visualizedImage.value = JSON.parse(await localforage.getItem('visualizeImage')).image
 
   wallCoordinates.value = JSON.parse(await localforage.getItem('visualizeImage')).wall_shape
+  await uploadToInfo()
 })
 
 const downloadimage = async () => {
@@ -47,6 +49,23 @@ const viewCollection = () => {
     router.replace(route.query.to ? String(route.query.to) : '/collection')
   else
     LoginPromptRef.value.triggerDialog()
+}
+
+const uploadToInfo = async () => {
+  const info = JSON.parse(localStorage.getItem('uploadedInfo'))
+
+  // Convert base64 to Blob
+  const base64Response = await fetch(visualizedImage.value)
+  const blob = await base64Response.blob()
+
+  // Create FormData and append the file
+  const formData = new FormData()
+
+  formData.append('edited_image', blob, 'image.png')
+
+  const response = await axiosIns.put(`/viz-image/image/${info.id}/`, formData)
+
+  console.log(response.data)
 }
 </script>
 

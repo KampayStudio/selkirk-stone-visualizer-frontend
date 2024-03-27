@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import localForage from 'localforage'
 import { ref } from 'vue'
-import axios from '@axios'
+import { default as axios, default as axiosIns } from '@axios'
 
 const route = useRoute()
 const router = useRouter()
@@ -122,12 +122,37 @@ const convertResponseToDesiredFormat = (originalResponse, base64image) => {
   return newFormat
 }
 
-const onFileChange = event => {
+const uploadToServer = async selectedFile => {
+  const formData = new FormData()
+
+  formData.append('raw_image', selectedFile) // 'file' is the key your server expects
+
+  try {
+    // Using axios for the POST request
+    const response = await axiosIns.post('/viz-image/upload/raw_image/', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+
+    console.log(response.data)
+    localStorage.setItem('uploadedInfo', JSON.stringify(response.data))
+
+    return response.data // Assuming the server responds with JSON
+  }
+  catch (error) {
+    console.error('Failed to upload file:', error)
+    throw error // Rethrow to allow the calling function to handle it
+  }
+}
+
+const onFileChange = async event => {
   isLoadingOpen.value = true
   if (event.target.files.length > 0) {
     const selectedFile = event.target.files[0]
 
-    uploadImage(selectedFile)
+    await uploadToServer(selectedFile)
+    await uploadImage(selectedFile)
   }
   isLoadingOpen.value = false
 }

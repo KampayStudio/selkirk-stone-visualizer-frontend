@@ -7,6 +7,75 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Selkirk Stone Visualizer</title>
   <link rel="stylesheet" type="text/css" href="/loader.css" />
+  <script type="text/javascript">
+    !(function (cfg) {
+  function e() { cfg.onInit && cfg.onInit(i) } let S; let u; let D; let t; let n; let i; const C = window; const x = document; const w = C.location; const I = 'script'; const b = 'ingestionendpoint'; const E = 'disableExceptionTracking'; const A = 'ai.device.'
+
+  'instrumentationKey'[S = 'toLowerCase'](), u = 'crossOrigin', D = 'POST', t = 'appInsightsSDK', n = cfg.name || 'appInsights', (cfg.name || C[t]) && (C[t] = n), i = C[n] || (function (l) {
+    let d = !1; let g = !1; const f = { initialize: !0, queue: [], sv: '7', version: 2, config: l }; function m(e, t) {
+          const n = {}; let i = 'Browser'; function a(e) {
+            e = `${e}`
+
+    return e.length === 1 ? `0${e}` : e
+          }
+
+    return n[`${A}id`] = i[S](), n[`${A}type`] = i, n['ai.operation.name'] = w && w.pathname || '_unknown_', n['ai.internal.sdkVersion'] = `javascript:snippet_${f.sv || f.version}`, { time: `${(i = new Date()).getUTCFullYear()}-${a(1 + i.getUTCMonth())}-${a(i.getUTCDate())}T${a(i.getUTCHours())}:${a(i.getUTCMinutes())}:${a(i.getUTCSeconds())}.${(i.getUTCMilliseconds() / 1e3).toFixed(3).slice(2, 5)}Z`, iKey: e, name: `Microsoft.ApplicationInsights.${e.replace(/-/g, '')}.${t}`, sampleRate: 100, tags: n, data: { baseData: { ver: 2 } }, ver: 4, seq: '1', aiDataContract: undefined }
+    } let h = -1; let v = 0; const y = ['js.monitor.azure.com', 'js.cdn.applicationinsights.io', 'js.cdn.monitor.azure.com', 'js0.cdn.applicationinsights.io', 'js0.cdn.monitor.azure.com', 'js2.cdn.applicationinsights.io', 'js2.cdn.monitor.azure.com', 'az416426.vo.msecnd.net']; let k = l.url || cfg.src; if (k) {
+          if ((n = navigator) && (~(n = (n.userAgent || '').toLowerCase()).indexOf('msie') || ~n.indexOf('trident/')) && ~k.indexOf('ai.3') && (k = k.replace(/(\/)(ai\.3\.)([^\d]*)$/, (e, t, n) => { return `${t}ai.2${n}` })), !1 !== cfg.cr)
+    for (let e = 0; e < y.length; e++) if (k.indexOf(y[e]) > 0) { h = e; break }
+
+          const i = function (e) {
+            let a, t, n, i, o, r, s, c, p, u; f.queue = [], g || (h >= 0 && v + 1 < y.length
+              ? (a = (h + v + 1) % y.length, T(k.replace(/^(.*\/\/)([\w\.]*)(\/.*)$/, (e, t, n, i) => { return t + y[a] + i })), v += 1)
+              : (d = g = !0, o = k, c = (p = (function () {
+                  let e; const t = {}; let n = l.connectionString; if (n)
+                  for (let i = n.split(';'), a = 0; a < i.length; a++) {
+                    const o = i[a].split('=')
+
+                    o.length === 2 && (t[o[0][S]()] = o[1])
+                  }
+
+                return t[b] || (e = (n = t.endpointsuffix) ? t.location : null, t[b] = `https://${e ? `${e}.` : ''}dc.${n || 'services.visualstudio.com'}`), t
+                }())).instrumentationkey || l.instrumentationKey || '', p = (p = p[b]) ? `${p}/v2/track` : l.endpointUrl, (u = []).push((t = 'SDK LOAD Failure: Failed to load Application Insights SDK script (See stack for details)', n = o, r = p, (s = (i = m(c, 'Exception')).data).baseType = 'ExceptionData', s.baseData.exceptions = [{ typeName: 'SDKLoadFailed', message: t.replace(/\./g, '-'), hasFullStack: !1, stack: `${t}\nSnippet failed to load [${n}] -- Telemetry is disabled\nHelp Link: https://go.microsoft.com/fwlink/?linkid=2128109\nHost: ${w && w.pathname || '_unknown_'}\nEndpoint: ${r}`, parsedStack: [] }], i)), u.push((s = o, t = p, (r = (n = m(c, 'Message')).data).baseType = 'MessageData', (i = r.baseData).message = `AI (Internal): 99 message:"${(`SDK LOAD Failure: Failed to load Application Insights SDK script (See stack for details) (${s})`).replace(/\"/g, '')}"`, i.properties = { endpoint: t }, n)), o = u, c = p, JSON && ((r = C.fetch) && !cfg.useXhr ? r(c, { method: D, body: JSON.stringify(o), mode: 'cors' }) : XMLHttpRequest && ((s = new XMLHttpRequest()).open(D, c), s.setRequestHeader('Content-type', 'application/json'), s.send(JSON.stringify(o))))))
+          }
+
+          const a = function (e, t) { g || setTimeout(() => { !t && f.core || i() }, 500), d = !1 }; var T = function (e) {
+            const n = x.createElement(I); var e = (n.src = e, cfg[u])
+
+            return !e && e !== '' || n[u] == 'undefined' || (n[u] = e), n.onload = a, n.onerror = i, n.onreadystatechange = function (e, t) { n.readyState !== 'loaded' && n.readyState !== 'complete' || a(0, t) }, cfg.ld && cfg.ld < 0 ? x.getElementsByTagName('head')[0].appendChild(n) : setTimeout(() => { x.getElementsByTagName(I)[0].parentNode.appendChild(n) }, cfg.ld || 0), n
+          }; T(k)
+    } try { f.cookie = x.cookie }
+    catch (p) {} function t(e) {
+          while (e.length) {
+            !(function (t) {
+              f[t] = function () {
+                const e = arguments
+
+                d || f.queue.push(() => { f[t].apply(f, e) })
+              }
+            }(e.pop()))
+          }
+    } let r; let s; var n = 'track'; const o = 'TrackPage'; const c = 'TrackEvent'; var n = (t([`${n}Event`, `${n}PageView`, `${n}Exception`, `${n}Trace`, `${n}DependencyData`, `${n}Metric`, `${n}PageViewPerformance`, `start${o}`, `stop${o}`, `start${c}`, `stop${c}`, 'addTelemetryInitializer', 'setAuthenticatedUserContext', 'clearAuthenticatedUserContext', 'flush']), f.SeverityLevel = { Verbose: 0, Information: 1, Warning: 2, Error: 3, Critical: 4 }, (l.extensionConfig || {}).ApplicationInsightsAnalytics || {})
+
+    return !0 !== l[E] && !0 !== n[E] && (t([`_${r = 'onerror'}`]), s = C[r], C[r] = function (e, t, n, i, a) {
+          const o = s && s(e, t, n, i, a)
+
+          return !0 !== o && f[`_${r}`]({ message: e, url: t, lineNumber: n, columnNumber: i, error: a, evt: C.event }), o
+    }, l.autoExceptionInstrumented = !0), f
+  }(cfg.cfg)), (C[n] = i).queue && i.queue.length === 0 ? (i.queue.push(e), i.trackPageView({})) : e()
+})({
+    src: 'https://js.monitor.azure.com/scripts/b/ai.3.gbl.min.js',
+    name: 'SelkirkFrontend',
+    // ld: 0,
+    // useXhr: 1,
+    crossOrigin: 'anonymous',
+    // onInit: null,
+    // cr: 0,
+    cfg: { // Application Insights Configuration
+        connectionString: 'YOUR_CONNECTION_STRING',
+  },
+})
+    </script>
 </head>
 
 <body>
