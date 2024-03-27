@@ -782,7 +782,7 @@ const reset = () => {
                     </VCol>
                   </VRow>
                   <VRow class="flex-column ma-0 mt-4 ml-n2">
-                    <div class="text-caption ml-2">
+                    <div class=" ml-2">
                       Rotation
                     </div>
 
@@ -806,7 +806,7 @@ const reset = () => {
                       </template>
                     </VSlider>
 
-                    <div class="text-caption ml-2 mt-2">
+                    <div class=" ml-2 mt-2">
                       Warp Perspective X
                     </div>
 
@@ -830,7 +830,7 @@ const reset = () => {
                       </template>
                     </VSlider>
 
-                    <div class="text-caption ml-2 mt-2">
+                    <div class=" ml-2 mt-2">
                       Warp Perspective Y
                     </div>
 
@@ -854,7 +854,7 @@ const reset = () => {
                       </template>
                     </VSlider>
 
-                    <div class="text-caption ml-2 mt-2">
+                    <div class=" ml-2 mt-2">
                       Tile Size
                     </div>
 
@@ -884,14 +884,14 @@ const reset = () => {
                 <VCol class="d-block gap-x-2 mt-5 justify-end d-md-flex">
                   <VBtn
                     variant="outlined"
-                    class="mt-2"
+                    class="mt-2 mx-1"
                     @click="saveWall('/visualizer')"
                   >
                     Select Another wall
                   </VBtn>
 
                   <VBtn
-                    class="mt-2"
+                    class="mt-2 mx-1"
                     @click="saveWall('/visualizer/dimension')"
                   >
                     Next
