@@ -14,18 +14,30 @@ const authenticatedNavItems: VerticalNavItems = [
     icon: { icon: 'bx-home-alt' },
   },
   {
-    title: 'Collection',
-    to: { name: 'collection' },
-    icon: { icon: 'bx-file-blank' },
-  },
-  {
     title: 'Sample Scenes',
     to: { name: 'sample-scenes' },
-    icon: { icon: 'bx-file-blank' },
+    icon: { icon: 'bx-landscape' },
   },
+  {
+    title: 'Collection',
+    to: { name: 'collection' },
+    icon: { icon: 'bx-folder' },
+  },
+
 ]
 
 const unauthenticatedNavItems: VerticalNavItems = [
+  {
+    title: 'Login',
+    to: { name: 'login' },
+    icon: { icon: 'bx-user' },
+  },
+  {
+    title: 'Register',
+    to: { name: 'register' },
+    icon: { icon: 'bx-edit' },
+  },
+  { heading: 'Pages' },
   {
     title: 'Home',
     to: { name: 'index' },
