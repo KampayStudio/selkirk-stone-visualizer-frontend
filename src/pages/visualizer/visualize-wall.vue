@@ -659,6 +659,7 @@ const reset = () => {
             <VWindow
               v-model="currentSection"
               style="inline-size: 100%;"
+              :touch="false"
             >
               <VWindowItem value="categories">
                 <div style="inline-size: 100%;">
