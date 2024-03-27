@@ -19393,7 +19393,7 @@ onMounted(() => {
                   >
                     <div
                       class="image-mask image-container mx-auto"
-                      @click="goToVisualizer(i)"
+                      @click="goToMantleVisualizer(i)"
                     >
                       <img :src="i.image">
                       <VCheckbox class="checkbox" />
