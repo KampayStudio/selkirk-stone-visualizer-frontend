@@ -119,12 +119,18 @@ const saveMantel = async routeTo => {
               </VRow>
             </div>
             <VRow>
-              <VCol class="d-flex gap-x-2 mt-5 justify-end">
-                <VBtn variant="outlined">
+              <VCol class="d-block gap-x-2 mt-5 justify-end d-lg-flex">
+                <VBtn
+                  variant="outlined"
+                  class="mt-2 mx-1"
+                >
                   Select Another Mantel
                 </VBtn>
 
-                <VBtn @click="saveMantel('/visualizer/dimension')">
+                <VBtn
+                  class="mt-2 mx-1"
+                  @click="saveMantel('/visualizer/dimension')"
+                >
                   Next
                 </VBtn>
               </VCol>

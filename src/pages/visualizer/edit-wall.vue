@@ -78,10 +78,11 @@ onMounted(async () => {
             </div>
           </div>
           <!-- Top Buttons -->
-          <div class="d-flex gap-x-3">
+          <div class="d-block gap-x-3 d-lg-flex">
             <VBtn
               v-if="VisualizerEditMainRef"
               variant="outlined"
+              class="mt-2 mx-1"
               @click="showHideDraw"
             >
               {{ isDraw ? "Back to Edit Wall" : "Draw Custom Wall" }}
@@ -90,6 +91,7 @@ onMounted(async () => {
               v-if="VisualizerEditMainRef && !isDraw"
               variant="outlined"
               :disabled="wallNumber === undefined"
+              class="mt-2 mx-1"
               @click="VisualizerEditMainRef.deleteWall"
             >
               Delete
@@ -97,6 +99,7 @@ onMounted(async () => {
             <VBtn
               v-if="VisualizerEditMainRef && !isDraw"
               variant="outlined"
+              class="mt-2 mx-1"
               @click="isDeleteAllDialogShow = !isDeleteAllDialogShow"
             >
               Delete All
@@ -104,6 +107,7 @@ onMounted(async () => {
             <VBtn
               v-if="isDraw"
               variant="outlined"
+              class="mt-2 mx-1"
               @click="VisualizerEditMainRef.undo"
             >
               Undo Recent Line
@@ -111,12 +115,14 @@ onMounted(async () => {
 
             <VBtn
               v-if="VisualizerEditMainRef && !isDraw"
+              class="mt-2 mx-1"
               @click="VisualizerEditMainRef.apply"
             >
               Save Changes
             </VBtn>
             <VBtn
               v-if="isDraw"
+              class="mt-2 mx-1"
               @click="VisualizerEditMainRef.addPathToMainPathList"
             >
               Make Custom Wall
