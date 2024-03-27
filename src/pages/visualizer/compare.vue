@@ -99,10 +99,11 @@ const uploadToInfo = async () => {
 
         <VRow>
           <VCol class="d-flex align-center">
-            <div class="d-flex gap-x-3">
+            <div class="d-block gap-x-3 d-lg-flex">
               <VBtn
                 variant="outlined"
                 density="compact"
+                class="mt-2 mx-1"
                 @click="addToCollection"
               >
                 Add to collection
@@ -110,6 +111,7 @@ const uploadToInfo = async () => {
               <VBtn
                 variant="outlined"
                 density="compact"
+                class="mt-2 mx-1"
                 @click="downloadimage"
               >
                 Download
@@ -118,19 +120,26 @@ const uploadToInfo = async () => {
                 variant="outlined"
                 density="compact"
                 disabled
+                class="mt-2 mx-1"
               >
                 Share
               </VBtn>
             </div>
           </VCol>
           <VCol>
-            <div class="d-flex gap-x-3 justify-end">
+            <div class="d-block gap-x-3 justify-end d-lg-flex">
               <RouterLink to="/sample-scenes">
-                <VBtn variant="outlined">
+                <VBtn
+                  variant="outlined"
+                  class="mt-2 mx-1"
+                >
                   Try Another Photo
                 </VBtn>
               </RouterLink>
-              <VBtn @click="viewCollection">
+              <VBtn
+                class="mt-2 mx-1"
+                @click="viewCollection"
+              >
                 View Collection
               </VBtn>
             </div>

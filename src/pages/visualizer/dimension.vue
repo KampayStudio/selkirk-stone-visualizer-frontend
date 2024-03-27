@@ -151,20 +151,24 @@ const finish = () => {
               </VForm>
             </div>
 
-            <div class="d-flex mt-auto ms-auto gap-x-3">
+            <div class="d-block mt-auto ms-auto gap-x-3 d-lg-flex">
               <RouterLink to="/visualizer/visualize-wall">
-                <VBtn variant="outlined">
+                <VBtn
+                  variant="outlined"
+                  class="mt-2 me-1"
+                >
                   Back
                 </VBtn>
               </RouterLink>
               <VBtn
                 variant="outlined"
+                class="mt-2"
                 @click="selectAnotherWall"
               >
                 Select Another Wall
               </VBtn>
 
-              <div class="d-flex flex-column gap-y-1 justify-end">
+              <div class="d-flex flex-column gap-y-1 justify-end mt-2">
                 <VBtn @click="finish">
                   Finish
                 </VBtn>

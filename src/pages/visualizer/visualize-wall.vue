@@ -764,16 +764,21 @@ const reset = () => {
                         </h6>
                       </div>
 
-                      <h1 class="d-flex align-center justify-space-between text-h4">
-                        Configure wall
-
-                        <VBtn
-                          variant="outlined"
-                          @click="reset"
-                        >
-                          Reset
-                        </VBtn>
-                      </h1>
+                      <VRow>
+                        <VCol>
+                          <h1 class="d-flex align-center justify-space-between text-h4">
+                            Configure wall
+                          </h1>
+                        </VCol>
+                        <VCol class="d-block justify-end align-center d-md-flex">
+                          <VBtn
+                            variant="outlined"
+                            @click="reset"
+                          >
+                            Reset
+                          </VBtn>
+                        </VCol>
+                      </VRow>
                     </VCol>
                   </VRow>
                   <VRow class="flex-column ma-0 mt-4 ml-n2">
@@ -876,15 +881,19 @@ const reset = () => {
                 </div>
               </VWindowItem>
               <VRow>
-                <VCol class="d-flex gap-x-2 mt-5 justify-end">
+                <VCol class="d-block gap-x-2 mt-5 justify-end d-md-flex">
                   <VBtn
                     variant="outlined"
+                    class="mt-2"
                     @click="saveWall('/visualizer')"
                   >
                     Select Another wall
                   </VBtn>
 
-                  <VBtn @click="saveWall('/visualizer/dimension')">
+                  <VBtn
+                    class="mt-2"
+                    @click="saveWall('/visualizer/dimension')"
+                  >
                     Next
                   </VBtn>
 
