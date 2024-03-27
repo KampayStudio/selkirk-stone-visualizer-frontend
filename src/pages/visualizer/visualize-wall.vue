@@ -782,101 +782,106 @@ const reset = () => {
                     </VCol>
                   </VRow>
                   <VRow class="flex-column ma-0 mt-4 ml-n2">
-                    <div class=" ml-2">
-                      Rotation
+                    <div>
+                      <div class=" ml-2">
+                        Rotation
+                      </div>
+
+                      <VSlider
+                        v-model="rotation"
+                        prepend-icon="mdi-rotate-3d-variant"
+                        thumb-label
+                        :max="180"
+                        :min="-180"
+                        :step="0.1"
+                      >
+                        <template #append>
+                          <VTextField
+                            v-model="rotation"
+                            density="compact"
+                            style="inline-size: 90px"
+                            type="number"
+                            variant="outlined"
+                            hide-details
+                          />
+                        </template>
+                      </VSlider>
                     </div>
+                    <div>
+                      <div class=" ml-2 mt-2">
+                        Warp Perspective X
+                      </div>
 
-                    <VSlider
-                      v-model="rotation"
-                      prepend-icon="mdi-rotate-3d-variant"
-                      thumb-label
-                      :max="180"
-                      :min="-180"
-                      :step="0.1"
-                    >
-                      <template #append>
-                        <VTextField
-                          v-model="rotation"
-                          density="compact"
-                          style="inline-size: 90px"
-                          type="number"
-                          variant="outlined"
-                          hide-details
-                        />
-                      </template>
-                    </VSlider>
-
-                    <div class=" ml-2 mt-2">
-                      Warp Perspective X
+                      <VSlider
+                        v-model="translationX"
+                        prepend-icon="mdi-axis-z-rotate-clockwise"
+                        thumb-label
+                        :max="100"
+                        :min="-100"
+                        :step="0.1"
+                      >
+                        <template #append>
+                          <VTextField
+                            v-model="translationX"
+                            density="compact"
+                            style="inline-size: 90px"
+                            type="number"
+                            variant="outlined"
+                            hide-details
+                          />
+                        </template>
+                      </VSlider>
                     </div>
+                    <div>
+                      <div class=" ml-2 mt-2">
+                        Warp Perspective Y
+                      </div>
 
-                    <VSlider
-                      v-model="translationX"
-                      prepend-icon="mdi-axis-z-rotate-clockwise"
-                      thumb-label
-                      :max="100"
-                      :min="-100"
-                      :step="0.1"
-                    >
-                      <template #append>
-                        <VTextField
-                          v-model="translationX"
-                          density="compact"
-                          style="inline-size: 90px"
-                          type="number"
-                          variant="outlined"
-                          hide-details
-                        />
-                      </template>
-                    </VSlider>
-
-                    <div class=" ml-2 mt-2">
-                      Warp Perspective Y
+                      <VSlider
+                        v-model="translationY"
+                        prepend-icon="mdi-horizontal-rotate-clockwise"
+                        thumb-label
+                        :max="100"
+                        :min="-100"
+                        :step="0.1"
+                      >
+                        <template #append>
+                          <VTextField
+                            v-model="translationY"
+                            density="compact"
+                            style="inline-size: 90px"
+                            type="number"
+                            variant="outlined"
+                            hide-details
+                          />
+                        </template>
+                      </VSlider>
                     </div>
+                    <div>
+                      <div class=" ml-2 mt-2">
+                        Tile Size
+                      </div>
 
-                    <VSlider
-                      v-model="translationY"
-                      prepend-icon="mdi-horizontal-rotate-clockwise"
-                      thumb-label
-                      :max="100"
-                      :min="-100"
-                      :step="0.1"
-                    >
-                      <template #append>
-                        <VTextField
-                          v-model="translationY"
-                          density="compact"
-                          style="inline-size: 90px"
-                          type="number"
-                          variant="outlined"
-                          hide-details
-                        />
-                      </template>
-                    </VSlider>
-
-                    <div class=" ml-2 mt-2">
-                      Tile Size
+                      <VSlider
+                        v-model="tileSize"
+                        prepend-icon="mdi-wall"
+                        thumb-label
+                        :max="25"
+                        :min="1"
+                        :step="1"
+                      >
+                        <template #append>
+                          <VTextField
+                            v-model="tileSize"
+                            density="compact"
+                            style="inline-size: 90px"
+                            type="number"
+                            variant="outlined"
+                            hide-details
+                          />
+                        </template>
+                      </VSlider>
                     </div>
-
-                    <VSlider
-                      v-model="tileSize"
-                      prepend-icon="mdi-wall"
-                      thumb-label
-                      :max="25"
-                      :min="1"
-                      :step="1"
-                    >
-                      <template #append>
-                        <VTextField
-                          v-model="tileSize"
-                          density="compact"
-                          style="inline-size: 90px"
-                          type="number"
-                          variant="outlined"
-                          hide-details
-                        />
-                      </template>
-                    </VSlider>
                   </VRow>
                 </div>
               </VWindowItem>
