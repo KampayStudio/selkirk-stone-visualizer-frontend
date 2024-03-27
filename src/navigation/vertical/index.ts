@@ -1,7 +1,7 @@
 import type { VerticalNavItems } from '@/@layouts/types'
 
 // Fetch the auth token from local storage
-const authToken = ref(localStorage.getItem('authToken'))
+const authToken = ref(sessionStorage.getItem('authToken'))
 
 // Compute whether the user is authenticated
 const isAuthenticated = computed(() => !!authToken.value)
@@ -16,6 +16,11 @@ const authenticatedNavItems: VerticalNavItems = [
   {
     title: 'Collection',
     to: { name: 'collection' },
+    icon: { icon: 'bx-file-blank' },
+  },
+  {
+    title: 'Sample Scenes',
+    to: { name: 'sample-scenes' },
     icon: { icon: 'bx-file-blank' },
   },
 ]

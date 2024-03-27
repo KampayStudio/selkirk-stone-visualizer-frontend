@@ -24,7 +24,8 @@ const actionArrowInitialRotation = isVerticalNavCollapsed.value ? '180deg' : '0d
 const { global } = useTheme()
 const globalThemeBackground = computed(() => global.current.value.colors.background)
 
-const authToken = ref(localStorage.getItem('authToken'))
+const authToken = ref(sessionStorage.getItem('authToken'))
+
 const isAuthenticated = computed(() => !authToken.value)
 </script>
 
