@@ -2,6 +2,7 @@
 import axios from '@axios'
 
 const isDialogOpen = ref(false)
+const router = useRouter()
 
 const deleteAccount = async () => {
   try {
@@ -14,7 +15,7 @@ const deleteAccount = async () => {
     sessionStorage.removeItem('contact_number')
     sessionStorage.removeItem('email')
     sessionStorage.removeItem('id')
-    router.push('/login')
+    router.push('/')
   }
   catch (error) {
     console.log(error)
@@ -38,6 +39,9 @@ const deleteAccount = async () => {
       confirm-msg="You'll be logged out in a sec."
       confirm-title="Your account is deleted."
       @confirm="deleteAccount"
+      @update:is-dialog-visible="() => {
+        isDialogOpen = false
+      }"
     />
   </div>
 </template>

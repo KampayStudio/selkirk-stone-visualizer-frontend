@@ -157,20 +157,22 @@ const collection = () => {
 
           <!-- 👉 Quotation -->
 
-          <VListItem
+          <!--
+            <VListItem
             link
             @click="quotation"
-          >
+            >
             <template #prepend>
-              <VIcon
-                class="me-2"
-                icon="mdi-list-box-outline"
-                size="22"
-              />
+            <VIcon
+            class="me-2"
+            icon="mdi-list-box-outline"
+            size="22"
+            />
             </template>
 
             <VListItemTitle>Quotation</VListItemTitle>
-          </VListItem>
+            </VListItem>
+          -->
 
           <!-- 👉 Settings -->
 
