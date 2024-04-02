@@ -898,7 +898,7 @@ const reset = () => {
 
                   <VBtn
                     class="mt-2 mx-1"
-                    @click="saveWall('/visualizer/dimension')"
+                    @click="saveWall('/visualizer/compare')"
                   >
                     Next
                   </VBtn>
