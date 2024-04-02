@@ -45,11 +45,11 @@ const addToCollection = async () => {
     const response = await axiosIns.post('/visualizer/collections/', payload)
 
     console.log(response)
-    SnackBarRef.value.show('success', response.statusText)
+    SnackBarRef.value.show('success', response.data.detail)
   }
   catch (e) {
     console.log(e)
-    SnackBarRef.value.show('error', 'Please contact support')
+    SnackBarRef.value.show('error', e.response.data.message)
   }
 
   loadingAdd.value = false
