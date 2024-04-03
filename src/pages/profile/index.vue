@@ -6,6 +6,8 @@ import { default as axios, default as axiosIns } from '@axios'
 const loading = ref()
 const SnackBarRef = ref()
 const delay = ms => new Promise(res => setTimeout(res, ms))
+const ResetPasswordDialogRef = ref()
+const resetPasswordLoading = ref()
 
 const profile = ref({
   first_name: sessionStorage.getItem('first_name'),
@@ -59,6 +61,24 @@ const fetchData = async () => {
 onMounted(() => {
   fetchData()
 })
+
+const submit = async () => {
+  resetPasswordLoading.value = true
+
+  try {
+    const response = await axiosIns.post('/users/reset-password/', {
+      email: sessionStorage.getItem('email'),
+    })
+
+    SnackBarRef.value.show('success', response.data.message)
+  }
+  catch (e) {
+    error.value = e.response.data.message
+    console.log(e.response.data)
+  }
+
+  resetPasswordLoading.value = false
+}
 </script>
 
 <template>
@@ -153,11 +173,13 @@ onMounted(() => {
         <VRow>
           <VCol class="d-flex gap-x-2">
             <!-- <ChangePasswordModal /> -->
-            <RouterLink to="/reset-password">
-              <VBtn variant="outlined">
-                Send Reset Password Email
-              </VBtn>
-            </RouterLink>
+            <VBtn
+              variant="outlined"
+              :loading="resetPasswordLoading"
+              @click="submit"
+            >
+              Send Reset Password
+            </VBtn>
 
             <DeleteAccountConfirmation />
           </VCol>
@@ -176,6 +198,7 @@ onMounted(() => {
       </VCardItem>
     </VCard>
     <SnackBar ref="SnackBarRef" />
+    <ResetPasswordDialog ref="ResetPasswordDialogRef" />
   </section>
 </template>
 
