@@ -554,6 +554,19 @@ watchDebounced(translationX, () => changeWall(), { debounce: 100, maxWait: 200 }
 watchDebounced(translationY, () => changeWall(), { debounce: 100, maxWait: 200 })
 watchDebounced(tileSize, () => changeWall(), { debounce: 500, maxWait: 1000 })
 
+const insightTrackEvent = (category, color) => {
+  const event = {
+    name: 'SelectedStone',
+    properties: {
+      stone_category: category,
+      stone_color: color,
+    },
+  }
+
+  console.log('sent')
+  app_insights.trackEvent(event)
+}
+
 const convertImageToBase64 = async imageUrl => {
   return new Promise((resolve, reject) => {
     try {
@@ -584,6 +597,7 @@ const selectStone = async (stone: any) => {
 }
 
 const selectColor = async (stone: any) => {
+  insightTrackEvent(selectedCategory.value, stone.name)
   isLoadingOpen.value = true
   currentSection.value = 'configuration'
 
