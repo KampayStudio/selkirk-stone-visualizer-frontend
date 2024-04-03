@@ -29,6 +29,7 @@ const login = async () => {
       withCredentials: true, // Include this line
     })
 
+    console.log(response)
     sessionStorage.setItem('authToken', response.data.jwt)
     sessionStorage.setItem('first_name', response.data.first_name)
     sessionStorage.setItem('last_name', response.data.last_name)
@@ -39,7 +40,7 @@ const login = async () => {
 
     isLoading.value = false
 
-    router.replace(route.query.to ? String(route.query.to) : '/')
+    // router.replace(route.query.to ? String(route.query.to) : '/')
   }
   catch (error) {
     console.error('Login error:', error)

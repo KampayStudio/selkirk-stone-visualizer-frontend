@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import ChangePasswordModal from '@/layouts/components/profile/ChangePasswordModal.vue'
 import DeleteAccountConfirmation from '@/layouts/components/profile/DeleteAccountConfirmation.vue'
 import SnackBar from '@/layouts/components/SnackBar.vue'
 import { default as axios, default as axiosIns } from '@axios'
@@ -153,7 +152,12 @@ onMounted(() => {
 
         <VRow>
           <VCol class="d-flex gap-x-2">
-            <ChangePasswordModal />
+            <!-- <ChangePasswordModal /> -->
+            <RouterLink to="/reset-password">
+              <VBtn variant="outlined">
+                Send Reset Password Email
+              </VBtn>
+            </RouterLink>
 
             <DeleteAccountConfirmation />
           </VCol>
