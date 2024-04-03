@@ -108,6 +108,21 @@ const deleteSelectedItems = async () => {
 onMounted(() => {
   fetchCollection()
 })
+
+const selectAll = category => {
+  // Assuming 'interior', 'exterior', 'mantel' are the keys in both `selectedItems` and refs
+  const categoryRef = { interior, exterior, mantel }[category]
+  if (categoryRef) {
+    // Determine if all items are currently selected
+    const allSelected = categoryRef.value.every(item => item.selected)
+
+    // If all items are selected, deselect them. Otherwise, select them.
+    categoryRef.value.forEach(item => { item.selected = !allSelected })
+
+    // Update the selectedItems state based on the new selection state
+    selectedItems.value[category] = allSelected ? [] : [...categoryRef.value]
+  }
+}
 </script>
 
 <template>
@@ -175,6 +190,7 @@ onMounted(() => {
             label="Interior"
             class="mt-4 mb-2"
             style=" display: flex; ;font-weight: bold;"
+            @click="selectAll('interior')"
           />
           <VContainer fluid>
             <VRow
@@ -209,6 +225,7 @@ onMounted(() => {
             label="Exterior"
             class="mt-4 mb-2"
             style=" display: flex; ;font-weight: bold;"
+            @click="selectAll('exterior')"
           />
           <VContainer fluid>
             <VRow
@@ -243,6 +260,7 @@ onMounted(() => {
             label="Non-Combustible Mantle"
             class="mt-4 mb-2"
             style=" display: flex; ;font-weight: bold;"
+            @click="selectAll('mantel')"
           />
           <VContainer fluid>
             <VRow
