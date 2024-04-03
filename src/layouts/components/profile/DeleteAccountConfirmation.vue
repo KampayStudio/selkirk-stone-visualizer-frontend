@@ -1,12 +1,15 @@
 <script setup lang="ts">
+import SnackBar from '../SnackBar.vue'
 import axios from '@axios'
 
 const isDialogOpen = ref(false)
 const router = useRouter()
+const SnackBarRef = ref()
+const delay = ms => new Promise(res => setTimeout(res, ms))
 
 const deleteAccount = async () => {
   try {
-    await axios.delete(`/users/get-users/${sessionStorage.getItem('id')}/`)
+    const response = await axios.delete(`/users/get-users/${sessionStorage.getItem('id')}/`)
 
     sessionStorage.removeItem('authToken')
     sessionStorage.removeItem('first_name')
@@ -15,10 +18,13 @@ const deleteAccount = async () => {
     sessionStorage.removeItem('contact_number')
     sessionStorage.removeItem('email')
     sessionStorage.removeItem('id')
+    SnackBarRef.value.show('success', response.data.message)
+    delay(3000)
     router.push('/')
   }
   catch (error) {
     console.log(error)
+    SnackBarRef.value.show('success', error.response.data.message)
   }
   isDialogOpen.value = false
 }
@@ -43,5 +49,7 @@ const deleteAccount = async () => {
         isDialogOpen = false
       }"
     />
+
+    <SnackBar ref="SnackBarRef" />
   </div>
 </template>

@@ -90,7 +90,7 @@ const collection = () => {
         <VList>
           <!-- 👉 User Avatar & Name -->
 
-          <VListItem>
+          <VListItem @click="profile">
             <template #prepend>
               <VListItemAction start>
                 <VBadge
