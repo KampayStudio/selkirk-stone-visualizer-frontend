@@ -19,12 +19,12 @@ const deleteAccount = async () => {
     sessionStorage.removeItem('email')
     sessionStorage.removeItem('id')
     SnackBarRef.value.show('success', response.data.message)
-    delay(3000)
+    await delay(3000)
     router.push('/')
   }
   catch (error) {
     console.log(error)
-    SnackBarRef.value.show('success', error.response.data.message)
+    SnackBarRef.value.show('error', error.response.data.message)
   }
   isDialogOpen.value = false
 }
