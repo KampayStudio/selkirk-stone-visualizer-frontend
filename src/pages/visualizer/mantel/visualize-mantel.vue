@@ -129,7 +129,7 @@ const saveMantel = async routeTo => {
 
                 <VBtn
                   class="mt-2 mx-1"
-                  @click="saveMantel('/visualizer/dimension')"
+                  @click="saveMantel('/visualizer/compare')"
                 >
                   Next
                 </VBtn>
