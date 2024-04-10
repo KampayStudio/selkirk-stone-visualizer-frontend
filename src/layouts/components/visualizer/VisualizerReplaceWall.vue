@@ -70,31 +70,17 @@ const saveWall = async () => {
   ctx.closePath()
   ctx.clip()
 
+  const x = shapeSize.minX - shapeSize.allowanceWidth
+  const y = shapeSize.minY - shapeSize.allowanceHeight
   if (rotation.value) {
-    const rotatedCanvas = document.createElement('canvas')
-
-    rotatedCanvas.width = imageWidth
-    rotatedCanvas.height = imageHeight
-
-    const rotatedCtx = rotatedCanvas.getContext('2d')
-
-    rotatedCtx.translate(rotatedCanvas.width / 2, rotatedCanvas.height / 2)
-    rotatedCtx.rotate(rotation.value * Math.PI / 180)
-    rotatedCtx.drawImage(wallImageRef.value, -rotatedCanvas.width / 2, -rotatedCanvas.height / 2)
-    rotatedCtx.restore()
-
-    const rotatedCanvasImageElement = new Image()
-
-    rotatedCanvasImageElement.src = rotatedCanvas.toDataURL()
-
-    canvasContainerRef.value.appendChild(rotatedCanvasImageElement)
-
-    await new Promise(resolve => rotatedCanvasImageElement.onload = resolve)
-
-    ctx.drawImage(rotatedCanvasImageElement, shapeSize.minX - shapeSize.allowanceWidth, shapeSize.minY - shapeSize.allowanceHeight, imageWidth, imageHeight)
+    ctx.translate(x + (imageWidth / 2), y + (imageHeight / 2))
+    ctx.rotate(rotation.value * Math.PI / 180)
+    ctx.translate(-x - (imageWidth / 2), -y - (imageHeight / 2))
+    ctx.drawImage(wallImageRef.value, x, y, imageWidth, imageHeight)
+    ctx.restore()
   }
   else {
-    ctx.drawImage(wallImageRef.value, shapeSize.minX - shapeSize.allowanceWidth, shapeSize.minY - shapeSize.allowanceHeight, imageWidth, imageHeight)
+    ctx.drawImage(wallImageRef.value, x, y, imageWidth, imageHeight)
   }
 
   imageRef.value.src = canvas.toDataURL('image/png')
