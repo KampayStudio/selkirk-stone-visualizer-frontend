@@ -1,8 +1,15 @@
 <script setup lang="ts">
 const isDialogOpen = ref(false)
 
+const router = useRouter()
+
 const openDialog = () => {
   isDialogOpen.value = true
+}
+
+const confirm = () => {
+  isDialogOpen.value = !isDialogOpen.value
+  router.push('/login')
 }
 
 defineExpose({ openDialog })
@@ -31,7 +38,7 @@ defineExpose({ openDialog })
         <VCardActions class="align-center justify-center gap-2">
           <VBtn
             variant="elevated"
-            @click="isDialogOpen = !isDialogOpen"
+            @click="confirm"
           >
             Confirm
           </VBtn>
