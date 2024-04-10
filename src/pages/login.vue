@@ -29,18 +29,23 @@ const login = async () => {
       withCredentials: true, // Include this line
     })
 
-    console.log(response)
-    sessionStorage.setItem('authToken', response.data.jwt)
-    sessionStorage.setItem('first_name', response.data.first_name)
-    sessionStorage.setItem('last_name', response.data.last_name)
-    sessionStorage.setItem('address', response.data.address)
-    sessionStorage.setItem('contact_number', response.data.contact_number)
-    sessionStorage.setItem('email', response.data.email)
-    sessionStorage.setItem('id', response.data.id)
+    if (response.data.is_verified) {
+      sessionStorage.setItem('authToken', response.data.jwt)
+      sessionStorage.setItem('first_name', response.data.first_name)
+      sessionStorage.setItem('last_name', response.data.last_name)
+      sessionStorage.setItem('address', response.data.address)
+      sessionStorage.setItem('contact_number', response.data.contact_number)
+      sessionStorage.setItem('email', response.data.email)
+      sessionStorage.setItem('id', response.data.id)
 
-    isLoading.value = false
+      isLoading.value = false
 
-    // router.replace(route.query.to ? String(route.query.to) : '/')
+      router.replace(route.query.to ? String(route.query.to) : '/')
+    }
+    else {
+      SnackBarRef.value.show('error', 'Please verify your account')
+      isLoading.value = false
+    }
   }
   catch (error) {
     console.error('Login error:', error)
