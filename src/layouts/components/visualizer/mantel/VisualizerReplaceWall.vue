@@ -132,7 +132,8 @@ const loadMantelAndFindDominantColor = async () => {
   const { data } = ctx.getImageData(0, 0, img.width, img.height)
   const color = findDominantColor(data)
 
-  dominantColor.value = `rgb(${color.r}, ${color.g}, ${color.b})`
+  // dominantColor.value = `rgb(${color.r}, ${color.g}, ${color.b})`
+  dominantColor.value = color
 
   console.log(color)
 }
@@ -213,12 +214,22 @@ const applyColorToBNWImage = async () => {
 
   ctx.globalCompositeOperation = 'multiply'
 
-  ctx.fillStyle = dominantColor.value
+  ctx.fillStyle = hexToRGBA(dominantColor.value, 0.8)
   ctx.fillRect(0, 0, canvas.width, canvas.height)
 
   ctx.globalCompositeOperation = 'source-over'
 
   previewBNW.value = canvas.toDataURL()
+}
+
+function hexToRGBA(hex, alpha = 1) {
+  const r = hex.r
+  const g = hex.g
+  const b = hex.b
+
+  console.log(r, g, b)
+
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`
 }
 
 const maskPreviewBNWImageBasedOnShape = async () => {
