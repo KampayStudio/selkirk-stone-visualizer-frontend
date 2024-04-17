@@ -105,8 +105,9 @@ const deleteSelectedItems = async () => {
   LoadingRef.value.triggerDialog(false)
 }
 
-onMounted(() => {
-  fetchCollection()
+onMounted(async () => {
+  await fetchCollection()
+  console.log(exterior.value)
 })
 
 const selectAll = category => {

@@ -18159,7 +18159,7 @@ onMounted(() => {
                       @click="goToVisualizer(i)"
                     >
                       <img :src="i.image">
-                      <VCheckbox class="checkbox" />
+                      <!-- <VCheckbox class="checkbox" /> -->
                     </div>
                   </VCol>
                 </VRow>
@@ -18218,7 +18218,7 @@ onMounted(() => {
                       @click="goToVisualizer(i)"
                     >
                       <img :src="i.image">
-                      <VCheckbox class="checkbox" />
+                      <!-- <VCheckbox class="checkbox" /> -->
                     </div>
                   </VCol>
                 </VRow>
@@ -18277,7 +18277,7 @@ onMounted(() => {
                       @click="goToMantleVisualizer(i)"
                     >
                       <img :src="i.image">
-                      <VCheckbox class="checkbox" />
+                      <!-- <VCheckbox class="checkbox" /> -->
                     </div>
                   </VCol>
                 </VRow>
