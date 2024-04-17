@@ -588,27 +588,31 @@ const insightTrackEvent = (category, color) => {
   app_insights.trackEvent(event)
 }
 
-const convertImageToBase64 = async imageUrl => {
-  return new Promise((resolve, reject) => {
-    try {
-      fetch(imageUrl)
-        .then(response => response.blob())
-        .then(blob => {
-          const reader = new FileReader()
+async function convertImageToBase64(imageUrl) {
+  try {
+    console.log(imageUrl)
 
-          reader.onloadend = () => {
-            resolve(reader.result)
-          }
-          reader.onerror = reject
-          reader.readAsDataURL(blob)
-        })
-        .catch(reject)
-    }
-    catch (error) {
-      console.error('Error converting image:', error)
-      reject(error)
-    }
-  })
+    const response = await fetch(imageUrl)
+    if (!response.ok)
+      throw new Error(`HTTP error! status: ${response.status}`)
+
+    const blob = await response.blob()
+
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader()
+
+      reader.onloadend = () => {
+        console.log('Base64 conversion successful:', reader.result)
+        resolve(reader.result)
+      }
+      reader.onerror = reject
+      reader.readAsDataURL(blob)
+    })
+  }
+  catch (error) {
+    console.error('Error converting image to base64:', error)
+    throw error
+  }
 }
 
 const selectStone = async (stone: any) => {
