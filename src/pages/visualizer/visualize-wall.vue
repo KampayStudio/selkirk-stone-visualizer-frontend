@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import VisualizerReplaceWall from '@/layouts/components/visualizer/VisualizerReplaceWall.vue'
+import axiosIns from '@/plugins/axios'
 
 const router = useRouter()
 const loading = ref(false)
