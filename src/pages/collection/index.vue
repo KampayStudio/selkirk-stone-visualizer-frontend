@@ -158,9 +158,11 @@ const selectAll = category => {
       <VCardText>
         <VRow>
           <VCol class="d-flex gap-x-2">
-            <VBtn size="small">
+            <!--
+              <VBtn size="small">
               Generate Report
-            </VBtn>
+              </VBtn>
+            -->
             <VBtn
               variant="text"
               size="small"
