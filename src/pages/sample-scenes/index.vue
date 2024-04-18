@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import localForage from 'localforage'
+import Loading from '@/layouts/components/Loading.vue'
 import axiosIns from '@/plugins/axios'
 
 const selectedSection = ref('exterior')
 const route = useRoute()
 const router = useRouter()
+const LoadingRef = ref()
 
 const interior = ref([])
 
@@ -68,6 +70,7 @@ const convertImageToBase64 = imageUrl => {
 }
 
 const goToVisualizer = async sampleImage => {
+  LoadingRef.value.triggerDialog(true)
   try {
     const toVisualize = { ...sampleImage }
 
@@ -99,6 +102,9 @@ const goToVisualizer = async sampleImage => {
   }
   catch (error) {
     console.error('Error in goToVisualizer:', error)
+  }
+  finally {
+    LoadingRef.value.triggerDialog(false)
   }
 }
 
@@ -373,6 +379,8 @@ onMounted(async () => {
         </VCard>
       </VCol>
     </VRow>
+
+    <Loading ref="LoadingRef" />
   </section>
 </template>
 
