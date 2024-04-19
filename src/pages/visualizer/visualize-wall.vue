@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import VisualizerReplaceWall from '@/layouts/components/visualizer/VisualizerReplaceWall.vue'
-import axiosIns from '@/plugins/axios'
 
 const router = useRouter()
 const loading = ref(false)
@@ -575,12 +574,13 @@ watchDebounced(translationX, () => changeWall(), { debounce: 100, maxWait: 200 }
 watchDebounced(translationY, () => changeWall(), { debounce: 100, maxWait: 200 })
 watchDebounced(tileSize, () => changeWall(), { debounce: 500, maxWait: 1000 })
 
-const insightTrackEvent = (category, color) => {
+const insightTrackEvent = (category, color, id) => {
   const event = {
     name: 'SelectedStone',
     properties: {
       stone_category: category,
       stone_color: color,
+      stone_id: id,
     },
   }
 
@@ -622,7 +622,7 @@ const selectStone = async (stone: any) => {
 }
 
 const selectColor = async (stone: any) => {
-  insightTrackEvent(selectedCategory.value, stone.name)
+  insightTrackEvent(selectedCategory.value, stone.name, stone.id)
   isLoadingOpen.value = true
   currentSection.value = 'configuration'
 
