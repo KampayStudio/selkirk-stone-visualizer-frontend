@@ -203,23 +203,15 @@ onMounted(async () => {
                     :key="i"
                     class="text-center d-flex justify-center flex-column"
                     cols="12"
-                    sm="6"
                     md="3"
-                    lg="2"
                     style="align-items: center; cursor: pointer"
                   >
                     <div class="image-mask image-container">
                       <PuSkeleton
-                        width="200px"
-                        height="8rem"
+                        width="400px"
+                        height="400px"
                       />
                     </div>
-                    <VLabel
-                      class="text-body-2 "
-                      style="font-size: .9rem;"
-                    >
-                      <PuSkeleton width="5rem" />
-                    </VLabel>
                   </VCol>
                 </VRow>
                 <VRow
@@ -231,9 +223,9 @@ onMounted(async () => {
                     :key="i.image"
                     class="text-center d-flex justify-center flex-column"
                     cols="12"
-                    sm="6"
+
                     md="3"
-                    lg="2"
+
                     style="align-items: center; cursor: pointer"
                   >
                     <div
@@ -262,23 +254,17 @@ onMounted(async () => {
                     :key="i"
                     class="text-center d-flex justify-center flex-column"
                     cols="12"
-                    sm="6"
+
                     md="3"
-                    lg="2"
+
                     style="align-items: center; cursor: pointer"
                   >
                     <div class="image-mask image-container">
                       <PuSkeleton
-                        width="200px"
-                        height="8rem"
+                        width="400px"
+                        height="400px"
                       />
                     </div>
-                    <VLabel
-                      class="text-body-2 "
-                      style="font-size: .9rem;"
-                    >
-                      <PuSkeleton width="5rem" />
-                    </VLabel>
                   </VCol>
                 </VRow>
                 <VRow
@@ -290,9 +276,9 @@ onMounted(async () => {
                     :key="i.image"
                     class="text-center"
                     cols="12"
-                    sm="6"
+
                     md="3"
-                    lg="2"
+
                     style="cursor: pointer"
                   >
                     <div
@@ -321,23 +307,17 @@ onMounted(async () => {
                     :key="i"
                     class="text-center d-flex justify-center flex-column"
                     cols="12"
-                    sm="6"
+
                     md="3"
-                    lg="2"
+
                     style="align-items: center;"
                   >
                     <div class="image-mask image-container">
                       <PuSkeleton
-                        width="200px"
-                        height="8rem"
+                        width="400px"
+                        height="400px"
                       />
                     </div>
-                    <VLabel
-                      class="text-body-2 "
-                      style="font-size: .9rem;"
-                    >
-                      <PuSkeleton width="5rem" />
-                    </VLabel>
                   </VCol>
                 </VRow>
                 <VRow
@@ -349,9 +329,7 @@ onMounted(async () => {
                     :key="i.image"
                     class="text-center"
                     cols="12"
-                    sm="6"
                     md="3"
-                    lg="2"
                     style="cursor: pointer"
                   >
                     <div
@@ -390,8 +368,8 @@ section{
   align-items: center;
   justify-content: center;
   border-radius: 10px;
-  block-size: 8rem;
-  inline-size: 12rem;
+  block-size: 15rem;
+  inline-size: 15rem;
 
   img {
     block-size: auto;

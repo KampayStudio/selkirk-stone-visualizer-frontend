@@ -122,14 +122,14 @@ const selectColor = async (stone: any) => {
                         style="margin-block-end: 35px;"
                       >
                         <h6 class="text-body-2">
-                          <b>Categories</b>
+                          <b>Profile</b>
                         </h6>
                       </div>
                       <h1 class="text-h4">
-                        Choose Stone Category
+                        Choose Stone Profile
                       </h1>
                       <p class="text-body-2 mt-3">
-                        Please choose a stone category you want to apply on the wall.
+                        Please choose a stone profile you want to apply on the wall.
                       </p>
                     </VCol>
                   </VRow>
