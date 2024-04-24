@@ -14,18 +14,8 @@ const exterior = ref([])
 
 const mantle = ref([])
 
-const fetchExterior = async () => {
-  try {
-    const response = await axiosIns.get('/sample_scenes/sample-exterior/')
-
-    exterior.value = response.data
-  }
-  catch (e) {
-    console.log(e)
-  }
-}
-
-const fetchInterior = async () => {
+const fetch = async () => {
+  // interior
   try {
     const response = await axiosIns.get('/sample_scenes/sample-interior/')
 
@@ -34,9 +24,18 @@ const fetchInterior = async () => {
   catch (e) {
     console.log(e)
   }
-}
 
-const fetchMantle = async () => {
+  // exterior
+  try {
+    const response = await axiosIns.get('/sample_scenes/sample-exterior/')
+
+    exterior.value = response.data
+  }
+  catch (e) {
+    console.log(e)
+  }
+
+  // mantle
   try {
     const response = await axiosIns.get('/sample_scenes/sample-mantle/')
 
@@ -45,17 +44,6 @@ const fetchMantle = async () => {
   catch (e) {
     console.log(e)
   }
-}
-
-const fetch = async () => {
-  // exterior
-  fetchExterior()
-
-  // interior
-  fetchInterior()
-
-  // mantle
-  fetchMantle()
 }
 
 const convertImageToBase64 = imageUrl => {
@@ -86,7 +74,29 @@ const goToVisualizer = async sampleImage => {
   try {
     const toVisualize = { ...sampleImage }
 
-    sessionStorage.setItem('visualizeImage', JSON.stringify(toVisualize))
+    toVisualize.image = await convertImageToBase64(sampleImage.image)
+
+    localForage.setItem('visualizeImage', JSON.stringify(toVisualize))
+    console.log(toVisualize.wall_shape.shapes.length)
+
+    const visualizerData = ref({
+      dimensions: [],
+      raw_image: undefined,
+      current_wall_number: 0,
+    })
+
+    for (let i = 0; i < toVisualize.wall_shape.shapes.length; i++) {
+      visualizerData.value.dimensions.push({
+        area: 0,
+        height: 0,
+        width: 0,
+        stone_type: '',
+        stone_color: '',
+      })
+    }
+    visualizerData.value.raw_image = toVisualize.image
+    visualizerData.value.current_wall_number = 0
+    localForage.setItem('visualizerData', JSON.stringify(visualizerData.value))
 
     router.replace(route.query.to ? String(route.query.to) : '/visualizer')
   }

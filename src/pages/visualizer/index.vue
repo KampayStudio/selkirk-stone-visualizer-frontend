@@ -1,28 +1,8 @@
 <script setup lang="ts">
-import localForage from 'localforage'
-import VisualizerMain from '@/layouts/components/visualizer/VisualizerMain.vue'
-
 const route = useRoute()
 const router = useRouter()
-const image = ref()
-
-onMounted(async () => {
-  try {
-    const storedImage = await localForage.getItem('visualizeImage')
-
-    if (storedImage) {
-      try {
-        image.value = JSON.parse(storedImage)
-      }
-      catch (e) {
-        console.error('Error parsing image data:', e)
-      }
-    }
-  }
-  catch (e) {
-    console.error('Error fetching image from localForage:', e)
-  }
-})
+const selectedImage = ref(JSON.parse(sessionStorage.getItem('visualizeImage')))
+const image = ref(selectedImage.value.image)
 </script>
 
 <template>
@@ -34,41 +14,53 @@ onMounted(async () => {
             cols="12"
             md="8"
           >
-            <VisualizerMain :image="image" />
+            <!-- <VisualizerMain :image="image" /> -->
+            <VImg :src="image" />
           </VCol>
           <VCol
             cols="12"
             md="4"
             class="d-flex flex-column justify-center gap-y-3"
           >
-            <div class="d-flex flex-row gap-x-5">
+            <!--
+              <div class="d-flex flex-row gap-x-5">
               <div class="text-sm d-flex align-center gap-x-1">
-                <VIcon
-                  icon="mdi-square"
-                  color="#38A736"
-                /> Detected Wall
+              <VIcon
+              icon="mdi-square"
+              color="#38A736"
+              /> Detected Wall
               </div>
               <div class="text-sm d-flex align-center gap-x-1">
-                <VIcon
-                  icon="mdi-square"
-                  color="#D8BF3A"
-                /> Added Wall
+              <VIcon
+              icon="mdi-square"
+              color="#D8BF3A"
+              /> Added Wall
               </div>
-            </div>
-            <h6 class="text-h4">
+              </div>
+            -->
+            <!--
+              <h6 class="text-h4">
               {{ image.wall_shape.shapes.length }} Detected Walls
+              </h6>
+            -->
+            <h6 class="text-h4">
+              Proceed to visualizer
             </h6>
-            <p class="text-body-2">
+            <!--
+              <p class="text-body-2">
               Are you satisfied with the wall detection? <br> Proceeding will not allow further changes.
-            </p>
+              </p>
+            -->
             <div class="d-flex gap-x-3">
-              <VBtn
+              <!--
+                <VBtn
                 variant="outlined"
                 @click="router.replace(route.query.to ? String(route.query.to) : '/visualizer/edit-wall')"
-              >
+                >
                 Edit Wall
-              </VBtn>
-              <VBtn @click="router.replace(route.query.to ? String(route.query.to) : '/visualizer/wall-selection')">
+                </VBtn>
+              -->
+              <VBtn @click="router.replace(route.query.to ? String(route.query.to) : '/visualizer/visualize-wall')">
                 Proceed
               </VBtn>
             </div>
