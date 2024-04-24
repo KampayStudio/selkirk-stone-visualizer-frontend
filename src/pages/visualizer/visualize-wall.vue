@@ -101,7 +101,10 @@ const selectColor = async (stone: any) => {
             md="8"
             class="d-flex align-center justify-center"
           >
-            <VImg :src="image" />
+            <VImg
+              :src="image"
+              style="max-block-size: 75vh;"
+            />
           </VCol>
           <VCol
             class="d-flex align-center"
@@ -167,7 +170,7 @@ const selectColor = async (stone: any) => {
                         style="margin-block-end: 35px;"
                       >
                         <h6 class="text-body-2">
-                          <span @click="currentSection = 'categories'">Categories </span><VIcon icon="mdi-chevron-right" /> <b>Colors</b>
+                          <span @click="currentSection = 'categories'">Profile </span><VIcon icon="mdi-chevron-right" /> <b>Colors</b>
                         </h6>
                       </div>
 

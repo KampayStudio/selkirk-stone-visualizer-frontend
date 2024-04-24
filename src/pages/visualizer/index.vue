@@ -15,7 +15,10 @@ const image = ref(selectedImage.value.image)
             md="8"
           >
             <!-- <VisualizerMain :image="image" /> -->
-            <VImg :src="image" />
+            <VImg
+              :src="image"
+              style="max-block-size: 75vh;"
+            />
           </VCol>
           <VCol
             cols="12"
