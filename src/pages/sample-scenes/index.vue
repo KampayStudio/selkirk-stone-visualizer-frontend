@@ -232,7 +232,12 @@ onMounted(async () => {
                       class="image-mask image-container mx-auto"
                       @click="goToVisualizer(i)"
                     >
-                      <img :src="i.thumbnail">
+                      <VHover>
+                        <template #default="{ isHovering }">
+                          <img :src="isHovering ? i.hover : i.thumbnail">
+                        </template>
+                      </VHover>
+
                       <!-- <VCheckbox class="checkbox" /> -->
                     </div>
                   </VCol>
@@ -281,13 +286,21 @@ onMounted(async () => {
 
                     style="cursor: pointer"
                   >
-                    <div
-                      class="image-mask image-container mx-auto"
-                      @click="goToVisualizer(i)"
-                    >
-                      <img :src="i.thumbnail">
-                      <!-- <VCheckbox class="checkbox" /> -->
-                    </div>
+                    <VHover>
+                      <template #default="{ isHovering, props }">
+                        <div
+                          class="image-mask image-container mx-auto"
+                          @click="goToVisualizer(i)"
+                        >
+                          <VCard>
+                            <img
+                              :src="isHovering ? i.hover : i.thumbnail"
+                              v-bind="props"
+                            >
+                          </VCard>
+                        </div>
+                      </template>
+                    </VHover>
                   </VCol>
                 </VRow>
               </VWindowItem>
@@ -336,8 +349,11 @@ onMounted(async () => {
                       class="image-mask image-container mx-auto"
                       @click="goToMantleVisualizer(i)"
                     >
-                      <img :src="i.thumbnail">
-                      <!-- <VCheckbox class="checkbox" /> -->
+                      <VHover>
+                        <template #default="{ isHovering }">
+                          <img :src="isHovering ? i.hover : i.thumbnail">
+                        </template>
+                      </VHover>
                     </div>
                   </VCol>
                 </VRow>
