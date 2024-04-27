@@ -4,7 +4,7 @@ import axiosIns from '@/plugins/axios'
 const loading = ref(false)
 const VisualizerReplaceWallRef = ref(null)
 const selectedImage = JSON.parse(sessionStorage.getItem('visualizeImage'))
-const image = ref(selectedImage.image)
+const image = ref(selectedImage.hover)
 const stones = ref([])
 
 const fetchStones = async () => {
@@ -77,17 +77,27 @@ const changeImage = (category, color) => {
   }
 }
 
-const selectColor = async (stone: any) => {
-  insightTrackEvent(selectedCategory.value, stone.name, stone.id)
-  currentSection.value = 'categories'
-  selectedColor.value = stone.name
-  changeImage(selectedCategory.value, stone.name)
+const selectColor = async (color: any) => {
+  // Reset isSelected for all colors in the current stone
+  currentStone.value.colors.forEach(c => c.isSelected = false)
+
+  // Set isSelected for the selected color
+  color.isSelected = true
+
+  insightTrackEvent(selectedCategory.value, color.name, color.id)
+  selectedColor.value = color.name
+  changeImage(selectedCategory.value, color.name)
 
   const response = await axiosIns.post('https://selkirkappapi.azurewebsites.net/api/analytics/product_analytics/', {
     stone_id: 0,
     stone_category: selectedCategory.value,
     stone_color: selectedColor.value.name,
   })
+}
+
+const reset = () => {
+  currentSection.value = 'categories'
+  image.value = selectedImage.hover
 }
 </script>
 
@@ -184,18 +194,21 @@ const selectColor = async (stone: any) => {
                   </VRow>
                   <VRow>
                     <VCol
-                      v-for="(stone, index) in currentStone.colors"
+                      v-for="(color, index) in currentStone.colors"
                       :key="index"
                       style="position: relative; cursor: pointer;"
                       class="d-flex justify-center align-center"
-                      @click="selectColor(stone)"
+                      @click="selectColor(color)"
                     >
-                      <div style="position: absolute; z-index: 2; color: white;">
-                        <b>{{ stone.name }}</b>
+                      <div
+                        :class="{ 'selected-color': color.isSelected }"
+                        style="position: absolute; z-index: 2; "
+                      />
+                      <div style="position: absolute; z-index: 3; color: white;">
+                        <b>{{ color.name }}</b>
                       </div>
                       <VImg
-                        :src="stone.image"
-
+                        :src="color.image"
                         height="5rem"
                         cover
                         style="border-radius: 10px; min-inline-size:12rem"
@@ -207,17 +220,15 @@ const selectColor = async (stone: any) => {
               <VRow>
                 <VCol class="d-block gap-x-2 mt-5 justify-end d-md-flex">
                   <VBtn
+                    v-if="!(currentSection === 'categories')"
                     variant="outlined"
                     class="mt-2 mx-1"
-                    @click="saveWall('/visualizer')"
+                    @click="reset"
                   >
-                    Select Another wall
+                    Select Profile
                   </VBtn>
 
-                  <VBtn
-                    class="mt-2 mx-1"
-                    @click="saveWall('/visualizer/compare')"
-                  >
+                  <VBtn class="mt-2 mx-1">
                     Next
                   </VBtn>
                 </VCol>
@@ -269,5 +280,14 @@ section{
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% {transform: rotate(360deg) }
+}
+
+.selected-color {
+  border-radius: 10px;
+  background-color: rgba(26, 78, 25, 40%); /* Light white background for visibility */
+  block-size: 5rem;
+  inline-size: 100%;
+  min-inline-size:12rem;
+  text-align: center;
 }
 </style>
