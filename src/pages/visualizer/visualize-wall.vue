@@ -2,10 +2,10 @@
 import axiosIns from '@/plugins/axios'
 
 const loading = ref(false)
-const VisualizerReplaceWallRef = ref(null)
 const selectedImage = JSON.parse(sessionStorage.getItem('visualizeImage'))
 const image = ref(selectedImage.hover)
 const stones = ref([])
+const router = useRouter()
 
 const fetchStones = async () => {
   loading.value = true
@@ -99,6 +99,20 @@ const reset = () => {
   currentSection.value = 'categories'
   image.value = selectedImage.hover
 }
+
+const next = () => {
+  sessionStorage.setItem('processedImage', image.value)
+  sessionStorage.setItem('processedData', JSON.stringify({
+    category: sessionStorage.getItem('category'),
+    stones: [
+      {
+        profile: 'Aged Brick',
+        color: 'Aspen',
+      },
+    ],
+  }))
+  router.push('/visualizer/compare')
+}
 </script>
 
 <template>
@@ -164,8 +178,7 @@ const reset = () => {
                           style="
                           border-radius: 10px;
                           block-size: 5rem;
-                          inline-size: 18rem;
-                          min-inline-size: 12rem;
+                          inline-size: 15rem;
                           object-fit: cover;
                         "
                         >
@@ -194,7 +207,7 @@ const reset = () => {
                         Please choose only one stone color you want to apply on the wall.
                       </p>
                       <p class="text-body-2">
-                        <b>Selected Profile: </b>{{ selectedCategory ? selectedCategory : 'No Profile Selected' }}
+                        <b>Selected Stone Profile: </b>{{ selectedCategory ? selectedCategory : 'No Profile Selected' }}
                       </p>
                     </VCol>
                   </VRow>
@@ -218,9 +231,9 @@ const reset = () => {
                         style="
                           border-radius: 10px;
                           block-size: 5rem;
-                          inline-size: 18rem;
-                          min-inline-size: 12rem;
+                          inline-size: 15rem;
                           object-fit: cover;
+
                         "
                       >
                     </VCol>
@@ -235,10 +248,13 @@ const reset = () => {
                     class="mt-2 mx-1"
                     @click="reset"
                   >
-                    Select Profile
+                    Select Stone Profile
                   </VBtn>
 
-                  <VBtn class="mt-2 mx-1">
+                  <VBtn
+                    class="mt-2 mx-1"
+                    @click="next"
+                  >
                     Next
                   </VBtn>
                 </VCol>
@@ -299,7 +315,7 @@ section{
   border-radius: 10px;
   background-color: rgba(26, 78, 25, 60%); /* Light white background for visibility */
   block-size: 5rem;
-  inline-size: 18rem;
+  inline-size: 15rem;
   text-align: center;
 }
 </style>

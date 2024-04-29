@@ -1,71 +1,57 @@
 <script setup lang="ts">
-import localforage from 'localforage'
 import LoginPrompt from '@/layouts/components/LoginPrompt.vue'
 import AddToCollectionDialog from '@/layouts/components/visualizer/AddToCollectionDialog.vue'
 import axiosIns from '@/plugins/axios'
 
-const originalImage = ref()
-const visualizedImage = ref()
-const visualizerData = ref()
-const wallCoordinates = ref()
-const AddToCollectionDialogRef = ref()
+const AddToCollectionDialogRef = ref(null)
 const LoginPromptRef = ref(null)
+const originalImage = JSON.parse(sessionStorage.getItem('visualizeImage')).image
+const processedImage = sessionStorage.getItem('processedImage')
 
-const route = useRoute()
-const router = useRouter()
+function downloadImage(imageSrc: string, imageName: string) {
+  const downloadLink = document.createElement('a')
 
-const isUserLoggedIn = sessionStorage.getItem('id') !== null
-
-onMounted(async () => {
-  visualizerData.value = JSON.parse(await localforage.getItem('visualizerData'))
-
-  originalImage.value = visualizerData.value.raw_image
-  visualizedImage.value = JSON.parse(await localforage.getItem('visualizeImage')).image
-
-  wallCoordinates.value = JSON.parse(await localforage.getItem('visualizeImage')).wall_shape
-  await uploadToInfo()
-})
-
-const downloadimage = async () => {
-  const a = document.createElement('a')
-  const image = await localforage.getItem('visualizeImage')
-
-  a.href = JSON.parse(image).image
-  a.download = 'visualized_image.png'
-  document.body.appendChild(a)
-  a.click()
-  document.body.removeChild(a)
+  downloadLink.href = imageSrc
+  downloadLink.download = imageName
+  document.body.appendChild(downloadLink)
+  downloadLink.click()
+  document.body.removeChild(downloadLink)
 }
 
-const addToCollection = () => {
-  if (isUserLoggedIn)
-    AddToCollectionDialogRef.value.triggerShow()
-  else
-    LoginPromptRef.value.triggerDialog()
+const addToCollection = async () => {
+  try {
+    const response = await axiosIns.post('/visualizer/collections/', {
+      image: processedImage,
+      collection_name: 'NAME',
+      category: sessionStorage.getItem('category'),
+      stone: JSON.stringify(sessionStorage.getItem('processedData')),
+    })
+
+    console.log(response)
+  }
+  catch (e) {
+    console.log(e)
+  }
 }
 
-const viewCollection = () => {
-  if (isUserLoggedIn)
-    router.replace(route.query.to ? String(route.query.to) : '/collection')
-  else
-    LoginPromptRef.value.triggerDialog()
-}
+const shareImage = async () => {
+  if (!navigator.share) {
+    console.log('Web Share API not supported in this browser.')
 
-const uploadToInfo = async () => {
-  const info = JSON.parse(localStorage.getItem('uploadedInfo'))
+    return
+  }
 
-  // Convert base64 to Blob
-  const base64Response = await fetch(visualizedImage.value)
-  const blob = await base64Response.blob()
-
-  // Create FormData and append the file
-  const formData = new FormData()
-
-  formData.append('edited_image', blob, 'image.png')
-
-  const response = await axiosIns.put(`/viz-image/image/${info.id}/`, formData)
-
-  console.log(response.data)
+  try {
+    await navigator.share({
+      title: 'Visualized Image',
+      text: 'Check out this image!',
+      url: processedImage,
+    })
+    console.log('Image shared successfully!')
+  }
+  catch (error) {
+    console.error('Error sharing the image:', error)
+  }
 }
 </script>
 
@@ -81,7 +67,7 @@ const uploadToInfo = async () => {
             <div class="text-h6">
               ORIGINAL IMAGE
             </div>
-
+            <!-- ORIGINAL IMAGE -->
             <VImg :src="originalImage" />
           </VCol>
 
@@ -92,8 +78,8 @@ const uploadToInfo = async () => {
             <div class="text-h6">
               VISUALIZED IMAGE
             </div>
-
-            <VImg :src="visualizedImage" />
+            <!-- Visualized Image -->
+            <VImg :src="processedImage" />
           </VCol>
         </VRow>
 
@@ -112,15 +98,15 @@ const uploadToInfo = async () => {
                 variant="outlined"
                 density="compact"
                 class="mt-2 mx-1"
-                @click="downloadimage"
+                @click="downloadImage(processedImage, 'VisualizedImage.jpg')"
               >
                 Download
               </VBtn>
               <VBtn
                 variant="outlined"
                 density="compact"
-                disabled
                 class="mt-2 mx-1"
+                @click="shareImage"
               >
                 Share
               </VBtn>
@@ -136,10 +122,7 @@ const uploadToInfo = async () => {
                   Try Another Photo
                 </VBtn>
               </RouterLink>
-              <VBtn
-                class="mt-2 mx-1"
-                @click="viewCollection"
-              >
+              <VBtn class="mt-2 mx-1">
                 View Collection
               </VBtn>
             </div>

@@ -81,14 +81,14 @@ const convertImageToBase64 = imageUrl => {
   })
 }
 
-const goToVisualizer = async sampleImage => {
+const goToVisualizer = async (sampleImage, category) => {
   LoadingRef.value.triggerDialog(true)
   try {
     const toVisualize = { ...sampleImage }
 
     sessionStorage.setItem('visualizeImage', JSON.stringify(toVisualize))
-
-    router.replace(route.query.to ? String(route.query.to) : '/visualizer')
+    sessionStorage.setItem('category', category)
+    router.push('/visualizer')
   }
   catch (error) {
     console.error('Error in goToVisualizer:', error)
@@ -230,7 +230,7 @@ onMounted(async () => {
                   >
                     <div
                       class="image-mask image-container mx-auto"
-                      @click="goToVisualizer(i)"
+                      @click="goToVisualizer(i, 'interior')"
                     >
                       <VHover>
                         <template #default="{ isHovering }">
@@ -290,7 +290,7 @@ onMounted(async () => {
                       <template #default="{ isHovering, props }">
                         <div
                           class="image-mask image-container mx-auto"
-                          @click="goToVisualizer(i)"
+                          @click="goToVisualizer(i, 'exterior')"
                         >
                           <VCard>
                             <img
@@ -347,7 +347,7 @@ onMounted(async () => {
                   >
                     <div
                       class="image-mask image-container mx-auto"
-                      @click="goToMantleVisualizer(i)"
+                      @click="goToMantleVisualizer(i, 'mantel')"
                     >
                       <VHover>
                         <template #default="{ isHovering }">
