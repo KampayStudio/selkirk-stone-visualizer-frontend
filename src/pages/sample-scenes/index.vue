@@ -166,6 +166,7 @@ onMounted(async () => {
         <VBtn
           variant="outlined"
           :to="{ name: 'visualizer-upload' }"
+          disabled
         >
           Upload Photo
         </VBtn>

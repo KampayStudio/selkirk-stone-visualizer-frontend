@@ -1,14 +1,28 @@
 <script setup lang="ts">
 import LoginPrompt from '@/layouts/components/LoginPrompt.vue'
-import AddToCollectionDialog from '@/layouts/components/visualizer/AddToCollectionDialog.vue'
+import SnackBar from '@/layouts/components/SnackBar.vue'
 import axiosIns from '@/plugins/axios'
 
-const AddToCollectionDialogRef = ref(null)
+const router = useRouter()
 const LoginPromptRef = ref(null)
 const originalImage = JSON.parse(sessionStorage.getItem('visualizeImage')).image
 const processedImage = sessionStorage.getItem('processedImage')
+const addToCollectionLoading = ref(false)
+const SnackBarRef = ref()
+
+const checkIfLogin = () => {
+  if (sessionStorage.getItem('authToken'))
+    return true
+  else
+    LoginPromptRef.value.triggerDialog()
+
+  return false
+}
 
 function downloadImage(imageSrc: string, imageName: string) {
+  if (!checkIfLogin())
+    return
+
   const downloadLink = document.createElement('a')
 
   downloadLink.href = imageSrc
@@ -19,22 +33,33 @@ function downloadImage(imageSrc: string, imageName: string) {
 }
 
 const addToCollection = async () => {
+  addToCollectionLoading.value = true
+  if (!checkIfLogin())
+    return
   try {
     const response = await axiosIns.post('/visualizer/collections/', {
       image: processedImage,
+      user_id: sessionStorage.getItem('id'),
       collection_name: 'NAME',
       category: sessionStorage.getItem('category'),
-      stone: JSON.stringify(sessionStorage.getItem('processedData')),
+      stones: JSON.stringify(sessionStorage.getItem('processedData')),
     })
 
     console.log(response)
+    SnackBarRef.value.show('success', 'Added to collection')
   }
   catch (e) {
-    console.log(e)
+    console.log(e.response.data)
+    SnackBarRef.value.show('error', 'There is an error while adding to collection')
+  }
+  finally {
+    addToCollectionLoading.value = false
   }
 }
 
 const shareImage = async () => {
+  if (!checkIfLogin())
+    return
   if (!navigator.share) {
     console.log('Web Share API not supported in this browser.')
 
@@ -52,6 +77,13 @@ const shareImage = async () => {
   catch (error) {
     console.error('Error sharing the image:', error)
   }
+}
+
+const viewCollection = () => {
+  if (!checkIfLogin())
+    return
+
+  router.push('/collection')
 }
 </script>
 
@@ -90,6 +122,7 @@ const shareImage = async () => {
                 variant="outlined"
                 density="compact"
                 class="mt-2 mx-1"
+                :loading="addToCollectionLoading"
                 @click="addToCollection"
               >
                 Add to collection
@@ -122,7 +155,10 @@ const shareImage = async () => {
                   Try Another Photo
                 </VBtn>
               </RouterLink>
-              <VBtn class="mt-2 mx-1">
+              <VBtn
+                class="mt-2 mx-1"
+                @click="viewCollection"
+              >
                 View Collection
               </VBtn>
             </div>
@@ -130,9 +166,9 @@ const shareImage = async () => {
         </VRow>
       </VCardText>
     </VCard>
-    <AddToCollectionDialog ref="AddToCollectionDialogRef" />
 
     <LoginPrompt ref="LoginPromptRef" />
+    <SnackBar ref="SnackBarRef" />
   </div>
 </template>
 
