@@ -159,13 +159,16 @@ const reset = () => {
                         <div style="position: absolute; z-index: 2; color: white;">
                           <b>{{ stone.name }}</b>
                         </div>
-                        <VImg
+                        <img
                           :src="stone.image"
-
-                          height="5rem"
-                          cover
-                          style="border-radius: 10px; min-inline-size:12rem"
-                        />
+                          style="
+                          border-radius: 10px;
+                          block-size: 5rem;
+                          inline-size: 18rem;
+                          min-inline-size: 12rem;
+                          object-fit: cover;
+                        "
+                        >
                       </div>
                     </VCol>
                   </VRow>
@@ -190,6 +193,9 @@ const reset = () => {
                       <p class="text-body-2 mt-3">
                         Please choose only one stone color you want to apply on the wall.
                       </p>
+                      <p class="text-body-2">
+                        <b>Selected Profile: </b>{{ selectedCategory ? selectedCategory : 'No Profile Selected' }}
+                      </p>
                     </VCol>
                   </VRow>
                   <VRow>
@@ -200,19 +206,23 @@ const reset = () => {
                       class="d-flex justify-center align-center"
                       @click="selectColor(color)"
                     >
+                      <!-- <div style="position: absolute; z-index: 2;" /> -->
                       <div
                         :class="{ 'selected-color': color.isSelected }"
-                        style="position: absolute; z-index: 2; "
-                      />
-                      <div style="position: absolute; z-index: 3; color: white;">
+                        style="position: absolute; z-index: 3; color: white;"
+                      >
                         <b>{{ color.name }}</b>
                       </div>
-                      <VImg
+                      <img
                         :src="color.image"
-                        height="5rem"
-                        cover
-                        style="border-radius: 10px; min-inline-size:12rem"
-                      />
+                        style="
+                          border-radius: 10px;
+                          block-size: 5rem;
+                          inline-size: 18rem;
+                          min-inline-size: 12rem;
+                          object-fit: cover;
+                        "
+                      >
                     </VCol>
                   </VRow>
                 </div>
@@ -283,11 +293,13 @@ section{
 }
 
 .selected-color {
+  display: flex; /* Use flexbox to align items */
+  align-items: center; /* Center vertically */
+  justify-content: center; /* Center horizontally */
   border-radius: 10px;
-  background-color: rgba(26, 78, 25, 40%); /* Light white background for visibility */
+  background-color: rgba(26, 78, 25, 60%); /* Light white background for visibility */
   block-size: 5rem;
-  inline-size: 100%;
-  min-inline-size:12rem;
+  inline-size: 18rem;
   text-align: center;
 }
 </style>
