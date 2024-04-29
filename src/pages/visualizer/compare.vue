@@ -9,6 +9,8 @@ const originalImage = JSON.parse(sessionStorage.getItem('visualizeImage')).image
 const processedImage = sessionStorage.getItem('processedImage')
 const addToCollectionLoading = ref(false)
 const SnackBarRef = ref()
+const collectionName = ref('')
+const isDialogOpen = ref(false)
 
 const checkIfLogin = () => {
   if (sessionStorage.getItem('authToken'))
@@ -40,12 +42,14 @@ const addToCollection = async () => {
     const response = await axiosIns.post('/visualizer/collections/', {
       image: processedImage,
       user_id: sessionStorage.getItem('id'),
-      collection_name: 'NAME',
+      collection_name: collectionName.value,
       category: sessionStorage.getItem('category'),
       stones: JSON.stringify(sessionStorage.getItem('processedData')),
     })
 
     console.log(response)
+    isDialogOpen.value = false
+    collectionName.value = ''
     SnackBarRef.value.show('success', 'Added to collection')
   }
   catch (e) {
@@ -122,8 +126,8 @@ const viewCollection = () => {
                 variant="outlined"
                 density="compact"
                 class="mt-2 mx-1"
-                :loading="addToCollectionLoading"
-                @click="addToCollection"
+
+                @click="isDialogOpen = !isDialogOpen"
               >
                 Add to collection
               </VBtn>
@@ -169,6 +173,37 @@ const viewCollection = () => {
 
     <LoginPrompt ref="LoginPromptRef" />
     <SnackBar ref="SnackBarRef" />
+    <VDialog v-model="isDialogOpen">
+      <VCard
+        class="mx-auto"
+        title="Add to Collection"
+        style="min-inline-size: 15rem;"
+      >
+        <VCardText>
+          <VRow>
+            <VCol>
+              <VTextField
+                v-model="collectionName"
+                label="Collection Name"
+              />
+            </VCol>
+          </VRow>
+        </VCardText>
+        <VCardActions>
+          <VBtn @click="isDialogOpen = !isDialogOpen">
+            Cancel
+          </VBtn>
+          <VSpacer />
+          <VBtn
+            :disabled="collectionName.length === 0"
+            :loading="addToCollectionLoading"
+            @click="addToCollection"
+          >
+            Add
+          </VBtn>
+        </VCardActions>
+      </VCard>
+    </VDialog>
   </div>
 </template>
 

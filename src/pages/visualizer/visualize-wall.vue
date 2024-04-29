@@ -253,6 +253,7 @@ const next = () => {
 
                   <VBtn
                     class="mt-2 mx-1"
+                    :disabled="!selectedColor"
                     @click="next"
                   >
                     Next
