@@ -42,25 +42,12 @@ const shareImage = async () => {
   }
 
   try {
-    // Download the image from the URL
-    const response = await fetch(processedImage)
-    const blob = await response.blob()
-
-    // Create a temporary URL for the downloaded image (optional)
-    const temporaryURL = window.URL.createObjectURL(blob)
-
-    // Share the image using the Web Share API
     await navigator.share({
       title: 'Visualized Image',
       text: 'Check out this image!',
-      files: [blob], // Share the Blob object containing the image data
+      url: processedImage,
     })
-
     console.log('Image shared successfully!')
-
-    // Revoke the temporary URL if created (optional)
-    if (temporaryURL)
-      window.URL.revokeObjectURL(temporaryURL)
   }
   catch (error) {
     console.error('Error sharing the image:', error)
