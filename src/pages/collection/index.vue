@@ -70,37 +70,32 @@ const clearSelections = () => {
 
 const deleteSelectedItems = async () => {
   LoadingRef.value.triggerDialog(true)
-  if (selectedItems.value.interior || selectedItems.value.exterior || selectedItems.value.mantel) {
-    SnackBarRef.value.show('error', 'Please select a collection to be deleted')
-  }
-  else {
-    try {
-      for (const category of Object.keys(selectedItems.value)) {
-        const selectedCategoryItems = eval(category).value.filter(item => item.selected)
+  try {
+    for (const category of Object.keys(selectedItems.value)) {
+      const selectedCategoryItems = eval(category).value.filter(item => item.selected)
 
-        // Delete each selected item in the current category
-        for (const item of selectedCategoryItems) {
-          await axios.delete(`/visualizer/collections/${item.id}`)
+      // Delete each selected item in the current category
+      for (const item of selectedCategoryItems) {
+        await axios.delete(`/visualizer/collections/${item.id}`)
 
-          // Remove item from the front-end state
-          const index = eval(category).value.findIndex(i => i.id === item.id)
-          if (index !== -1)
-            eval(category).value.splice(index, 1)
-        }
+        // Remove item from the front-end state
+        const index = eval(category).value.findIndex(i => i.id === item.id)
+        if (index !== -1)
+          eval(category).value.splice(index, 1)
       }
+    }
 
-      // Clear selections after deletion
-      fetchCollection()
-      clearSelections()
-      SnackBarRef.value.show('success', 'Selected items have been successfully deleted.')
-    }
-    catch (error) {
-      console.error('Failed to delete selected items:', error)
-      SnackBarRef.value.show('error', 'Error deleting selected items. Please try again.')
-    }
-    finally {
-      LoadingRef.value.triggerDialog(false)
-    }
+    // Clear selections after deletion
+    fetchCollection()
+    clearSelections()
+    SnackBarRef.value.show('success', 'Selected items have been successfully deleted.')
+  }
+  catch (error) {
+    console.error('Failed to delete selected items:', error)
+    SnackBarRef.value.show('error', 'Error deleting selected items. Please try again.')
+  }
+  finally {
+    LoadingRef.value.triggerDialog(false)
   }
   LoadingRef.value.triggerDialog(false)
 }
