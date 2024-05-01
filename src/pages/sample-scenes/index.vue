@@ -162,7 +162,7 @@ onMounted(async () => {
                   style="justify-content: center;"
                 >
                   <VCol
-                    v-for="i in 12"
+                    v-for="i in 8"
                     :key="i"
                     class="text-center d-flex justify-center flex-column"
                     cols="12"
@@ -218,7 +218,7 @@ onMounted(async () => {
                   style="justify-content: center;"
                 >
                   <VCol
-                    v-for="i in 12"
+                    v-for="i in 8"
                     :key="i"
                     class="text-center d-flex justify-center flex-column"
                     cols="12"
@@ -279,7 +279,7 @@ onMounted(async () => {
                   style="justify-content: center;"
                 >
                   <VCol
-                    v-for="i in 12"
+                    v-for="i in 4"
                     :key="i"
                     class="text-center d-flex justify-center flex-column"
                     cols="12"
