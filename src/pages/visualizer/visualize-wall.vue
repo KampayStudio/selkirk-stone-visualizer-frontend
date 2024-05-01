@@ -6,6 +6,7 @@ const selectedImage = JSON.parse(sessionStorage.getItem('visualizeImage'))
 const image = ref(selectedImage.hover)
 const stones = ref([])
 const router = useRouter()
+const currentCategory = sessionStorage.getItem('category')
 
 const fetchStones = async () => {
   loading.value = true
@@ -22,8 +23,23 @@ const fetchStones = async () => {
   }
 }
 
+const fetchMantels = async () => {
+  loading.value = true
+  try {
+    const response = await axiosIns.get('/products/colors/')
+
+    stones.value = response.data.filter(item => item.product_parent_id === 2000)
+  }
+  catch (e) {
+    console.log(e)
+  }
+  finally {
+    loading.value = false
+  }
+}
+
 onMounted(() => {
-  fetchStones()
+  currentCategory === 'mantel' ? fetchMantels() : fetchStones()
 })
 
 const currentStone = ref()
@@ -47,32 +63,39 @@ const insightTrackEvent = (category, color, id) => {
 }
 
 const selectStone = async (stone: any) => {
-  currentStone.value = stone
-  currentSection.value = 'colors'
-  selectedCategory.value = stone.name
+  if (currentCategory === 'mantel') {
+    insightTrackEvent(selectedCategory.value, stone.name, stone.id)
+    selectedColor.value = stone.name
+
+    image.value = stone.image
+    changeImageMantel(stone.name)
+  }
+  else {
+    currentStone.value = stone
+    currentSection.value = 'colors'
+    selectedCategory.value = stone.name
+  }
+}
+
+const changeImageMantel = mantel => {
+  image.value = selectedImage.variants.colors.filter(item => item.color === mantel)[0].image
 }
 
 const changeImage = (category, color) => {
-  // Access the category using bracket notation since it's a variable
   const categoryVariants = selectedImage.variants[category]
 
-  // Ensure the category exists and has an array of variants
   if (categoryVariants) {
-    // Find the variant within the category array that matches the selected color
     const variant = categoryVariants.find(v => v.color.trim().toLowerCase() === color.trim().toLowerCase())
 
-    // If a matching variant is found, update the image source
     if (variant) {
       image.value = variant.image
       console.log('Image changed to:', variant.image)
     }
     else {
-      // If no matching variant is found
       console.log('No matching variant found for the color:', color)
     }
   }
   else {
-    // If the category does not exist in the variants object
     console.log('No such category found:', category)
   }
 }
@@ -153,10 +176,10 @@ const next = () => {
                         </h6>
                       </div>
                       <h1 class="text-h4">
-                        Choose Stone Profile
+                        {{ currentCategory === 'mantel' ? 'Choose Mantel Color' : ' Choose Stone Profile' }}
                       </h1>
                       <p class="text-body-2 mt-3">
-                        Please choose a stone profile you want to apply on the wall.
+                        Please choose a {{ currentCategory === 'mantel' ? 'mantel color' : ' stone profile' }}  you want to apply on the wall.
                       </p>
                     </VCol>
                   </VRow>

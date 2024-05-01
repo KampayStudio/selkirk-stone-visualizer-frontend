@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import localForage from 'localforage'
 import Loading from '@/layouts/components/Loading.vue'
 import axiosIns from '@/plugins/axios'
 
@@ -95,43 +94,6 @@ const goToVisualizer = async (sampleImage, category) => {
   }
   finally {
     LoadingRef.value.triggerDialog(false)
-  }
-}
-
-const goToMantleVisualizer = async sampleImage => {
-  try {
-    const toVisualize = ref({ ...sampleImage })
-
-    toVisualize.value.image = await convertImageToBase64(sampleImage.image)
-
-    // toVisualize.value.wall_shape.shapes = []
-    localForage.setItem('visualizeImage', JSON.stringify(toVisualize.value))
-    localForage.setItem('visualizedMantels', JSON.stringify(toVisualize.value))
-    console.log(toVisualize.value)
-
-    const visualizerData = ref({
-      dimensions: [],
-      raw_image: undefined,
-      current_wall_number: 0,
-    })
-
-    for (let i = 0; i < toVisualize.value.wall_shape.shapes.length; i++) {
-      visualizerData.value.dimensions.push({
-        area: 0,
-        height: 0,
-        width: 0,
-        stone_type: '',
-        stone_color: '',
-      })
-    }
-    visualizerData.value.raw_image = toVisualize.value.image
-    visualizerData.value.current_wall_number = 0
-    localForage.setItem('visualizerData', JSON.stringify(visualizerData.value))
-
-    router.replace(route.query.to ? String(route.query.to) : '/visualizer/mantel')
-  }
-  catch (error) {
-    console.error('Visualizer:', error)
   }
 }
 
@@ -348,7 +310,7 @@ onMounted(async () => {
                   >
                     <div
                       class="image-mask image-container mx-auto"
-                      @click="goToMantleVisualizer(i, 'mantel')"
+                      @click="goToVisualizer(i, 'mantel')"
                     >
                       <VHover>
                         <template #default="{ isHovering }">
