@@ -132,7 +132,7 @@ const deleteAllWalls = () => {
 
 const apply = () => {
   localForage.setItem('visualizeImage', JSON.stringify(props.image))
-  router.replace(route.query.to ? String(route.query.to) : '/visualizer')
+  router.replace(route.query.to ? String(route.query.to) : '/manual-visualizer')
 }
 
 const drawLines = () => {

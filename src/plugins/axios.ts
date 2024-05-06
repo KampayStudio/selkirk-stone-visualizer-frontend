@@ -7,7 +7,7 @@ const axiosIns = axios.create({
   baseURL: 'https://api.selkirkstone.app/api',
 
   // timeout: 1000,
-  // headers: {'X-Custom-Header': 'foobar'}
+  headers: { 'Access-Control-Allow-Origin': '*' },
 })
 
 // ℹ️ Add request interceptor to send the authorization header on each subsequent request after login

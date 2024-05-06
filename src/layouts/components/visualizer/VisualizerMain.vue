@@ -82,15 +82,15 @@ onMounted(() => {
 })
 
 const wallClicked = async (shape, index) => {
-  isLoadingOpen.value = !isLoadingOpen.value
+  isLoadingOpen.value = true
   localForage.setItem('selectedWall', JSON.stringify(shape))
 
   const visualizerData = ref(JSON.parse(await localForage.getItem('visualizerData')))
 
   visualizerData.value.current_wall_number = index
   localForage.setItem('visualizerData', JSON.stringify(visualizerData.value))
-  isLoadingOpen.value = !isLoadingOpen.value
-  router.replace(route.query.to ? String(route.query.to) : '/visualizer/visualize-wall')
+  isLoadingOpen.value = false
+  router.replace(route.query.to ? String(route.query.to) : '/manual-visualizer/visualize-wall')
 }
 </script>
 

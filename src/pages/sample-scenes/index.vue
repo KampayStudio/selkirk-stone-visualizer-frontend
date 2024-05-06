@@ -127,8 +127,7 @@ onMounted(async () => {
       <VCol>
         <VBtn
           variant="outlined"
-          :to="{ name: 'visualizer-upload' }"
-          disabled
+          to="/manual-visualizer/upload"
         >
           Upload Photo
         </VBtn>

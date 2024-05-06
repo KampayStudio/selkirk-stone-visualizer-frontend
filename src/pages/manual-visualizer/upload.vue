@@ -94,7 +94,7 @@ const goToVisualizer = async sampleImage => {
 
     localForage.setItem('visualizerData', JSON.stringify(visualizerData))
 
-    router.replace(route.query.to ? String(route.query.to) : '/visualizer')
+    router.replace(route.query.to ? String(route.query.to) : '/manual-visualizer')
   }
   catch (error) {
     console.error('Error in goToVisualizer:', error)
