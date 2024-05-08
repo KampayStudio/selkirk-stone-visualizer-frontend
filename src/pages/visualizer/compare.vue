@@ -11,6 +11,8 @@ const addToCollectionLoading = ref(false)
 const SnackBarRef = ref()
 const collectionName = ref('')
 const isDialogOpen = ref(false)
+const originalImageLoading = ref(true)
+const visualizedImageLoading = ref(true)
 
 const checkIfLogin = () => {
   if (sessionStorage.getItem('authToken'))
@@ -104,7 +106,19 @@ const viewCollection = () => {
               ORIGINAL IMAGE
             </div>
             <!-- ORIGINAL IMAGE -->
-            <VImg :src="originalImage" />
+            <div
+              v-if="originalImageLoading"
+              class="image-loader"
+            >
+              <VProgressCircular
+                indeterminate
+                color="primary"
+              />
+            </div>
+            <VImg
+              :src="originalImage"
+              @load="originalImageLoading = false"
+            />
           </VCol>
 
           <VCol
@@ -115,7 +129,19 @@ const viewCollection = () => {
               VISUALIZED IMAGE
             </div>
             <!-- Visualized Image -->
-            <VImg :src="processedImage" />
+            <div
+              v-if="visualizedImageLoading"
+              class="image-loader"
+            >
+              <VProgressCircular
+                indeterminate
+                color="primary"
+              />
+            </div>
+            <VImg
+              :src="processedImage"
+              @load="visualizedImageLoading = false"
+            />
           </VCol>
         </VRow>
 

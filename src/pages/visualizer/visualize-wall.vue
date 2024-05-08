@@ -7,6 +7,12 @@ const image = ref(selectedImage.hover)
 const stones = ref([])
 const router = useRouter()
 const currentCategory = sessionStorage.getItem('category')
+const visualizedImageLoading = ref(true)
+
+watch(image, (newValue, oldValue) => {
+  if (newValue !== oldValue)
+    visualizedImageLoading.value = true
+})
 
 const fetchStones = async () => {
   loading.value = true
@@ -146,11 +152,21 @@ const next = () => {
           <VCol
             cols="12"
             md="8"
-            class="d-flex align-center justify-center"
+            class="d-flex justify-center"
           >
+            <div
+              v-if="visualizedImageLoading"
+              class="d-flex align-center justify-center w-100"
+            >
+              <VProgressCircular
+                indeterminate
+                color="primary"
+              />
+            </div>
             <VImg
               :src="image"
               style="max-block-size: 75vh;"
+              @load="visualizedImageLoading = false"
             />
           </VCol>
           <VCol
@@ -183,7 +199,7 @@ const next = () => {
                       </p>
                     </VCol>
                   </VRow>
-                  <VRow>
+                  <VRow style="max-block-size: 60vh; overflow-y: scroll;">
                     <VCol
                       v-for="(stone, index) in stones"
                       :key="index"
@@ -234,7 +250,7 @@ const next = () => {
                       </p>
                     </VCol>
                   </VRow>
-                  <VRow>
+                  <VRow style="max-block-size: 60vh; overflow-y: scroll;">
                     <VCol
                       v-for="(color, index) in currentStone.colors"
                       :key="index"
