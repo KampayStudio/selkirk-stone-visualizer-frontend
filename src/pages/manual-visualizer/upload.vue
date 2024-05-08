@@ -151,7 +151,11 @@ const onFileChange = async event => {
   if (event.target.files.length > 0) {
     const selectedFile = event.target.files[0]
 
-    await uploadToServer(selectedFile)
+    const uploadResponse = await uploadToServer(selectedFile)
+
+    sessionStorage.setItem('visualizeImage', JSON.stringify({ image: uploadResponse.raw_image }))
+    sessionStorage.setItem('category', selectionGroup.value)
+
     await uploadImage(selectedFile)
   }
   isLoadingOpen.value = false

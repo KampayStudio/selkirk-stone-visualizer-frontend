@@ -29,7 +29,7 @@ onMounted(() => {
 
 const currentStone = ref()
 const currentSection = ref('categories')
-const selectedColor = ref()
+const selectedColor = ref(null)
 const selectedCategory = ref()
 const rotation = ref(0)
 const translationX = ref(0)
@@ -65,8 +65,6 @@ const insightTrackEvent = (category, color, id) => {
 
 async function convertImageToBase64(imageUrl) {
   try {
-    console.log(imageUrl)
-
     const response = await fetch(imageUrl)
     if (!response.ok)
       throw new Error(`HTTP error! status: ${response.status}`)
@@ -77,7 +75,6 @@ async function convertImageToBase64(imageUrl) {
       const reader = new FileReader()
 
       reader.onloadend = () => {
-        console.log('Base64 conversion successful:', reader.result)
         resolve(reader.result)
       }
       reader.onerror = reject
@@ -405,14 +402,19 @@ const reset = () => {
                   <VBtn
                     variant="outlined"
                     class="mt-2 mx-1"
-                    @click="saveWall('/visualizer')"
+                    @click="saveWall('/manual-visualizer')"
                   >
                     Select Another wall
                   </VBtn>
 
                   <VBtn
                     class="mt-2 mx-1"
-                    @click="saveWall('/visualizer/compare')"
+                    :loading="loading"
+                    :disabled="selectedColor == null"
+                    @click="() => {
+                      loading = true
+                      VisualizerReplaceWallRef.next(selectedCategory, selectedColor)
+                    }"
                   >
                     Next
                   </VBtn>

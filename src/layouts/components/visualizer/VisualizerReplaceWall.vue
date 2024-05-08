@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import fx from '@/plugins/glfx.js'
 import * as cv from '@techstark/opencv-js'
 import localForage from 'localforage'
+import fx from '@/plugins/glfx.js'
+import axios from '@axios'
 
 const props = defineProps<{
   selectedColor?: object
@@ -12,6 +13,7 @@ const props = defineProps<{
   setDefaultTileSize?: Function
 }>()
 
+const router = useRouter()
 const { selectedColor, rotation, translationX, translationY, tileSize, setDefaultTileSize } = toRefs(props)
 const imageRef = ref(null)
 const wallImageRef = ref(null)
@@ -21,6 +23,7 @@ const scaledShape = ref(null)
 const positionedShape = ref(null)
 const fxCanvas = ref({ canvas: null, texture: null, selectedColor: null, translationX: 0, rotation: 0, tileSize: 2 })
 const canvasRefs = ref(null)
+const imageSave = ref()
 
 const getShapeSize = shape => {
   const minX = Math.min(...shape.map(p => p.x))
@@ -89,6 +92,7 @@ const saveWall = async () => {
   const imageData = storedImage ? JSON.parse(storedImage) : {}
 
   imageData.image = imageRef.value.src
+  imageSave.value = imageData.image
   localForage.setItem('visualizeImage', JSON.stringify(imageData))
     .catch(error => console.error('Error saving image:', error))
 }
@@ -312,7 +316,48 @@ onMounted(async () => {
   }
 })
 
-defineExpose({ changeWall, saveWall })
+const next = async (selectedProfile, selectedColor) => {
+  try {
+    await saveWall()
+    if (!imageSave.value)
+      throw new Error('No saved image data available.')
+
+    const base64Content = imageSave.value.split(';base64,').pop()
+    if (!base64Content)
+      throw new Error('Invalid image data.')
+
+    // Convert base64 string to a Blob
+    const blob = await (await fetch(`data:image/jpeg;base64,${base64Content}`)).blob()
+    const formData = new FormData()
+
+    formData.append('image', blob, 'image.jpg')
+
+    // Make the API call to upload the image
+    const response = await axios.post('/image-uploader/images/', formData)
+
+    // After successful upload, store the image URL or data received from server response
+    sessionStorage.setItem('processedImage', response.data.image)
+
+    // Store additional data if necessary
+    sessionStorage.setItem('processedData', JSON.stringify({
+      category: sessionStorage.getItem('category'),
+      stones: [
+        {
+          profile: selectedProfile,
+          color: selectedColor,
+        },
+      ],
+    }))
+
+    // Navigate to the next route after successful operations
+    router.push('/visualizer/compare')
+  }
+  catch (error) {
+    console.error('Error processing the next function:', error)
+  }
+}
+
+defineExpose({ changeWall, saveWall, next })
 </script>
 
 <template>

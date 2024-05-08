@@ -129,8 +129,8 @@ const next = () => {
     category: sessionStorage.getItem('category'),
     stones: [
       {
-        profile: 'Aged Brick',
-        color: 'Aspen',
+        profile: selectedCategory.value,
+        color: selectedColor.value,
       },
     ],
   }))

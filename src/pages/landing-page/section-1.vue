@@ -83,7 +83,7 @@ onMounted(() => {
               </VBtn>
               <VBtn
                 variant="outlined"
-                :to="{ name: 'visualizer-upload' }"
+                :to="{ name: 'manual-visualizer-upload' }"
               >
                 Upload a photo
               </VBtn>
