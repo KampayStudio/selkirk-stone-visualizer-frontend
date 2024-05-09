@@ -29,6 +29,13 @@ const uploadImage = async selectedFile => {
 
   reader.onload = async e => {
     const selectionConfig = apiConfig[selectionGroup.value]
+    const imageBase64 = e.target.result.split(',')[1]
+
+    if (selectionGroup.value === 'mantle') {
+      router.push('/manual-visualizer/mantel')
+
+      return
+    }
 
     if (!selectionConfig || !selectionConfig.url) {
       console.log(`${selectionGroup.value} is not yet available`)
@@ -37,8 +44,6 @@ const uploadImage = async selectedFile => {
     }
 
     isLoadingOpen.value = true
-
-    const imageBase64 = e.target.result.split(',')[1]
 
     try {
       const response = await axios({

@@ -74,7 +74,9 @@ const drawShapes = () => {
 onMounted(async () => {
   LoadingRef.value.triggerDialog(true)
   try {
-    const storedImage = await localForage.getItem('visualizeImage')
+    const storedImage = sessionStorage.getItem('visualizeImage')
+
+    console.log(storedImage)
     if (storedImage) {
       image.value = JSON.parse(storedImage)
       preview.value = image.value.image // Set original image URL
@@ -314,7 +316,48 @@ const saveMantel = async () => {
     .catch(error => console.error('Error saving image:', error))
 }
 
-defineExpose({ loadMantelColor, saveMantel })
+const next = async selectedMantel => {
+  try {
+    await saveMantel()
+    if (!image.value.image)
+      throw new Error('No saved image data available.')
+
+    const base64Content = image.value.image.split(';base64,').pop()
+    if (!base64Content)
+      throw new Error('Invalid image data.')
+
+    // Convert base64 string to a Blob
+    const blob = await (await fetch(`data:image/jpeg;base64,${base64Content}`)).blob()
+    const formData = new FormData()
+
+    formData.append('image', blob, 'image.jpg')
+
+    // Make the API call to upload the image
+    const response = await axios.post('/image-uploader/images/', formData)
+
+    // After successful upload, store the image URL or data received from server response
+    sessionStorage.setItem('processedImage', response.data.image)
+
+    // Store additional data if necessary
+    sessionStorage.setItem('processedData', JSON.stringify({
+      category: sessionStorage.getItem('category'),
+      stones: [
+        {
+          profile: selectedMantel,
+          color: 'null',
+        },
+      ],
+    }))
+
+    // Navigate to the next route after successful operations
+    router.push('/visualizer/compare')
+  }
+  catch (error) {
+    console.error('Error processing the next function:', error)
+  }
+}
+
+defineExpose({ loadMantelColor, saveMantel, next })
 </script>
 
 <template>

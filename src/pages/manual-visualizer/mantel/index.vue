@@ -9,7 +9,8 @@ const mantels = ref()
 
 onMounted(async () => {
   try {
-    const storedImage = await localForage.getItem('visualizeImage')
+    const storedImage = sessionStorage.getItem('visualizeImage')
+
     const mantelsAnnot = await localForage.getItem('visualizedMantels')
     if (storedImage) {
       try {

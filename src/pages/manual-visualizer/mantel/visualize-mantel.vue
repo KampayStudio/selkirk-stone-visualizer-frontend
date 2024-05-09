@@ -129,7 +129,10 @@ const saveMantel = async routeTo => {
 
                 <VBtn
                   class="mt-2 mx-1"
-                  @click="saveMantel('/visualizer/compare')"
+                  @click="() => {
+                    isLoadingOpen = true
+                    VisualizerReplaceWallRef.next(selectedColor)
+                  }"
                 >
                   Next
                 </VBtn>
