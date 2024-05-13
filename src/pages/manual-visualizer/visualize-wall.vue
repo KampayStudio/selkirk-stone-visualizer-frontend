@@ -105,7 +105,7 @@ const selectColor = async (stone: any) => {
 
   isLoadingOpen.value = false
 
-  const response = await axiosIns.post('https://selkirkappapi.azurewebsites.net/api/analytics/product_analytics/', {
+  const response = await axiosIns.post('https://selkirkappapi-staging.azurewebsites.net/api/analytics/product_analytics/', {
     stone_id: 0,
     stone_category: selectedCategory.value,
     stone_color: selectedColor.value.name,
