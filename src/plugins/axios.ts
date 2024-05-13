@@ -4,7 +4,7 @@ const axiosIns = axios.create({
   // You can add your headers here
   // ================================
   // baseURL: 'https://selkirkistonesapi.azurewebsites.net/api',
-  baseURL: 'https://api.selkirkstone.app/api',
+  baseURL: 'https://selkirkappapi-staging.azurewebsites.net/api',
 
   // timeout: 1000,
   headers: { 'Access-Control-Allow-Origin': '*' },
