@@ -326,7 +326,7 @@ const next = async (selectedProfile, selectedColor) => {
     if (!base64Content)
       throw new Error('Invalid image data.')
 
-    // Convert base64 string to a Blob
+    // Convert base64 string to a Blob.
     const blob = await (await fetch(`data:image/jpeg;base64,${base64Content}`)).blob()
     const formData = new FormData()
 
