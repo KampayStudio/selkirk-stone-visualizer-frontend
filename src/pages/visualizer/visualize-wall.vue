@@ -68,13 +68,37 @@ const insightTrackEvent = (category, color, id) => {
   app_insights.trackEvent(event)
 }
 
-const selectStone = async (stone: any) => {
-  if (currentCategory === 'mantel') {
-    insightTrackEvent(selectedCategory.value, stone.name, stone.id)
-    selectedColor.value = stone.name
+// const selectStone = async (stone: any) => {
+//   if (currentCategory === 'mantel') {
+//     insightTrackEvent(selectedCategory.value, stone.name, stone.id)
+//     selectedColor.value = stone.name
 
+//     image.value = stone.image
+//     changeImageMantel(stone.name)
+//   }
+//   else {
+//     currentStone.value = stone
+//     currentSection.value = 'colors'
+//     selectedCategory.value = stone.name
+//   }
+// }
+
+const selectStone = async stone => {
+  // Reset isSelected for all stones/mantels
+  stones.value.forEach(s => {
+    if (s.isSelected)
+      s.isSelected = false
+  })
+
+  // Set isSelected for the selected stone/mantel
+  stone.isSelected = true
+
+  if (currentCategory === 'mantel') {
+    selectedColor.value = stone.name
     image.value = stone.image
+    selectedCategory.value = stone.name
     changeImageMantel(stone.name)
+    insightTrackEvent(selectedCategory.value, stone.name, stone.id)
   }
   else {
     currentStone.value = stone
@@ -85,6 +109,7 @@ const selectStone = async (stone: any) => {
 
 const changeImageMantel = mantel => {
   image.value = selectedImage.variants.colors.filter(item => item.color === mantel)[0].image
+  console.log('Image changed to:', mantel)
 }
 
 const changeImage = (category, color) => {
@@ -205,20 +230,24 @@ const next = () => {
                       :key="index"
                     >
                       <div
+                        id="stone"
                         style="position: relative; cursor: pointer;"
                         class="d-flex justify-center align-center"
                         @click="selectStone(stone)"
                       >
-                        <div style="position: absolute; z-index: 2; color: white;">
+                        <div
+                          style="position: absolute; z-index: 2; color: white;"
+                          :class="{ 'selected-color': stone.isSelected }"
+                        >
                           <b>{{ stone.name }}</b>
                         </div>
                         <img
                           :src="stone.image"
                           style="
-                          border-radius: 10px;
-                          block-size: 5rem;
-                          inline-size: 15rem;
-                          object-fit: cover;
+                        border-radius: 10px;
+                        block-size: 5rem;
+                        inline-size: 15rem;
+                        object-fit: cover;
                         "
                         >
                       </div>
@@ -253,6 +282,7 @@ const next = () => {
                   <VRow style="max-block-size: 60vh; overflow-y: scroll;">
                     <VCol
                       v-for="(color, index) in currentStone.colors"
+
                       :key="index"
                       style="position: relative; cursor: pointer;"
                       class="d-flex justify-center align-center"
@@ -260,6 +290,7 @@ const next = () => {
                     >
                       <!-- <div style="position: absolute; z-index: 2;" /> -->
                       <div
+                        id="color"
                         :class="{ 'selected-color': color.isSelected }"
                         style="position: absolute; z-index: 3; color: white;"
                       >
