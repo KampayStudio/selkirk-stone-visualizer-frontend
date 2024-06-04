@@ -34,7 +34,7 @@ const fetchMantels = async () => {
   try {
     const response = await axiosIns.get('/products/colors/')
 
-    stones.value = response.data.filter(item => item.product_parent_id === 2000)
+    stones.value = response.data.filter(item => item.product_parent_id === 5)
   }
   catch (e) {
     console.log(e)
