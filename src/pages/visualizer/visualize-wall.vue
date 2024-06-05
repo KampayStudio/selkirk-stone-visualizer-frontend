@@ -19,7 +19,7 @@ const fetchStones = async () => {
   try {
     const response = await axiosIns.get('/products/products/')
 
-    stones.value = response.data
+    stones.value = (response.data).sort((a, b) => a.name.localeCompare(b.name))
   }
   catch (e) {
     console.log(e)
@@ -34,7 +34,9 @@ const fetchMantels = async () => {
   try {
     const response = await axiosIns.get('/products/colors/')
 
-    stones.value = response.data.filter(item => item.product_parent_id === 2000)
+    stones.value = response.data
+      .filter(item => item.product_parent_id === 2000)
+      .sort((a, b) => a.name.localeCompare(b.name))
   }
   catch (e) {
     console.log(e)
@@ -67,21 +69,6 @@ const insightTrackEvent = (category, color, id) => {
   console.log('sent')
   app_insights.trackEvent(event)
 }
-
-// const selectStone = async (stone: any) => {
-//   if (currentCategory === 'mantel') {
-//     insightTrackEvent(selectedCategory.value, stone.name, stone.id)
-//     selectedColor.value = stone.name
-
-//     image.value = stone.image
-//     changeImageMantel(stone.name)
-//   }
-//   else {
-//     currentStone.value = stone
-//     currentSection.value = 'colors'
-//     selectedCategory.value = stone.name
-//   }
-// }
 
 const selectStone = async stone => {
   // Reset isSelected for all stones/mantels
