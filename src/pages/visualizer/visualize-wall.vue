@@ -129,7 +129,7 @@ const selectColor = async (color: any) => {
   selectedColor.value = color.name
   changeImage(selectedCategory.value, color.name)
 
-  const response = await axiosIns.post('https://selkirkappapi-staging.azurewebsites.net/api/analytics/product_analytics/', {
+  const response = await axiosIns.post('https://api.selkirkstone.app/api/analytics/product_analytics/', {
     stone_id: 0,
     stone_category: selectedCategory.value,
     stone_color: selectedColor.value.name,

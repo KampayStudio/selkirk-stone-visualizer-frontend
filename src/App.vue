@@ -15,7 +15,7 @@ syncConfigThemeWithVuetifyTheme()
 handleSkinChanges()
 
 onMounted(async () => {
-  const response = await axiosIns.get('https://selkirkappapi-staging.azurewebsites.net/api/analytics/get-client-info/')
+  const response = await axiosIns.get('https://api.selkirkstone.app/api/analytics/get-client-info/')
 
   console.log(response)
 })
