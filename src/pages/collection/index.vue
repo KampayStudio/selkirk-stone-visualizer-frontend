@@ -144,6 +144,7 @@ const selectAll = category => {
             Try Sample Scenes
           </VBtn>
           <VBtn
+            variant="outlined"
             size="small"
             to="/manual-visualizer/upload"
           >
