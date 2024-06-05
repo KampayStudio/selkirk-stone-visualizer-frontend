@@ -172,7 +172,7 @@ const next = () => {
 <template>
   <section>
     <VCard :loading="loading">
-      <VCardText>
+      <VCardText style="block-size: 1200px;">
         <VRow>
           <VCol
             cols="12"
@@ -191,6 +191,7 @@ const next = () => {
             <VImg
               :src="image"
               style="max-block-size: 75vh;"
+
               @load="visualizedImageLoading = false"
             />
           </VCol>
