@@ -137,10 +137,16 @@ const selectAll = category => {
         style="justify-content: end;"
       >
         <div class="d-flex gap-x-2 my-auto">
-          <VBtn size="small">
+          <VBtn
+            size="small"
+            to="/sample-scenes"
+          >
             Try Sample Scenes
           </VBtn>
-          <VBtn size="small">
+          <VBtn
+            size="small"
+            to="/manual-visualizer/upload"
+          >
             Upload Photo
           </VBtn>
         </div>
