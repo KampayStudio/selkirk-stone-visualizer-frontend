@@ -145,7 +145,7 @@ onMounted(async () => {
                 Interior
               </VTab>
               <VTab value="mantle">
-                Non-Combustible Mantel
+                Non-Combustible Mantels
               </VTab>
             </VTabs>
             <VWindow v-model="selectedSection">
