@@ -34,7 +34,7 @@ const selectedCategory = ref()
 const rotation = ref(0)
 const translationX = ref(0)
 const translationY = ref(0)
-const tileSize = ref(3)
+const tileSize = ref(1)
 const isLoadingOpen = ref(false)
 
 const changeWall = () => {
@@ -126,7 +126,7 @@ const saveWall = async routeTo => {
   router.replace(routeTo)
 }
 
-let defaultTileSize = 3
+let defaultTileSize = 1
 
 const setDefaultTileSize = value => {
   defaultTileSize = value
@@ -250,7 +250,7 @@ const reset = () => {
                         <b>{{ stone.name }}</b>
                       </div>
                       <VImg
-                        :src="stone.image"
+                        :src="stone.image_thumbnail"
 
                         height="5rem"
                         cover

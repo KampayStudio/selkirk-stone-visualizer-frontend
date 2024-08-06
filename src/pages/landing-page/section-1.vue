@@ -86,6 +86,10 @@ onMounted(() => {
                 :to="{ name: 'manual-visualizer-upload' }"
               >
                 Upload a photo
+                <VBadge
+                  id="beta-badge"
+                  content="BETA"
+                />
               </VBtn>
             </div>
           </VCardText>
@@ -97,6 +101,16 @@ onMounted(() => {
 </template>
 
 <style lang="scss">
+#beta-badge {
+  position: absolute;
+  inset-block-start: calc(50% - 2px);
+  inset-inline-end: 0;
+}
+
+#beta-badge .v-badge__badge {
+  border-radius: 4px;
+}
+
 #dummy{
   display:none;
 

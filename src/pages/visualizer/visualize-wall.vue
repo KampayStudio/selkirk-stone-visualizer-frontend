@@ -285,7 +285,7 @@ const next = () => {
                         <b>{{ color.name }}</b>
                       </div>
                       <img
-                        :src="color.image"
+                        :src="color.image_thumbnail"
                         style="
                           border-radius: 10px;
                           block-size: 5rem;

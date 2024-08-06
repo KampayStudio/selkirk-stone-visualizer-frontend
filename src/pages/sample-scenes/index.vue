@@ -130,6 +130,10 @@ onMounted(async () => {
           to="/manual-visualizer/upload"
         >
           Upload Photo
+          <VBadge
+            id="beta-badge"
+            content="BETA"
+          />
         </VBtn>
       </VCol>
     </VRow>
@@ -331,6 +335,16 @@ onMounted(async () => {
 </template>
 
 <style lang="scss">
+#beta-badge {
+  position: absolute;
+  inset-block-start: calc(50% - 2px);
+  inset-inline-end: 0;
+}
+
+#beta-badge .v-badge__badge {
+  border-radius: 4px;
+}
+
 .max-section-width {
   margin-inline: auto;
   max-inline-size: 1440px;
