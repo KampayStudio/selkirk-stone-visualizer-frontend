@@ -304,7 +304,7 @@ onMounted(async () => {
       wallImageRef.value.style.marginLeft = `${-shapeSize.allowanceWidth}px`
       wallImageRef.value.style.marginTop = `${-shapeSize.allowanceHeight}px`
 
-      setDefaultTileSize.value(Math.round(Math.min(25, (imageRef.value.naturalWidth / shapeSize.width), (imageRef.value.naturalHeight / shapeSize.height)) + 3, 0))
+      // setDefaultTileSize.value(Math.round(Math.min(25, (imageRef.value.naturalWidth / shapeSize.width), (imageRef.value.naturalHeight / shapeSize.height)) + 3, 0))
     }
 
     fxCanvas.value.canvas = fx.canvas()

@@ -1,13 +1,13 @@
 <script setup lang="ts">
+import { default as axios, default as axiosIns } from '@axios'
 import localForage from 'localforage'
 import { ref } from 'vue'
-import { default as axios, default as axiosIns } from '@axios'
 
 const route = useRoute()
 const router = useRouter()
 
 const fileInput = ref(null)
-const selectionGroup = ref('interior')
+const selectionGroup = ref('exterior')
 const isLoadingOpen = ref(false)
 
 // Assuming convertImageToBase64 and other helper functions are already defined
@@ -181,9 +181,17 @@ const openFileDialog = () => {
       >
         <h3 class="text-h3 text-primary">
           Upload Photo
+          <VChip
+            id="beta-chip"
+            color="primary"
+            variant="flat"
+            label
+          >
+            BETA
+          </VChip>
         </h3>
         <p class="text-body-2">
-          Upload your own project image and our advanced A.I. technology will  process it, enabling you to visualize our range of high-quality manufactured stone and brick veneers
+          Upload your own project image and our A.I. technology (Beta version) will process the wall detection and can enable you to visualize our range of high-quality manufactured stone and brick veneers. Please be advised that we are still improving this feature and the wall detection of your project might not be perfect.
         </p>
       </VCol>
     </VRow>
@@ -208,18 +216,18 @@ const openFileDialog = () => {
             inline
           >
             <VRadio
-              key="interior"
-              label="Interior"
-              value="interior"
-            />
-            <VRadio
               key="exterior"
               label="Exterior"
               value="exterior"
             />
             <VRadio
+              key="interior"
+              label="Interior"
+              value="interior"
+            />
+            <VRadio
               key="mantle"
-              label="Non-Combustible Mantle"
+              label="Non-Combustible Mantel"
               value="mantle"
             />
           </VRadioGroup>
@@ -286,7 +294,7 @@ const openFileDialog = () => {
             Image Uploading...
           </h6>
           <p class="body-text-2">
-            Your uploaded image is being processed with our AI technology. Get ready to visualize your scene! Our AI detects the walls, enabling you to customize your interior or exterior
+            Your uploaded image is being processed with our technology. Please be advised that we are still improving this feature and the wall detection of your project might not be perfect.
           </p>
         </VCardText>
       </VCard>

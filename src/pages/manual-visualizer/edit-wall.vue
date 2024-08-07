@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import localForage from 'localforage'
 import VisualizerEditMain from '@/layouts/components/visualizer/VisualizerEditMain.vue'
+import localForage from 'localforage'
 
 const image = ref()
 const VisualizerEditMainRef = ref(undefined)
@@ -8,6 +8,7 @@ const wallNumber = ref(undefined)
 const isDraw = ref(false)
 
 const isDeleteAllDialogShow = ref(false)
+const isDialogOpen = ref(false)
 
 const assignWall = index => {
   wallNumber.value = index
@@ -35,6 +36,10 @@ onMounted(async () => {
     console.error('Error fetching image from localForage:', e)
   }
 })
+
+const toggleDialog = () => {
+  isDialogOpen.value = !isDialogOpen.value
+}
 </script>
 
 <template>
@@ -76,6 +81,12 @@ onMounted(async () => {
                 </div>
               </div>
             </div>
+            <VBtn
+              variant="outlined"
+              @click="toggleDialog"
+            >
+              Get Help
+            </VBtn>
           </div>
           <!-- Top Buttons -->
           <div class="d-block gap-x-3 d-lg-flex">
@@ -190,6 +201,36 @@ onMounted(async () => {
             Cancel
           </VBtn>
         </VCardActions>
+      </VCard>
+    </VDialog>
+
+    <VDialog v-model="isDialogOpen">
+      <VCard
+        max-width="1255"
+        min-width="300"
+        class="mx-auto w-100"
+      >
+        <VCardTitle class="d-flex justify-space-between align-center">
+          <div class="text-h5 text-medium-emphasis ps-2">
+            Get Help
+          </div>
+
+          <VBtn
+            icon="mdi-close"
+            variant="text"
+            @click="toggleDialog"
+          />
+        </VCardTitle>
+        <iframe
+          width="1255"
+          height="706"
+          src="https://www.youtube.com/embed/BRnwSedEpG0"
+          title="Stone Veneer | Selkirk Stone"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerpolicy="strict-origin-when-cross-origin"
+          allowfullscreen
+        />
       </VCard>
     </VDialog>
   </div>
