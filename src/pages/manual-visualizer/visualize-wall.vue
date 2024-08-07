@@ -378,7 +378,7 @@ const reset = () => {
                         v-model="tileSize"
                         prepend-icon="mdi-wall"
                         thumb-label
-                        :max="25"
+                        :max="10"
                         :min="1"
                         :step="1"
                       >
