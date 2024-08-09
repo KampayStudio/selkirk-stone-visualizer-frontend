@@ -118,8 +118,8 @@ const createTexture = async selectedColor => {
   const tiledImage = new cv.Mat.zeros(finalRows, finalCols, srcImage.type())
 
   // Fill the tiled image with mirrored copies
-  for (let i = 0; i < tileSize.value; i++) {
-    for (let j = 0; j < tileSize.value; j++) {
+  for (let i = 0; i < Math.min(tileSize.value, 5); i++) {
+    for (let j = 0; j < Math.min(tileSize.value, 5); j++) {
       const srcRegion = srcImage.clone()
       if (i % 2 === 1) { // Mirror vertically
         cv.flip(srcRegion, srcRegion, 0)
