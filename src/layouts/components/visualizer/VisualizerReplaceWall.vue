@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import * as cv from '@techstark/opencv-js'
-import localForage from 'localforage'
 import fx from '@/plugins/glfx.js'
 import axios from '@axios'
+import * as cv from '@techstark/opencv-js'
+import localForage from 'localforage'
 
 const props = defineProps<{
   selectedColor?: object
@@ -14,7 +14,7 @@ const props = defineProps<{
 }>()
 
 const router = useRouter()
-const { selectedColor, rotation, translationX, translationY, tileSize, setDefaultTileSize } = toRefs(props)
+const { rotation, translationX, translationY, tileSize, setDefaultTileSize } = toRefs(props)
 const imageRef = ref(null)
 const wallImageRef = ref(null)
 const canvasContainerRef = ref(null)
@@ -32,6 +32,10 @@ const getShapeSize = shape => {
   const maxY = Math.max(...shape.map(p => p.y))
   const width = maxX - minX
   const height = maxY - minY
+
+  console.log(`maxY: ${maxY}`)
+  console.log(`minY: ${minY}`)
+
   const allowanceWidth = width * 0.35
   const allowanceHeight = height * 0.35
 
@@ -97,13 +101,14 @@ const saveWall = async () => {
     .catch(error => console.error('Error saving image:', error))
 }
 
-const createTexture = async () => {
-  if (fxCanvas.value.selectedColor === selectedColor.value && fxCanvas.value.tileSize === tileSize.value)
+const createTexture = async selectedColor => {
+  if (fxCanvas.value.selectedColor === selectedColor && fxCanvas.value.tileSize === tileSize.value)
     return false
 
   const selectedColorImageElement = new Image()
 
-  selectedColorImageElement.src = selectedColor.value.image
+  selectedColorImageElement.src = selectedColor.image
+  selectedColorImageElement.crossOrigin = 'Anonymous'
 
   await new Promise(resolve => selectedColorImageElement.onload = resolve)
 
@@ -166,7 +171,7 @@ const createTexture = async () => {
   imageElement.height = imageHeight
 
   fxCanvas.value.texture = fxCanvas.value.canvas.texture(imageElement)
-  fxCanvas.value.selectedColor = selectedColor.value
+  fxCanvas.value.selectedColor = selectedColor
   fxCanvas.value.tileSize = tileSize.value
 
   fxCanvas.value.canvas.height = imageElement.height
@@ -179,8 +184,8 @@ const createTexture = async () => {
   return true
 }
 
-const changeWall = async () => {
-  const textureCreated = await createTexture()
+const changeWall = async selectedColor => {
+  const textureCreated = await createTexture(selectedColor)
 
   const canvas = fxCanvas.value.canvas
   if (textureCreated || fxCanvas.value.translationX !== translationX.value || fxCanvas.value.translationY !== translationY.value) {
