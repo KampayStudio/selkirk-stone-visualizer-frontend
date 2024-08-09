@@ -37,17 +37,21 @@ const translationY = ref(0)
 const tileSize = ref(1)
 const isLoadingOpen = ref(false)
 
-const changeWall = () => {
+const changeWall = async () => {
   if (!selectedColor.value || !VisualizerReplaceWallRef.value)
     return
 
-  VisualizerReplaceWallRef.value.changeWall()
+  await VisualizerReplaceWallRef.value.changeWall(selectedColor.value)
 }
 
 watch(rotation, () => changeWall())
 watchDebounced(translationX, () => changeWall(), { debounce: 100, maxWait: 200 })
 watchDebounced(translationY, () => changeWall(), { debounce: 100, maxWait: 200 })
-watchDebounced(tileSize, () => changeWall(), { debounce: 500, maxWait: 1000 })
+watchDebounced(tileSize, async () => {
+  isLoadingOpen.value = true
+  await changeWall()
+  isLoadingOpen.value = false
+}, { debounce: 100, maxWait: 200 })
 
 const insightTrackEvent = (category, color, id) => {
   const event = {
@@ -99,9 +103,8 @@ const selectColor = async (stone: any) => {
   currentSection.value = 'configuration'
 
   selectedColor.value = { ...stone }
-  selectedColor.value.image = await convertImageToBase64(selectedColor.value.image)
 
-  changeWall()
+  await changeWall()
 
   isLoadingOpen.value = false
 
@@ -154,7 +157,6 @@ const reset = () => {
           >
             <VisualizerReplaceWall
               ref="VisualizerReplaceWallRef"
-              :selected-color="selectedColor"
               :rotation="rotation"
               :translation-x="translationX"
               :translation-y="translationY"
