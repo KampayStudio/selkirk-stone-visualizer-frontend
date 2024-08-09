@@ -34,7 +34,7 @@ const selectedCategory = ref()
 const rotation = ref(0)
 const translationX = ref(0)
 const translationY = ref(0)
-const tileSize = ref(1)
+const tileSize = ref(2)
 const isLoadingOpen = ref(false)
 
 const changeWall = async () => {
@@ -129,7 +129,7 @@ const saveWall = async routeTo => {
   router.replace(routeTo)
 }
 
-let defaultTileSize = 1
+let defaultTileSize = 2
 
 const setDefaultTileSize = value => {
   defaultTileSize = value
@@ -380,7 +380,7 @@ const reset = () => {
                         v-model="tileSize"
                         prepend-icon="mdi-wall"
                         thumb-label
-                        :max="4"
+                        :max="5"
                         :min="1"
                         :step="1"
                       >
