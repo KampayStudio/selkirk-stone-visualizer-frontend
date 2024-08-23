@@ -93,7 +93,7 @@ const toggleDialog = () => {
 
     <VDialog v-model="isDialogOpen">
       <VCard
-        max-width="1255"
+        max-width="1280"
         min-width="300"
         class="mx-auto w-100"
       >
@@ -109,10 +109,10 @@ const toggleDialog = () => {
           />
         </VCardTitle>
         <iframe
-          width="1255"
-          height="706"
-          src="https://www.youtube.com/embed/BRnwSedEpG0"
-          title="Stone Veneer | Selkirk Stone"
+          width="1280"
+          height="720"
+          src="https://www.youtube.com/embed/E8_EDOrIJcM"
+          title="Selkirk Stone App Custom Wall Tutorial"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           referrerpolicy="strict-origin-when-cross-origin"
