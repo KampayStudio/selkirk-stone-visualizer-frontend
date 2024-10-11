@@ -23,7 +23,6 @@ const scaledShape = ref(null)
 const positionedShape = ref(null)
 const fxCanvas = ref({ canvas: null, texture: null, selectedColor: null, translationX: 0, rotation: 0, tileSize: 2 })
 const canvasRefs = ref(null)
-const imageSave = ref()
 
 const getShapeSize = shape => {
   const minX = Math.min(...shape.map(p => p.x))
@@ -96,7 +95,6 @@ const saveWall = async () => {
   const imageData = storedImage ? JSON.parse(storedImage) : {}
 
   imageData.image = imageRef.value.src
-  imageSave.value = imageData.image
   localForage.setItem('visualizeImage', JSON.stringify(imageData))
     .catch(error => console.error('Error saving image:', error))
 }
@@ -324,15 +322,11 @@ onMounted(async () => {
 const next = async (selectedProfile, selectedColor) => {
   try {
     await saveWall()
-    if (!imageSave.value)
+    if (!imageRef.value || !imageRef.value.src)
       throw new Error('No saved image data available.')
 
-    const base64Content = imageSave.value.split(';base64,').pop()
-    if (!base64Content)
-      throw new Error('Invalid image data.')
-
     // Convert base64 string to a Blob.
-    const blob = await (await fetch(`data:image/jpeg;base64,${base64Content}`)).blob()
+    const blob = await (await fetch(imageRef.value.src)).blob()
     const formData = new FormData()
 
     formData.append('image', blob, 'image.jpg')
