@@ -32,7 +32,6 @@ const isAuthenticated = computed(() => !authToken.value)
         v-if="$route.path === '/'"
         href="https://www.selkirkstone.ca"
         class="d-flex align-center pr-10"
-        target="_blank"
       >
         <img
           :src="$vuetify.theme.name !== 'dark' ? '/image/selkirk-logo-full.png' : '/image/selkirk-logo-white.png' "
