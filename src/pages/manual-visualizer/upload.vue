@@ -317,9 +317,10 @@ const validateEmail = () => {
               >
             </VCol>
             <VCol cols="12">
+              <span>Please enter a valid email address so you can upload your image.</span>
               <VTextField
                 v-model="fileInputEmail"
-                label="Please enter a valid email address so you can upload your image."
+                label="Email address"
                 type="email"
                 required
                 @input="validateEmail"
