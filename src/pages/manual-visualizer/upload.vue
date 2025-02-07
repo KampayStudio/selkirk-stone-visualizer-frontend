@@ -7,7 +7,12 @@ const route = useRoute()
 const router = useRouter()
 
 const fileInput = ref(null)
+const fileInputFile = ref(null)
+const fileInputUrl = ref(null)
+const fileInputEmail = ref(null)
+const fileInputEmailValid = ref(false)
 const selectionGroup = ref('exterior')
+const isImageSelected = ref(false)
 const isLoadingOpen = ref(false)
 
 // Assuming convertImageToBase64 and other helper functions are already defined
@@ -127,10 +132,14 @@ const convertResponseToDesiredFormat = (originalResponse, base64image) => {
   return newFormat
 }
 
-const uploadToServer = async selectedFile => {
+const uploadToServer = async () => {
+  isLoadingOpen.value = true
+  isImageSelected.value = false
+
   const formData = new FormData()
 
-  formData.append('raw_image', selectedFile) // 'file' is the key your server expects
+  formData.append('raw_image', fileInputFile.value)
+  formData.append('uploaded_by', fileInputEmail.value)
 
   try {
     // Using axios for the POST request
@@ -140,34 +149,43 @@ const uploadToServer = async selectedFile => {
       },
     })
 
-    console.log(response.data)
     localStorage.setItem('uploadedInfo', JSON.stringify(response.data))
 
-    return response.data // Assuming the server responds with JSON
+    sessionStorage.setItem('visualizeImage', JSON.stringify({ image: response.data.raw_image }))
+    sessionStorage.setItem('category', selectionGroup.value)
+
+    await uploadImage(fileInputFile.value)
   }
   catch (error) {
+    alert('Failed to upload photo')
     console.error('Failed to upload file:', error)
     throw error // Rethrow to allow the calling function to handle it
   }
+  finally {
+    isLoadingOpen.value = false
+  }
 }
 
-const onFileChange = async event => {
-  isLoadingOpen.value = true
+const onFileChange = event => {
   if (event.target.files.length > 0) {
-    const selectedFile = event.target.files[0]
+    fileInputFile.value = event.target.files[0]
+    fileInputUrl.value = URL.createObjectURL(fileInputFile.value)
 
-    const uploadResponse = await uploadToServer(selectedFile)
-
-    sessionStorage.setItem('visualizeImage', JSON.stringify({ image: uploadResponse.raw_image }))
-    sessionStorage.setItem('category', selectionGroup.value)
-
-    await uploadImage(selectedFile)
+    isImageSelected.value = true
   }
-  isLoadingOpen.value = false
 }
 
 const openFileDialog = () => {
   fileInput.value.click()
+}
+
+const validateEmail = () => {
+  if (!fileInputEmail.value)
+    return fileInputEmailValid.value = false
+  else if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(fileInputEmail.value))
+    return fileInputEmailValid.value = true
+  else
+    return fileInputEmailValid.value = false
 }
 </script>
 
@@ -282,7 +300,56 @@ const openFileDialog = () => {
       </VCol>
     </VRow>
 
-    <VDialog v-model="isLoadingOpen">
+    <VDialog v-model="isImageSelected">
+      <VCard
+        max-width="400"
+        style="align-self: center;"
+      >
+        <VCardTitle>
+          Upload Photo
+        </VCardTitle>
+        <VCardText>
+          <VRow>
+            <VCol cols="612">
+              <img
+                :src="fileInputUrl"
+                style="block-size: 200px; inline-size: auto;"
+              >
+            </VCol>
+            <VCol cols="12">
+              <VTextField
+                v-model="fileInputEmail"
+                label="Please enter a valid email address so you can upload your image."
+                type="email"
+                required
+                @input="validateEmail"
+              />
+            </VCol>
+          </VRow>
+        </VCardText>
+        <VCardActions>
+          <VSpacer />
+          <VBtn
+            color="default"
+            variant="flat"
+            @click="isImageSelected = false"
+          >
+            Cancel
+          </VBtn>
+          <VBtn
+            :disabled="!fileInputEmailValid"
+            variant="flat"
+            @click="uploadToServer"
+          >
+            Upload
+          </VBtn>
+        </VCardActions>
+      </VCard>
+    </VDialog>
+    <VDialog
+      v-model="isLoadingOpen"
+      persistent
+    >
       <VCard
         max-width="500"
         min-width="300"

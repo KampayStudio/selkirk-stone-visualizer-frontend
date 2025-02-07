@@ -19,6 +19,7 @@ const isAuthenticated = computed(() => !authToken.value)
     <!-- 👉 navbar -->
     <template #navbar>
       <RouterLink
+        v-if="$route.path !== '/'"
         to="/"
         class="d-flex align-center pr-10"
       >
@@ -27,6 +28,16 @@ const isAuthenticated = computed(() => !authToken.value)
           style="inline-size: 9rem;"
         >
       </RouterLink>
+      <a
+        v-if="$route.path === '/'"
+        href="https://www.selkirkstone.ca"
+        class="d-flex align-center pr-10"
+      >
+        <img
+          :src="$vuetify.theme.name !== 'dark' ? '/image/selkirk-logo-full.png' : '/image/selkirk-logo-white.png' "
+          style="inline-size: 9rem;"
+        >
+      </a>
       <RouterLink to="/">
         <VBtn variant="text">
           Home
